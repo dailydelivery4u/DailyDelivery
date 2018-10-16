@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">DailyDelivery</string>
+    <string name="server_addr">http://192.168.0.4/</string>
+    <string name="private_sharedpref_file">dd</string>
+    <string name="sp_tag_user_id">user_id</string>
+    <string name="categories_downloaded">cat_downloaded</string>
+</resources>
