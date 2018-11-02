@@ -1,4 +1,4 @@
-package in.dailydelivery.dailydelivery.Fragments;
+package in.dailydelivery.dailydelivery.Fragments.categories;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,11 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import in.dailydelivery.dailydelivery.Fragments.CategoryDisplayFragment.CategoryDisplayFragmentInteractionListener;
-import in.dailydelivery.dailydelivery.Fragments.categories.Categories.category;
-import in.dailydelivery.dailydelivery.R;
-
 import java.util.List;
+
+import in.dailydelivery.dailydelivery.Fragments.categories.Categories.category;
+import in.dailydelivery.dailydelivery.Fragments.categories.CategoryDisplayFragment.CategoryDisplayFragmentInteractionListener;
+import in.dailydelivery.dailydelivery.R;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link category} and makes a call to the
@@ -37,7 +37,7 @@ public class MycategoryDisplayRecyclerViewAdapter extends RecyclerView.Adapter<M
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
+        holder.mIdView.setText(String.valueOf(mValues.get(position).id));
         holder.mContentView.setText(mValues.get(position).content);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {

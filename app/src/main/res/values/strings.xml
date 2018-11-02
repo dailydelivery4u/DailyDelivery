@@ -1,7 +1,20 @@
 <resources>
     <string name="app_name">DailyDelivery</string>
-    <string name="server_addr">http://192.168.0.4/</string>
+    <string name="server_addr">http://www.scoollife.com/dd/</string>
     <string name="private_sharedpref_file">dd</string>
     <string name="sp_tag_user_id">user_id</string>
     <string name="categories_downloaded">cat_downloaded</string>
+
+    <string-array name="order_type_array">
+        <item>One Time Order</item>
+        <item>Repeating Order</item>
+    </string-array>
+
+    <string-array name="delivery_slots">
+        <item>5:30 AM to 7:30 AM</item>
+        <item>6:00 PM to 8:00 PM</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

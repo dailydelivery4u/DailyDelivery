@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.OrderDetailsFragment">
+
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose your order date"
+        android:padding="10dp" />
+
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_below="@+id/textview"
+        android:layout_width="wrap_content"
+        android:layout_height="310dp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/textview2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Delivery Time Slot"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        android:layout_below="@+id/calendarView" />
+
+    <Spinner
+        android:id="@+id/delivery_time_spinner"
+        android:layout_below="@+id/textview2"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/placeOrderBtn"
+        android:text="Place Order"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp" />
+
+</RelativeLayout>

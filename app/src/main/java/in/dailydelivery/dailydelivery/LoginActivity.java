@@ -8,9 +8,9 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -37,13 +37,19 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPref = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
+        if (sharedPref.getBoolean("logged_in", false)) {
+            startActivity(new Intent(this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+            finish();
+        }
+
         setContentView(R.layout.activity_login);
 
         phnoInput = (EditText) findViewById(R.id.phnoInput);
         pinInput = (EditText) findViewById(R.id.pinInput);
         progress = new ProgressDialog(this);
 
-        sharedPref = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
+
     }
 
     public void onLoginBtnClicked(View view){
@@ -127,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
                     int userId = resultJson.getInt("userId");
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putInt(getString(R.string.sp_tag_user_id),userId);
+                    editor.putBoolean("logged_in", true);
                     editor.commit();
 
                     Intent userHomeActivityIntent = new Intent(LoginActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

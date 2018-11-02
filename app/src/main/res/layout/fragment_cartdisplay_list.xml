@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Fragments.CartDisplayFragment"
+    android:name="in.dailydelivery.dailydelivery.Fragments.cartDisplayFragment">
+
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        tools:listitem="@layout/fragment_cartdisplay" />
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:id="@+id/bottomLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#b19a9a"
+        android:gravity="center"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/totalPriceTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total : Rs. 500"
+            android:textColor="#fff"
+            android:layout_weight="1"
+            android:padding="15dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/proceedBtn"
+            android:text="Proceed to Place Order"
+            android:layout_weight="1"
+            android:gravity="center" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+</RelativeLayout>

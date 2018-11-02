@@ -1,18 +1,22 @@
 package in.dailydelivery.dailydelivery;
 
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,109 +31,160 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.List;
 
-import in.dailydelivery.dailydelivery.Fragments.CategoryDisplayFragment;
+import in.dailydelivery.dailydelivery.DB.AppDatabase;
+import in.dailydelivery.dailydelivery.DB.Cart;
+import in.dailydelivery.dailydelivery.DB.OneTimeOrderDetails;
+import in.dailydelivery.dailydelivery.Fragments.CartDisplayFragment;
+import in.dailydelivery.dailydelivery.Fragments.OrderDetailsFragment;
 import in.dailydelivery.dailydelivery.Fragments.categories.Categories;
+import in.dailydelivery.dailydelivery.Fragments.categories.CategoryDisplayFragment;
+import in.dailydelivery.dailydelivery.Fragments.products.ProductDisplayFragment;
+import in.dailydelivery.dailydelivery.Fragments.products.Products;
 
-public class CreateOrderActivity extends AppCompatActivity implements CategoryDisplayFragment.CategoryDisplayFragmentInteractionListener {
+public class CreateOrderActivity extends AppCompatActivity implements CategoryDisplayFragment.CategoryDisplayFragmentInteractionListener, ProductDisplayFragment.ProductDisplayFragmentInteractionListener, CartDisplayFragment.OnCartDisplayFragmentInteractionListener, OrderDetailsFragment.OnOrderDetailsFragmentInteractionListener {
 
-    SharedPreferences sharedPref;
-    int req_type; // to share whether full list of categories is requested or only update check
     FrameLayout fragmentFrame;
+    AHBottomNavigation bottomNavigationView;
+    AppDatabase db;
+    ProgressDialog progress;
+    SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_order);
-        fragmentFrame = findViewById(R.id.fragment_frame);
-        //Check if categories are already downloaded
+
+        progress = new ProgressDialog(this);
         sharedPref = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
-        if(!sharedPref.getBoolean(getString(R.string.categories_downloaded),false)){
-            //Categories not yet downloaded.. GO ahead and download
-            getCategoriesFromServer(1);
-        } else {
-            displayCategories(1);
-            getCategoriesFromServer(2);
+
+        fragmentFrame = findViewById(R.id.fragment_frame);
+        CategoryDisplayFragment frag = new CategoryDisplayFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, frag).commit();
+
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem("Home", R.drawable.ic_home);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem("Categories", R.drawable.ic_apps);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Cart", R.drawable.ic_cart);
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.addItem(item1);
+        bottomNavigationView.addItem(item2);
+        bottomNavigationView.addItem(item3);
+
+        bottomNavigationView.setDefaultBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        bottomNavigationView.setAccentColor(Color.WHITE);
+        bottomNavigationView.setInactiveColor(Color.WHITE);
+        db = AppDatabase.getAppDatabase(this);
+
+        new GetCartQty().execute();
+        bottomNavigationView.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+            @Override
+            public boolean onTabSelected(int position, boolean wasSelected) {
+                switch (position) {
+                    case 0:
+                        Intent userHomeActIntent = new Intent(CreateOrderActivity.this, UserHomeActivity.class);
+                        startActivity(userHomeActIntent);
+                        break;
+                    case 1:
+                        getSupportActionBar().setTitle("Categories");
+                        CategoryDisplayFragment frag = new CategoryDisplayFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, frag).addToBackStack(null).commit();
+                        break;
+                    case 2:
+                        getSupportActionBar().setTitle("Cart");
+                        CartDisplayFragment cartDisplayFragment = new CartDisplayFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, cartDisplayFragment).addToBackStack(null).commit();
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+
+    private void setCartNum(int num) {
+        bottomNavigationView.setNotification(String.valueOf(num), 2);
+    }
+
+    @Override
+    public void categoryFragmentInteraction(Categories.category item) {
+        //Toast.makeText(this,"Item Clicked: "+ item.toString(),Toast.LENGTH_LONG).show();
+        //Create new fragment containing prodcuts of the category
+        ProductDisplayFragment productDisplayFragment = new ProductDisplayFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("cat_id", item.id);
+        productDisplayFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, productDisplayFragment).addToBackStack(null).commit();
+        getSupportActionBar().setTitle("Products");
+    }
+
+    @Override
+    public void productDisplayFragmentInteraction(Products.Product item, int qty) {
+        //Toast.makeText(this,"Item Clicked: "+ item.toString(),Toast.LENGTH_LONG).show();
+        new dbAsyncTask(item).execute(qty);
+    }
+
+    @Override
+    public void onCartDisplayFragmentInteraction(int proceed) {
+        if (proceed == 1) {
+            getSupportActionBar().setTitle("Order Details");
+            OrderDetailsFragment fragment = new OrderDetailsFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, fragment).addToBackStack(null).commit();
         }
     }
 
-    private void getCategoriesFromServer(int i) {
-
+    @Override
+    public void onOrderDetailsFragmentInteraction(String dateSelected, int deliverySlot) {
         //----------------------------------Connect to Server
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            //Create a JSONObject for sending to server
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setIndeterminate(true);
+            progress.setProgress(30);
+            progress.setCanceledOnTouchOutside(false);
+            progress.setMessage("Placing your Order...");
+            progress.show();
+            //Create a JSONArray for sending to server
+            JSONArray jsonArray = new JSONArray();
             JSONObject obj = new JSONObject();
-
-            switch(i){
-                case 1:
-                    //get list of categories
-                    req_type = 1;
-                    try {
-                        obj.put("cat_token",1);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    break;
-                case 2:
-                    //check if there is an update of categories from server
-                    req_type = 2;
-                    try {
-                        obj.put("cat_token",2);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    break;
+            try {
+                obj.put("user_id", sharedPref.getInt(getString(R.string.sp_tag_user_id), 273));
+                //DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
+                obj.put("date", dateSelected);
+                //Toast.makeText(CreateOrderActivity.this,dateTime.toString(dtf),Toast.LENGTH_SHORT).show();
+                obj.put("delivery_slot", deliverySlot);
+                for (Cart c : OrderDetailsFragment.cartList) {
+                    JSONObject cartDetails = new JSONObject();
+                    cartDetails.put("cat_id", c.getCatId());
+                    cartDetails.put("p_id", c.getProductId());
+                    cartDetails.put("qty", c.getProductqty());
+                    jsonArray.put(cartDetails);
+                }
+                obj.put("cart_details", jsonArray);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
-
-
-
-            new CreateOrderActivity.PostDataToServer(obj).execute(getString(R.string.server_addr) + "categories_req.php");
+            //new RegisterActivity.PostDataToServer(obj).execute(getString(R.string.server_addr) + "add_user.php");
+            new PlaceOrder(obj).execute(getString(R.string.server_addr) + "add_one_time_order.php");
         } else {
             Toast.makeText(this, "No Network Connection detected!", Toast.LENGTH_LONG).show();
         }
         //--------------------------------
-
     }
 
-    public void displayCategories(int i){
-        //i = 1 => display, i=2 => update
-        switch (i){
-            case 1:
-                CategoryDisplayFragment frag = new CategoryDisplayFragment();
-                getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame,frag).commit();
-                break;
+    private class PlaceOrder extends AsyncTask<String, Void, String> {
+        JSONObject orderDetails;
 
-            case 2:
-
-                break;
-        }
-    }
-
-    @Override
-    public void categoryFragmentInteraction(Categories.category item) {
-        Toast.makeText(this,"Item Clicked: "+ item.toString(),Toast.LENGTH_LONG).show();
-    }
-
-
-    // Uses AsyncTask to create a task away from the main UI thread. This task takes a
-    // URL string and uses it to create an HttpUrlConnection. Once the connection
-    // has been established, the AsyncTask downloads the contents of the webpage as
-    // an InputStream. Finally, the InputStream is converted into a string, which is
-    // displayed in the UI by the AsyncTask's onPostExecute method.
-    private class PostDataToServer extends AsyncTask<String, Void, String> {
-        JSONObject userDetails;
-
-        public PostDataToServer(JSONObject obj) {
-            this.userDetails = obj;
+        public PlaceOrder(JSONObject orderDetails) {
+            this.orderDetails = orderDetails;
         }
 
         @Override
         protected String doInBackground(String... urls) {
+            progress.setProgress(50);
             // params comes from the execute() call: params[0] is the url.
             try {
                 return downloadUrl(urls[0]);
@@ -144,24 +199,29 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
             if(result.equals("timeout")){
                 Toast.makeText(CreateOrderActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             }
-            Log.d("DD","Result from webserver in Create Order Activity: "+ result);
+            Log.d("DD", "Result from webserver: " + result);
             try {
-                JSONArray resultArrayJson = new JSONArray(result);
+                JSONObject resultArrayJson = new JSONObject(result);
                 //Check for Result COde
-                //Store categories in sharedpref
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putInt("cat_num",resultArrayJson.length());
-                editor.putBoolean(getString(R.string.categories_downloaded),true);
-                for(int i=0;i<resultArrayJson.length();i++){
-                    JSONObject obj = resultArrayJson.getJSONObject(i);
-                    editor.putString("cat_"+String.valueOf(i),obj.getString("name"));
+                //If result is OK, update user Id in editor
+                JSONObject resultJson = resultArrayJson.getJSONObject("result");
+                if (resultJson.getInt("responseCode") == 273) {
+                    int orderStatus = resultJson.getInt("status");
+
+                    Toast.makeText(CreateOrderActivity.this, "Order Placed in Server", Toast.LENGTH_SHORT).show();
+                    new UpdateOrderInDb(orderDetails.getString("date"), orderDetails.getInt("delivery_slot"), orderStatus).execute();
+
+                } else if (resultJson.getInt("responseCode") == 275) {
+                    Toast.makeText(CreateOrderActivity.this, "Phone No. and Pin does not Match!", Toast.LENGTH_LONG).show();
+
+
+                } else {
+                    Toast.makeText(CreateOrderActivity.this, "Error in connection with Server.. Please try again later.", Toast.LENGTH_LONG).show();
                 }
-                editor.commit();
-                displayCategories(1);
             } catch (JSONException e) {
                 e.printStackTrace();
             } finally {
-
+                progress.dismiss();
             }
         }
 
@@ -185,7 +245,7 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
                 conn.setDoOutput(true);
                 // Starts the query
                 conn.connect();
-                String query = "json=" + userDetails.toString();
+                String query = "json=" + orderDetails.toString();
                 OutputStream out = new BufferedOutputStream(conn.getOutputStream());
                 //out.write(Integer.parseInt(URLEncoder.encode(userDetails.toString(), "UTF-8")));
                 out.write(query.getBytes());
@@ -217,6 +277,86 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
             char[] buffer = new char[len];
             reader.read(buffer);
             return new String(buffer);
+        }
+
+        private class UpdateOrderInDb extends AsyncTask<Void, Void, Void> {
+            List<Cart> cartItems;
+            String date;
+            int deliverySlot;
+            int status;
+
+            public UpdateOrderInDb(String date, int deliverySlot, int status) {
+                this.date = date;
+                this.deliverySlot = deliverySlot;
+                this.status = status;
+                cartItems = OrderDetailsFragment.cartList;
+            }
+
+            @Override
+            protected Void doInBackground(Void... integers) {
+                for (Cart c : cartItems) {
+                    db.oneTimeOrderDetailsDao().insertOnetimeOrderDetails(new OneTimeOrderDetails(c.getProductId(), c.getCatId(), c.getProductqty(), c.getProductName(), c.getProductDes(), c.getProductDdprice(), status, date, deliverySlot));
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                Toast.makeText(CreateOrderActivity.this, "Order Placed", Toast.LENGTH_SHORT).show();
+                Intent userHomeActivityIntent = new Intent(CreateOrderActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(userHomeActivityIntent);
+                finish();
+            }
+        }
+
+
+    }
+
+    private class dbAsyncTask extends AsyncTask<Integer, Void, Integer> {
+        private Products.Product item;
+
+        public dbAsyncTask(Products.Product item) {
+            this.item = item;
+        }
+
+        @Override
+        protected Integer doInBackground(Integer... integers) {
+            int qty = integers[0];
+
+            if (qty == 1) {
+                if (db.userDao().getId(item.getId()) > 0) {
+                    //Item already exists, update qty
+                    db.userDao().updateQty(item.getId(), item.getCat_id(), qty);
+                } else {
+                    //new item. insert in db
+                    db.userDao().insertCart(new Cart(item.getCat_id(), item.getId(), item.getProductName(), item.getProductDes(), item.getMrp(), item.getDdPrice(), qty, item.getThumbnailUrl()));
+                }
+            } else if (qty == 0) {
+                //delete product from db
+                db.userDao().deleteProd(item.getId(), item.getCat_id());
+            } else if (qty > 0) {
+                //Item quantity updated
+                db.userDao().updateQty(item.getId(), item.getCat_id(), qty);
+            }
+            return db.userDao().count();
+        }
+
+        @Override
+        protected void onPostExecute(Integer cart_qty) {
+            setCartNum(cart_qty);
+        }
+    }
+
+    private class GetCartQty extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            return db.userDao().count();
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            setCartNum(integer);
         }
     }
 }

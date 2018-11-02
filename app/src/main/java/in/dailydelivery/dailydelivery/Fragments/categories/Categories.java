@@ -1,16 +1,7 @@
 package in.dailydelivery.dailydelivery.Fragments.categories;
 
-import android.content.SharedPreferences;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import in.dailydelivery.dailydelivery.CreateOrderActivity;
-import in.dailydelivery.dailydelivery.R;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -27,10 +18,10 @@ public class Categories {
     }
 
     public static class category {
-        public final String id;
+        public final int id;
         public final String content;
 
-        public category(String id, String content) {
+        public category(int id, String content) {
             this.id = id;
             this.content = content;
         }
