@@ -45,7 +45,18 @@
                 android:id="@+id/ordersforthedayRV"
                 android:layout_below="@+id/divider"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/noOrdersTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No Orders for the day :("
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/divider" />
 
         </RelativeLayout>
 

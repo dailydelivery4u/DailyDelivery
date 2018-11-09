@@ -297,6 +297,7 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
                 for (Cart c : cartItems) {
                     db.oneTimeOrderDetailsDao().insertOnetimeOrderDetails(new OneTimeOrderDetails(c.getProductId(), c.getCatId(), c.getProductqty(), c.getProductName(), c.getProductDes(), c.getProductDdprice(), status, date, deliverySlot));
                 }
+                db.userDao().emptyCart();
                 return null;
             }
 
@@ -308,8 +309,6 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
                 finish();
             }
         }
-
-
     }
 
     private class dbAsyncTask extends AsyncTask<Integer, Void, Integer> {

@@ -45,11 +45,9 @@ public class LoginActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_login);
 
-        phnoInput = (EditText) findViewById(R.id.phnoInput);
-        pinInput = (EditText) findViewById(R.id.pinInput);
+        phnoInput = findViewById(R.id.phnoInput);
+        pinInput = findViewById(R.id.pinInput);
         progress = new ProgressDialog(this);
-
-
     }
 
     public void onLoginBtnClicked(View view){

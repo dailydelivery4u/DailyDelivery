@@ -14,9 +14,6 @@ import in.dailydelivery.dailydelivery.DB.OneTimeOrderDetails;
 public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<OrdersDisplayRecylcerViewAdapter.ViewHolder> {
     List<OneTimeOrderDetails> items;
 
-    public OrdersDisplayRecylcerViewAdapter() {
-    }
-
     public OrdersDisplayRecylcerViewAdapter(List<OneTimeOrderDetails> items) {
         this.items = items;
     }
@@ -74,6 +71,7 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
     public void updateData(List<OneTimeOrderDetails> list) {
         items.clear();
         items = list;
+
         notifyDataSetChanged();
     }
 }

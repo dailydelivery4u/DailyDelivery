@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.github.jhonnyx2012.horizontalpicker.DatePickerListener;
 import com.github.jhonnyx2012.horizontalpicker.HorizontalPicker;
@@ -27,7 +27,8 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
     AppDatabase db;
     RecyclerView ordersforthedayRV;
     OrdersDisplayRecylcerViewAdapter recylcerViewAdapter;
-    boolean isLoaddingFirstTime;
+    TextView noOrdersTV;
+    boolean isLoadingFirstTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,14 +43,12 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                 .setListener(this)
                 .init();
         //picker.setBackgroundColor(Color.LTGRAY);
+        isLoadingFirstTime = true;
         DateTime today = new DateTime();
         picker.setDate(today);
-        isLoaddingFirstTime = true;
-        recylcerViewAdapter = new OrdersDisplayRecylcerViewAdapter();
+        noOrdersTV = findViewById(R.id.noOrdersTV);
         ordersforthedayRV = findViewById(R.id.ordersforthedayRV);
         ordersforthedayRV.setLayoutManager(new LinearLayoutManager(this));
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
-        new GetOrders(today.toString(dtf)).execute();
     }
 
     @Override
@@ -84,20 +83,22 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
     }
 
     private void updateRecyclerView(List<OneTimeOrderDetails> orders) {
-        if (isLoaddingFirstTime) {
+        if (isLoadingFirstTime) {
             if (orders.size() > 0) {
+                ordersforthedayRV.setVisibility(View.VISIBLE);
+                noOrdersTV.setVisibility(View.GONE);
                 recylcerViewAdapter = new OrdersDisplayRecylcerViewAdapter(orders);
                 ordersforthedayRV.setAdapter(recylcerViewAdapter);
-            } else {
-                //TODO: DIsplay no orders for the day
-                Toast.makeText(UserHomeActivity.this, "No Orders Today", Toast.LENGTH_SHORT).show();
+                isLoadingFirstTime = false;
             }
-            isLoaddingFirstTime = false;
         } else {
             if (orders.size() > 0) {
+                ordersforthedayRV.setVisibility(View.VISIBLE);
+                noOrdersTV.setVisibility(View.GONE);
                 recylcerViewAdapter.updateData(orders);
             } else {
-                Toast.makeText(UserHomeActivity.this, "No Orders Today", Toast.LENGTH_SHORT).show();
+                ordersforthedayRV.setVisibility(View.GONE);
+                noOrdersTV.setVisibility(View.VISIBLE);
             }
         }
     }

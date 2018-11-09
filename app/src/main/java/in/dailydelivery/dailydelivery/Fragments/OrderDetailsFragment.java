@@ -3,7 +3,6 @@ package in.dailydelivery.dailydelivery.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,6 +93,9 @@ public class OrderDetailsFragment extends Fragment {
                     spinner.setSelection(1);
                     spinner.setEnabled(false);
                 }
+            } else {
+                spinner.setSelection(0);
+                spinner.setEnabled(true);
             }
         } else if (calendarView.getDate() < tomo.withTimeAtStartOfDay().getMillis()) {
             if (deliveryState == 1) {
@@ -114,8 +116,7 @@ public class OrderDetailsFragment extends Fragment {
             int month = Integer.parseInt(today.monthOfYear().getAsString());
             int year = Integer.parseInt(today.year().getAsString());
             dateSelected = String.valueOf((date < 10 ? ("0" + date) : date) + "-" + (month < 10 ? ("0" + month) : month) + "-" + year);
-            Log.d("dd", "Date selected" + dateSelected);
-
+            //Log.d("dd", "Date selected" + dateSelected);
         } else {
             calendarView.setMinDate(tomo.getMillis());
             calendarView.setDate(tomo.getMillis());
@@ -124,7 +125,7 @@ public class OrderDetailsFragment extends Fragment {
             int month = Integer.parseInt(tomo.monthOfYear().getAsString());
             int year = Integer.parseInt(tomo.year().getAsString());
             dateSelected = String.valueOf((date < 10 ? ("0" + date) : date) + "-" + (month < 10 ? ("0" + month) : month) + "-" + year);
-            Log.d("dd", "Date selected" + dateSelected);
+            //Log.d("dd", "Date selected" + dateSelected);
         }
     }
 
@@ -141,6 +142,9 @@ public class OrderDetailsFragment extends Fragment {
     }
 
     private boolean cartContainsWater() {
+        for (Cart c : cartList) {
+            if (c.getCatId() == 250) return true;
+        }
         return false;
     }
 

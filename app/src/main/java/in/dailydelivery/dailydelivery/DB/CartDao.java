@@ -30,6 +30,9 @@ public interface CartDao {
     @Query("DELETE FROM cart WHERE product_id = :pId AND cat_id = :catId")
     void deleteProd(int pId, int catId);
 
+    @Query("DELETE FROM cart")
+    void emptyCart();
+
     @Insert
     void insertCart(Cart cart);
 

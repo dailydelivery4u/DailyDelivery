@@ -117,4 +117,5 @@ public class Cart {
     public void setProductTnUrl(String productTnUrl) {
         this.productTnUrl = productTnUrl;
     }
+
 }
