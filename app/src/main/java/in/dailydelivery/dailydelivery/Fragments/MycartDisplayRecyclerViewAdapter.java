@@ -80,7 +80,7 @@ public class MycartDisplayRecyclerViewAdapter extends RecyclerView.Adapter<Mycar
                 //Log.d("DD","Value changed to " + value);
                 if (value == 0) {
                     monItemRemovedListner.onItemRemoved(mValues.get(position).getProductId(), mValues.get(position).getCatId(), position);
-                    mValues.remove(position);
+                    //mValues.remove(position);
                     notifyDataSetChanged();
                 } else {
                     monQtyChangedListner.onQtyChanged(holder.mItem.getProductId(), holder.mItem.getCatId(), value, position);

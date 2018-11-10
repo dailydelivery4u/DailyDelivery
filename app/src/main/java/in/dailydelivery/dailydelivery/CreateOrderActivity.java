@@ -59,9 +59,18 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
         progress = new ProgressDialog(this);
         sharedPref = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
 
+        Intent intent = getIntent();
+        int fragmentNum = intent.getIntExtra("fragment", 0);
+
+
         fragmentFrame = findViewById(R.id.fragment_frame);
-        CategoryDisplayFragment frag = new CategoryDisplayFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, frag).commit();
+        if (fragmentNum == 3) {
+            CartDisplayFragment frag = new CartDisplayFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, frag).commit();
+        } else {
+            CategoryDisplayFragment frag = new CategoryDisplayFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, frag).commit();
+        }
 
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Home", R.drawable.ic_home);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem("Categories", R.drawable.ic_apps);

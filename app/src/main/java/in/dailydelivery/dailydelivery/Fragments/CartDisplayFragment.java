@@ -160,23 +160,6 @@ public class CartDisplayFragment extends Fragment implements onItemRemovedListne
         }
     }
 
-    /*private class updateTotalPrice extends AsyncTask<Void,Void,Void>{
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            priceTuple = db.userDao().getprices();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            totalPrice = 0;
-            for(PriceTuple p : priceTuple){
-                totalPrice += p.getProductDdPrice() * p.getProductqty();
-            }
-            totalPriceTV.setText("Total Amount: Rs. " + String.valueOf(totalPrice));
-        }
-    }*/
 }
 
 interface onItemRemovedListner {

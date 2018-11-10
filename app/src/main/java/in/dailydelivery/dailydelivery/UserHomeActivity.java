@@ -7,8 +7,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.jhonnyx2012.horizontalpicker.DatePickerListener;
 import com.github.jhonnyx2012.horizontalpicker.HorizontalPicker;
@@ -29,6 +35,8 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
     OrdersDisplayRecylcerViewAdapter recylcerViewAdapter;
     TextView noOrdersTV;
     boolean isLoadingFirstTime;
+    TextView cartQtyTV;
+    ImageView cartImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +57,41 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
         noOrdersTV = findViewById(R.id.noOrdersTV);
         ordersforthedayRV = findViewById(R.id.ordersforthedayRV);
         ordersforthedayRV.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.mainmenu, menu);
+
+        //MenuItem item = menu.findItem(R.id.cartItem);
+        //MenuItemCompat.setActionView(item, R.layout.layout_badge);
+        //RelativeLayout notifCount = (RelativeLayout)   MenuItemCompat.getActionView(item);
+        RelativeLayout badgeLayout = (RelativeLayout) menu.findItem(R.id.cartItem).getActionView();
+        cartQtyTV = badgeLayout.findViewById(R.id.actionbar_notifcation_textview);
+        cartImage = badgeLayout.findViewById(R.id.cartImage);
+        cartImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(UserHomeActivity.this,"cart clicked",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(UserHomeActivity.this, CreateOrderActivity.class);
+                intent.putExtra("fragment", 3);
+                startActivity(intent);
+            }
+        });
+        //cartQtyTV.setText("0");
+        new UpdateCartQty().execute();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.wallet:
+                Toast.makeText(this, "Wallet Clicked", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -100,6 +143,21 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                 ordersforthedayRV.setVisibility(View.GONE);
                 noOrdersTV.setVisibility(View.VISIBLE);
             }
+        }
+    }
+
+    private class UpdateCartQty extends AsyncTask<Void, Void, Void> {
+        int qty;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            qty = db.userDao().count();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            cartQtyTV.setText(String.valueOf(qty));
         }
     }
 }
