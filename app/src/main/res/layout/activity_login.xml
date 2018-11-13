@@ -36,6 +36,9 @@
         android:layout_marginTop="35dp"
         android:onClick="onLoginBtnClicked"
         android:text="Login"
+        android:textSize="16dp"
+        android:background="@drawable/button_green"
+        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pinInput" />
@@ -59,6 +62,8 @@
         android:layout_marginTop="24dp"
         android:onClick="onRegisterBrnClicked"
         android:text="Register"
+        android:background="@color/colorAccent"
+        android:textColor="@android:color/white"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
