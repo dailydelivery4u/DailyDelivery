@@ -8,4 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="DailyDelivery" parent="AppTheme" >
+        <item name="android:textColorPrimary">@color/lightBackground</item>
+        <item name="android:textColorPrimaryInverse">@color/colorAccent</item>
+        <item name="android:windowBackground">@android:color/background_light</item>
+    </style>
+
 </resources>
