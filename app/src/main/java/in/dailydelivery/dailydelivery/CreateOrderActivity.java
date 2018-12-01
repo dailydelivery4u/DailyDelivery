@@ -62,7 +62,6 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
         Intent intent = getIntent();
         int fragmentNum = intent.getIntExtra("fragment", 0);
 
-
         fragmentFrame = findViewById(R.id.fragment_frame);
         if (fragmentNum == 3) {
             CartDisplayFragment frag = new CartDisplayFragment();
@@ -123,6 +122,7 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
         ProductDisplayFragment productDisplayFragment = new ProductDisplayFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("cat_id", item.id);
+        bundle.putInt("order_type", 1);// 1 for 1 time order ; 2 for recurring order
         productDisplayFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, productDisplayFragment).addToBackStack(null).commit();
         getSupportActionBar().setTitle("Products");
@@ -176,8 +176,8 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            //new RegisterActivity.PostDataToServer(obj).execute(getString(R.string.server_addr) + "add_user.php");
-            new PlaceOrder(obj).execute(getString(R.string.server_addr) + "add_one_time_order.php");
+            //new RegisterActivity.GetHashFromServer(obj).execute(getString(R.string.server_addr) + "add_user.php");
+            new PlaceOrder(obj).execute(getString(R.string.server_addr_release) + "add_one_time_order.php");
         } else {
             Toast.makeText(this, "No Network Connection detected!", Toast.LENGTH_LONG).show();
         }
@@ -217,11 +217,11 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
                 if (resultJson.getInt("responseCode") == 273) {
                     int orderStatus = resultJson.getInt("status");
 
-                    Toast.makeText(CreateOrderActivity.this, "Order Placed in Server", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateOrderActivity.this, "Order Placed", Toast.LENGTH_SHORT).show();
                     new UpdateOrderInDb(orderDetails.getString("date"), orderDetails.getInt("delivery_slot"), orderStatus).execute();
 
                 } else if (resultJson.getInt("responseCode") == 275) {
-                    Toast.makeText(CreateOrderActivity.this, "Phone No. and Pin does not Match!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CreateOrderActivity.this, "Some Error occured! Pls try again", Toast.LENGTH_LONG).show();
 
 
                 } else {
@@ -288,35 +288,36 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
             return new String(buffer);
         }
 
-        private class UpdateOrderInDb extends AsyncTask<Void, Void, Void> {
-            List<Cart> cartItems;
-            String date;
-            int deliverySlot;
-            int status;
+    }
 
-            public UpdateOrderInDb(String date, int deliverySlot, int status) {
-                this.date = date;
-                this.deliverySlot = deliverySlot;
-                this.status = status;
-                cartItems = OrderDetailsFragment.cartList;
-            }
+    private class UpdateOrderInDb extends AsyncTask<Void, Void, Void> {
+        List<Cart> cartItems;
+        String date;
+        int deliverySlot;
+        int status;
 
-            @Override
-            protected Void doInBackground(Void... integers) {
-                for (Cart c : cartItems) {
-                    db.oneTimeOrderDetailsDao().insertOnetimeOrderDetails(new OneTimeOrderDetails(c.getProductId(), c.getCatId(), c.getProductqty(), c.getProductName(), c.getProductDes(), c.getProductDdprice(), status, date, deliverySlot));
-                }
-                db.userDao().emptyCart();
-                return null;
-            }
+        public UpdateOrderInDb(String date, int deliverySlot, int status) {
+            this.date = date;
+            this.deliverySlot = deliverySlot;
+            this.status = status;
+            cartItems = OrderDetailsFragment.cartList;
+        }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                Toast.makeText(CreateOrderActivity.this, "Order Placed", Toast.LENGTH_SHORT).show();
-                Intent userHomeActivityIntent = new Intent(CreateOrderActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(userHomeActivityIntent);
-                finish();
+        @Override
+        protected Void doInBackground(Void... integers) {
+            for (Cart c : cartItems) {
+                db.oneTimeOrderDetailsDao().insertOnetimeOrderDetails(new OneTimeOrderDetails(c.getProductId(), c.getCatId(), c.getProductqty(), c.getProductName(), c.getProductDes(), c.getProductDdprice(), status, date, deliverySlot));
             }
+            db.userDao().emptyCart();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Toast.makeText(CreateOrderActivity.this, "Order Placed", Toast.LENGTH_SHORT).show();
+            Intent userHomeActivityIntent = new Intent(CreateOrderActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(userHomeActivityIntent);
+            finish();
         }
     }
 

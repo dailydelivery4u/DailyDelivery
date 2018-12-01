@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.jhonnyx2012.horizontalpicker.DatePickerListener;
 import com.github.jhonnyx2012.horizontalpicker.HorizontalPicker;
@@ -88,7 +87,13 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.wallet:
-                Toast.makeText(this, "Wallet Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(UserHomeActivity.this, WalletActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.vacation:
+                Intent intent1 = new Intent(UserHomeActivity.this, VacationActivity.class);
+                startActivity(intent1);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -102,6 +107,11 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
 
     public void createOrderBtnOnClick(View view){
         Intent createOrderActivityIntent = new Intent(this, CreateOrderActivity.class);
+        startActivity(createOrderActivityIntent);
+    }
+
+    public void createRecurringOrderBtnOnClick(View view) {
+        Intent createOrderActivityIntent = new Intent(this, CreateRecurringOrderActivity.class);
         startActivity(createOrderActivityIntent);
     }
 

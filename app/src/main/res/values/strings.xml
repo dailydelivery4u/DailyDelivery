@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">DailyDelivery</string>
-    <string name="server_addr">http://www.scoollife.com/dd/</string>
+    <string name="server_addr_release">http://www.scoollife.com/dd/</string>
+    <string name="server_addr_local">http://192.168.0.4/</string>
     <string name="private_sharedpref_file">dd</string>
     <string name="sp_tag_user_id">user_id</string>
     <string name="categories_downloaded">cat_downloaded</string>
@@ -17,4 +18,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="paytm_mid">sYBvfx01514982804268</string>
+    <string name="delivery_slot_0">5:30 AM to 7:30 AM</string>
+    <string name="delivery_slot_1">6:00 PM to 8:00PM</string>
+    <string name="sp_tag_is_vacation_present">isVacationPresent</string>
 </resources>

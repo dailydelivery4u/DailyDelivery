@@ -120,7 +120,7 @@ public class CategoryDisplayFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            new PostDataToServer(obj).execute(getString(R.string.server_addr) + "categories_req.php");
+            new PostDataToServer(obj).execute(getString(R.string.server_addr_release) + "categories_req.php");
         } else {
             Toast.makeText(getActivity(), "No Network Connection detected!", Toast.LENGTH_LONG).show();
         }
@@ -203,7 +203,7 @@ public class CategoryDisplayFragment extends Fragment {
             try {
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
+                return "Unable to retrieve web page. URL may be invalid." + e.getMessage();
             }
         }
 
@@ -213,7 +213,7 @@ public class CategoryDisplayFragment extends Fragment {
             if (result.equals("timeout")) {
                 //Toast.makeText(CreateOrderActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             } else {
-                Log.d("DD", "Result from webserver in Create Order Activity: " + result);
+                Log.d("DD", "Result from webserver in Category fetching: " + result);
                 try {
                     categoryList = new JSONArray(result);
                     displayCategories();

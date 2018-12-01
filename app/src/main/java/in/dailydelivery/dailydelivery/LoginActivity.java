@@ -41,13 +41,13 @@ public class LoginActivity extends AppCompatActivity {
         if (sharedPref.getBoolean("logged_in", false)) {
             startActivity(new Intent(this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
             finish();
+        } else {
+            setContentView(R.layout.activity_login);
+
+            phnoInput = findViewById(R.id.phnoInput);
+            pinInput = findViewById(R.id.pinInput);
+            progress = new ProgressDialog(this);
         }
-
-        setContentView(R.layout.activity_login);
-
-        phnoInput = findViewById(R.id.phnoInput);
-        pinInput = findViewById(R.id.pinInput);
-        progress = new ProgressDialog(this);
     }
 
     public void onLoginBtnClicked(View view){
@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            new PostDataToServer(obj).execute(getString(R.string.server_addr) + "login.php");
+            new PostDataToServer(obj).execute(getString(R.string.server_addr_release) + "login.php");
         } else {
             Toast.makeText(this, "No Network Connection detected!", Toast.LENGTH_LONG).show();
         }
@@ -198,7 +198,6 @@ public class LoginActivity extends AppCompatActivity {
                 conn.connect();
                 String query = "json=" + userDetails.toString();
                 OutputStream out = new BufferedOutputStream(conn.getOutputStream());
-                //out.write(Integer.parseInt(URLEncoder.encode(userDetails.toString(), "UTF-8")));
                 out.write(query.getBytes());
                 out.flush();
                 out.close();

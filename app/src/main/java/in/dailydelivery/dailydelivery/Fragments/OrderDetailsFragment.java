@@ -148,7 +148,6 @@ public class OrderDetailsFragment extends Fragment {
         return false;
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

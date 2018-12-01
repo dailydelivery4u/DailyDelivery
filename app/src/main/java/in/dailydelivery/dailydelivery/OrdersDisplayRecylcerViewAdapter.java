@@ -37,9 +37,9 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
         holder.nameTV.setText(items.get(position).getName() + "(" + items.get(position).getQty() + " Nos. )");
         holder.desTV.setText(items.get(position).getDes());
         holder.priceTV.setText("Rs. " + ddPrice);
-        if (items.get(position).getDeliverySlot() == 1) {
+        if (items.get(position).getDeliverySlot() == 0) {
             holder.slotTV.setText("Delivery: 5:30AM to 7:30AM");
-        } else if (items.get(position).getDeliverySlot() == 2) {
+        } else if (items.get(position).getDeliverySlot() == 1) {
             holder.slotTV.setText("Delivery: 6 PM to 8 PM");
         }
     }

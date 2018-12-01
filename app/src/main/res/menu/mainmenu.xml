@@ -5,11 +5,12 @@
         android:id="@+id/wallet"
         android:title="Wallet" />
     <item
-        android:id="@+id/account"
-        android:title="Account" />
+        android:id="@+id/vacation"
+        android:title="Set Vacation" />
     <item
         android:id="@+id/profile"
         android:title="Profile" />
+
     <item
         android:id="@+id/cartItem"
         android:title="Cart"

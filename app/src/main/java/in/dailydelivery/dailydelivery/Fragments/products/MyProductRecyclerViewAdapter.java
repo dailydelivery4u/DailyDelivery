@@ -33,11 +33,13 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
     private final List<Product> mValues;
     private final ProductDisplayFragmentInteractionListener mListener;
     private Context context;
+    private int orderType;
 
-    public MyProductRecyclerViewAdapter(List<Product> items, Context context_, ProductDisplayFragmentInteractionListener listener) {
+    public MyProductRecyclerViewAdapter(List<Product> items, Context context_, ProductDisplayFragmentInteractionListener listener, int orderType) {
         mValues = items;
         context = context_;
         mListener = listener;
+        this.orderType = orderType;
     }
 
     @Override
@@ -65,19 +67,24 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
         holder.mrpTV.setText("MRP: " + String.valueOf(mValues.get(position).getMrp()));
         holder.mrpTV.setPaintFlags(holder.mrpTV.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         holder.ddPriceTV.setText("DD Price: " + String.valueOf(mValues.get(position).getDdPrice()));
+        if (orderType == 2) {
+            holder.addBtn.setText("Select");
+        }
 
         //Load image using glide
         Glide.with(this.context)
                 .load(mValues.get(position).getThumbnailUrl())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.imageView);
-
-        if (holder.mItem.isIn_cart()) {
-            holder.addBtn.setText("ADDED");
-            holder.numberPicker.setValue(holder.mItem.getQty());
-            holder.addBtn.setEnabled(false);
-            holder.qtyLinLay.setVisibility(View.VISIBLE);
+        if (orderType == 1) {
+            if (holder.mItem.isIn_cart()) {
+                holder.addBtn.setText("ADDED");
+                holder.numberPicker.setValue(holder.mItem.getQty());
+                holder.addBtn.setEnabled(false);
+                holder.qtyLinLay.setVisibility(View.VISIBLE);
+            }
         }
+
 
         holder.numberPicker.setValueChangedListener(new ValueChangedListener() {
             @Override
@@ -99,13 +106,18 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.productDisplayFragmentInteraction(holder.mItem, 1);
-                    holder.addBtn.setText("ADDED");
-                    holder.numberPicker.setValue(1);
-                    holder.addBtn.setEnabled(false);
-                    holder.qtyLinLay.setVisibility(View.VISIBLE);
+
+                    if (orderType == 1) {
+                        // Notify the active callbacks interface (the activity, if the
+                        // fragment is attached to one) that an item has been selected.
+                        mListener.productDisplayFragmentInteraction(holder.mItem, 1);
+                        holder.addBtn.setText("ADDED");
+                        holder.numberPicker.setValue(1);
+                        holder.addBtn.setEnabled(false);
+                        holder.qtyLinLay.setVisibility(View.VISIBLE);
+                    } else {
+                        mListener.productDisplayFragmentInteraction(holder.mItem, 1);
+                    }
                 }
             }
         });

@@ -1,5 +1,6 @@
 package in.dailydelivery.dailydelivery.Fragments.products;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * <p>
  * TODO: Replace all uses of this class before publishing your app.
  */
-public class Products {
+public class Products implements Serializable {
 
     /**
      * An array of sample (dummy) items.
@@ -24,7 +25,7 @@ public class Products {
     /**
      * A dummy item representing a piece of content.
      */
-    public static class Product {
+    public static class Product implements Serializable {
         private int id;
         private int cat_id;
         private String productName;

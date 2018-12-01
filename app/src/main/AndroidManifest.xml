@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
         android:allowBackup="true"
@@ -21,7 +23,10 @@
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".UserHomeActivity" />
-        <activity android:name=".CreateOrderActivity"></activity>
+        <activity android:name=".CreateOrderActivity" />
+        <activity android:name=".WalletActivity" />
+        <activity android:name=".CreateRecurringOrderActivity" />
+        <activity android:name=".VacationActivity"></activity>
     </application>
 
 </manifest>

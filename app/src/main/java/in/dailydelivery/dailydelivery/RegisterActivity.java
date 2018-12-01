@@ -72,7 +72,7 @@ public class RegisterActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            new RegisterActivity.PostDataToServer(obj).execute(getString(R.string.server_addr) + "add_user.php");
+            new RegisterActivity.PostDataToServer(obj).execute(getString(R.string.server_addr_release) + "add_user.php");
         } else {
             Toast.makeText(this, "No Network Connection detected!", Toast.LENGTH_LONG).show();
         }

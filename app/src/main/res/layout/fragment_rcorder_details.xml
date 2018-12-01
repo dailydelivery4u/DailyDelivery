@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:srcCompat="@drawable/background_day_selected"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/productNameTextView"
+        android:text="Heritage Golden Cow Milk"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_alignTop="@+id/imageView"
+        android:layout_marginLeft="30dp"
+        android:textAllCaps="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/productDescriptionTextView"
+        android:text="500ml Milk Packet"
+        android:layout_below="@+id/productNameTextView"
+        android:layout_alignLeft="@+id/productNameTextView"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/mrpTextView"
+        android:text="MRP: Rs 21"
+        android:textSize="12dp"
+        android:layout_below="@+id/productDescriptionTextView"
+        android:layout_alignLeft="@+id/productDescriptionTextView"
+        android:layout_marginTop="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ddPriceTextView"
+        android:text="DD Price: Rs 21"
+        android:textSize="14dp"
+        android:layout_below="@+id/productDescriptionTextView"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/mrpTextView" />
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/imageView"
+        android:background="?android:attr/listDivider" />
+
+    <TextView
+        android:id="@+id/weeklyOrderTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Weekly Order"
+        android:padding="10dp"
+        android:layout_below="@+id/divider3" />
+
+    <View
+        android:id="@+id/divider4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/weeklyOrderTV"
+        android:background="?android:attr/listDivider" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/weekListLL"
+        android:layout_width="match_parent"
+        android:weightSum="7"
+        android:layout_below="@+id/divider4"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:padding="5dp"
+            android:text="Mon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:padding="5dp"
+            android:text="Tue" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="Wed" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:textAlignment="center"
+            android:text="Thu" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:textAlignment="center"
+            android:text="Fri" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:textAlignment="center"
+            android:text="Sat" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:textAlignment="center"
+            android:text="Sun" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/npLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/weekListLL"
+        android:orientation="horizontal"
+        android:weightSum="7">
+
+        <NumberPicker
+            android:id="@+id/np0"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp" />
+
+        <NumberPicker
+            android:id="@+id/np1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp" />
+
+        <NumberPicker
+            android:id="@+id/np2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_weight="1" />
+
+        <NumberPicker
+            android:id="@+id/np3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_weight="1" />
+
+        <NumberPicker
+            android:id="@+id/np4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_weight="1" />
+
+        <NumberPicker
+            android:id="@+id/np5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_weight="1" />
+
+        <NumberPicker
+            android:id="@+id/np6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/deliverySlotTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/npLL"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Delivery Slot" />
+
+
+    <View
+        android:id="@+id/divider7"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/deliverySlotTV"
+        android:background="?android:attr/listDivider" />
+
+    <TextView
+        android:id="@+id/deliverySlotDisplayTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="5:30AM to 7:30AM"
+        android:padding="10dp"
+        android:layout_below="@+id/divider7" />
+
+    <View
+        android:id="@+id/divider8"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/deliverySlotDisplayTV"
+        android:background="?android:attr/listDivider" />
+
+
+    <TextView
+        android:id="@+id/startDateTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Date"
+        android:layout_below="@+id/divider8" />
+
+    <View
+        android:id="@+id/divider9"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/startDateTV"
+        android:background="?android:attr/listDivider" />
+
+
+    <TextView
+        android:id="@+id/startDateDisplayTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Monday, 26 November 2018"
+        android:padding="10dp"
+        android:layout_below="@+id/divider9" />
+
+    <View
+        android:id="@+id/divider5"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/startDateDisplayTV"
+        android:layout_marginBottom="20dp"
+        android:background="?android:attr/listDivider" />
+
+    <Button
+        android:id="@+id/placeRcOrdBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Place Recurring Order"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp" />
+
+</RelativeLayout>

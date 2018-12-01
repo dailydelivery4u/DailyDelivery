@@ -47,6 +47,7 @@ public class ProductDisplayFragment extends Fragment {
     RecyclerView recyclerView;
     Context context;
     private int cat_id;
+    private int orderType;//1 for one time order; 2 for repeating order
     AppDatabase db;
     List<ProductTuple> productsIdsInCart;
 
@@ -74,6 +75,7 @@ public class ProductDisplayFragment extends Fragment {
             recyclerView = (RecyclerView) view;
         }
         cat_id = getArguments().getInt("cat_id");
+        orderType = getArguments().getInt("orderType");
         return view;
     }
 
@@ -94,7 +96,7 @@ public class ProductDisplayFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            new PostDataToServer(obj).execute(getString(R.string.server_addr) + "products_req.php");
+            new PostDataToServer(obj).execute(getString(R.string.server_addr_release) + "products_req.php");
         } else {
             Toast.makeText(getActivity(), "No Network Connection detected!", Toast.LENGTH_LONG).show();
         }
@@ -122,7 +124,7 @@ public class ProductDisplayFragment extends Fragment {
 
     public void displayProducts() {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(new MyProductRecyclerViewAdapter(Products.ITEMS, getActivity(), mListener));
+        recyclerView.setAdapter(new MyProductRecyclerViewAdapter(Products.ITEMS, getActivity(), mListener, orderType));
     }
 
     /**
