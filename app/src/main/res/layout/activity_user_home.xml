@@ -12,6 +12,8 @@
         android:textAlignment="textEnd"
         android:paddingEnd="30dp"
         android:paddingRight="30dp"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
         android:gravity="end" />
 
     <com.github.jhonnyx2012.horizontalpicker.HorizontalPicker
@@ -22,7 +24,8 @@
 
     <Button
         android:id="@+id/button3"
-        android:layout_width="wrap_content"
+        style="@style/buttonStyle"
+        android:layout_width="136dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
