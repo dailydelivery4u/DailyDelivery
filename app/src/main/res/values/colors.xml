@@ -3,9 +3,5 @@
     <color name="colorPrimary">#4286f4</color>
     <color name="colorPrimaryDark">#415cf4</color>
     <color name="lightBackground">#e0fff8</color>
-    <color name="colorAccent">#42f456</color>
-    <color name="lightGreen">#008577</color>
-    <color name="darkGreen">#00574B</color>
-    <color name="magenta">#D81B60</color>
-    <color name="orange">#c45631</color>
+    <color name="colorAccent">#4CBB17</color>
 </resources>
