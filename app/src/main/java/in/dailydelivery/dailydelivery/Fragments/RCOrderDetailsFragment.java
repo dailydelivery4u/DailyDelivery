@@ -116,6 +116,7 @@ public class RCOrderDetailsFragment extends Fragment {
         mrpTV.setText("Mrp: Rs." + String.valueOf(product.getMrp()));
         mrpTV.setPaintFlags(mrpTV.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         ddPriceTV.setText("DD Price: Rs." + String.valueOf(product.getDdPrice()));
+        startDateTV.setText(new DateTime().plusDays(2).toString(dtf));
         Glide.with(getActivity())
                 .load(product.getThumbnailUrl())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -125,7 +126,7 @@ public class RCOrderDetailsFragment extends Fragment {
         placeRCOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.rcOrderDetailsFragmentInteraction(new RcOrderDetails(1, product.getId(), product.getCat_id(), product.getProductName(), product.getProductDes(), product.getDdPrice(), 1, 0, new DateTime().plusDays(dateSelected).toString(dtf), np[0].getValue(), np[1].getValue(), np[2].getValue(), np[3].getValue(), np[4].getValue(), np[5].getValue(), np[6].getValue()));
+                mListener.rcOrderDetailsFragmentInteraction(new RcOrderDetails(1, product.getId(), product.getCat_id(), product.getProductName(), product.getProductDes(), product.getDdPrice(), 1, 0, new DateTime().plusDays(dateSelected).plusDays(2).toString(dtf), np[0].getValue(), np[1].getValue(), np[2].getValue(), np[3].getValue(), np[4].getValue(), np[5].getValue(), np[6].getValue()));
             }
         });
         deliverySlotTV.setOnClickListener(new View.OnClickListener() {
@@ -181,7 +182,7 @@ public class RCOrderDetailsFragment extends Fragment {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DateTime dt = new DateTime().plusDays(dateSelected);
+                        DateTime dt = new DateTime().plusDays(dateSelected).plusDays(2);
                         startDateTV.setText(dt.toString(dtf));
                         dialog.dismiss();
                     }

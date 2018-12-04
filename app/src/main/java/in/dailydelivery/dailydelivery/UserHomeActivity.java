@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,20 +23,31 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import in.dailydelivery.dailydelivery.DB.AppDatabase;
 import in.dailydelivery.dailydelivery.DB.OneTimeOrderDetails;
+import in.dailydelivery.dailydelivery.DB.RcOrderDetails;
+import in.dailydelivery.dailydelivery.DB.Vacation;
 
 
 public class UserHomeActivity extends AppCompatActivity implements DatePickerListener {
     AppDatabase db;
-    RecyclerView ordersforthedayRV;
+    RecyclerView ordersforthedayRV, rcOrdersforthedayRV;
     OrdersDisplayRecylcerViewAdapter recylcerViewAdapter;
+    RcOrdersDisplayRecyclerviewAdapter rcOrdersDisplayRecyclerviewAdapter;
     TextView noOrdersTV;
     boolean isLoadingFirstTime;
     TextView cartQtyTV;
     ImageView cartImage;
+    List<RcOrderDetails> rcOrders;
+    List<Vacation> vacations;
+    DateTime dateSelected;
+    DateTimeFormatter dtf;
+    boolean ordersPresent;
+    boolean oneTimeUpdate, displayingRcOrderFirstTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,30 +67,29 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
         picker.setDate(today);
         noOrdersTV = findViewById(R.id.noOrdersTV);
         ordersforthedayRV = findViewById(R.id.ordersforthedayRV);
+        rcOrdersforthedayRV = findViewById(R.id.rcOrdersforthedayRV);
         ordersforthedayRV.setLayoutManager(new LinearLayoutManager(this));
+        rcOrdersforthedayRV.setLayoutManager(new LinearLayoutManager(this));
+        dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
+        oneTimeUpdate = true;
+        displayingRcOrderFirstTime = true;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.mainmenu, menu);
-
-        //MenuItem item = menu.findItem(R.id.cartItem);
-        //MenuItemCompat.setActionView(item, R.layout.layout_badge);
-        //RelativeLayout notifCount = (RelativeLayout)   MenuItemCompat.getActionView(item);
         RelativeLayout badgeLayout = (RelativeLayout) menu.findItem(R.id.cartItem).getActionView();
         cartQtyTV = badgeLayout.findViewById(R.id.actionbar_notifcation_textview);
         cartImage = badgeLayout.findViewById(R.id.cartImage);
         cartImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(UserHomeActivity.this,"cart clicked",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(UserHomeActivity.this, CreateOrderActivity.class);
                 intent.putExtra("fragment", 3);
                 startActivity(intent);
             }
         });
-        //cartQtyTV.setText("0");
         new UpdateCartQty().execute();
         return true;
     }
@@ -101,7 +112,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
 
     @Override
     public void onDateSelected(DateTime dateSelected) {
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
+        this.dateSelected = dateSelected;
         new GetOrders(dateSelected.toString(dtf)).execute();
     }
 
@@ -126,6 +137,12 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
         @Override
         protected Void doInBackground(Void... voids) {
             orders = db.oneTimeOrderDetailsDao().getOrdersForTheDay(date);
+            if (oneTimeUpdate) {
+                rcOrders = db.rcOrderDetailsDao().getRcOrders();
+                vacations = db.vacationDao().getAll();
+                oneTimeUpdate = false;
+                Log.d("dd", "Rc Orders First time size: " + rcOrders.size());
+            }
             return null;
         }
 
@@ -138,21 +155,76 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
     private void updateRecyclerView(List<OneTimeOrderDetails> orders) {
         if (isLoadingFirstTime) {
             if (orders.size() > 0) {
-                ordersforthedayRV.setVisibility(View.VISIBLE);
-                noOrdersTV.setVisibility(View.GONE);
+                ordersPresent = true;
+                //ordersforthedayRV.setVisibility(View.VISIBLE);
+                //noOrdersTV.setVisibility(View.GONE);
                 recylcerViewAdapter = new OrdersDisplayRecylcerViewAdapter(orders);
                 ordersforthedayRV.setAdapter(recylcerViewAdapter);
                 isLoadingFirstTime = false;
-            }
+            } else ordersPresent = false;
         } else {
             if (orders.size() > 0) {
+                ordersPresent = true;
                 ordersforthedayRV.setVisibility(View.VISIBLE);
                 noOrdersTV.setVisibility(View.GONE);
                 recylcerViewAdapter.updateData(orders);
             } else {
                 ordersforthedayRV.setVisibility(View.GONE);
                 noOrdersTV.setVisibility(View.VISIBLE);
+                ordersPresent = false;
             }
+        }
+        displayRcOrders();
+    }
+
+    private void displayRcOrders() {
+        //rcOrdersForTheDay.clear();
+        //Log.d("dd","Rc Orders size: " + rcOrders.size());
+        if (rcOrders.size() > 0) {
+            List<RcOrderDetails> rcOrdersForTheDay = new ArrayList<>();
+            DateTime startDate, vStartDate, vEndDate;
+            for (RcOrderDetails rcOrderDetails : rcOrders) {
+                startDate = dtf.parseDateTime(rcOrderDetails.getStartDate());
+                if (dateSelected.isAfter(startDate.minusDays(1))) {
+                    rcOrderDetails.setStatus(1);
+                    Log.d("dd", "Vacations: " + vacations.size());
+                    for (Vacation v : vacations) {
+                        Log.d("dd", "Vacation start Date: " + v.getStartDate());
+
+                        vStartDate = dtf.parseDateTime(v.getStartDate());
+                        vEndDate = dtf.parseDateTime(v.getEndDate());
+                        if (dateSelected.isAfter(vStartDate.minusDays(1)) && dateSelected.isBefore(vEndDate.plusDays(1))) {
+                            rcOrderDetails.setStatus(2);
+                        }
+                    }
+                    rcOrdersForTheDay.add(rcOrderDetails);
+                    //Log.d("dd","Rc Orders for the Day size: " + rcOrdersForTheDay.size() + ",Date selected " + dateSelected.toString(dtf) + ", StartDate: "+ startDate.toString(dtf));
+                }
+            }
+            //Log.d("dd","Rc Orders for the Day size: " + rcOrdersForTheDay.size() + ",Date selected " + dateSelected.toString(dtf));
+
+            if (rcOrdersForTheDay.size() > 0) {
+                ordersPresent = true;
+                if (displayingRcOrderFirstTime) {
+                    Log.d("dd", "Setting Adapter");
+                    rcOrdersDisplayRecyclerviewAdapter = new RcOrdersDisplayRecyclerviewAdapter(rcOrdersForTheDay, dateSelected.getDayOfWeek());
+                    rcOrdersforthedayRV.setAdapter(rcOrdersDisplayRecyclerviewAdapter);
+                    displayingRcOrderFirstTime = false;
+                } else {
+                    Log.d("dd", "Updating Rc Orders for the Day size: " + rcOrdersForTheDay.size() + ",Date selected " + dateSelected.toString(dtf));
+                    rcOrdersDisplayRecyclerviewAdapter.updateData(rcOrdersForTheDay, dateSelected.getDayOfWeek());
+                }
+            } else {
+                if (!displayingRcOrderFirstTime) {
+                    rcOrdersDisplayRecyclerviewAdapter.updateData(rcOrdersForTheDay, dateSelected.getDayOfWeek());
+                }
+            }
+        }
+
+        if (!ordersPresent) {
+            noOrdersTV.setVisibility(View.VISIBLE);
+        } else {
+            noOrdersTV.setVisibility(View.GONE);
         }
     }
 

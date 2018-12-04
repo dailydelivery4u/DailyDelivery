@@ -18,17 +18,38 @@ public class Categories {
     }
 
     public static class category {
-        public final int id;
-        public final String content;
+        private int id;
+        private int deliverySlot;
+        private String catName;
 
-        public category(int id, String content) {
+        public category(int id, int deliverySlot, String catName) {
             this.id = id;
-            this.content = content;
+            this.deliverySlot = deliverySlot;
+            this.catName = catName;
         }
 
-        @Override
-        public String toString() {
-            return content;
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public int getDeliverySlot() {
+            return deliverySlot;
+        }
+
+        public void setDeliverySlot(int deliverySlot) {
+            this.deliverySlot = deliverySlot;
+        }
+
+        public String getCatName() {
+            return catName;
+        }
+
+        public void setCatName(String catName) {
+            this.catName = catName;
         }
     }
 }

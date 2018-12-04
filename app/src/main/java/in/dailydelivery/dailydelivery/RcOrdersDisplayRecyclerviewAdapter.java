@@ -9,18 +9,21 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import in.dailydelivery.dailydelivery.DB.OneTimeOrderDetails;
+import in.dailydelivery.dailydelivery.DB.RcOrderDetails;
 
-public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<OrdersDisplayRecylcerViewAdapter.ViewHolder> {
-    List<OneTimeOrderDetails> items;
+public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcOrdersDisplayRecyclerviewAdapter.ViewHolder> {
 
-    public OrdersDisplayRecylcerViewAdapter(List<OneTimeOrderDetails> items) {
+    List<RcOrderDetails> items;
+    private int dayOfWeek;
+
+    public RcOrdersDisplayRecyclerviewAdapter(List<RcOrderDetails> items, int dayOfWeek) {
         this.items = items;
+        this.dayOfWeek = dayOfWeek;
     }
 
     @NonNull
     @Override
-    public OrdersDisplayRecylcerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+    public RcOrdersDisplayRecyclerviewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_order_list, parent, false);
         TextView nameTV = view.findViewById(R.id.nameTV);
@@ -28,19 +31,44 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
         TextView priceTV = view.findViewById(R.id.priceTV);
         TextView slotTV = view.findViewById(R.id.deliverySlotTV);
         TextView statusTV = view.findViewById(R.id.statusTV);
-        return new ViewHolder(view, nameTV, desTV, priceTV, slotTV, statusTV);
+        return new RcOrdersDisplayRecyclerviewAdapter.ViewHolder(view, nameTV, desTV, priceTV, slotTV, statusTV);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull OrdersDisplayRecylcerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RcOrdersDisplayRecyclerviewAdapter.ViewHolder holder, int position) {
         holder.mItem = items.get(position);
-        int ddPrice = items.get(position).getPrice() * items.get(position).getQty();
-        holder.nameTV.setText(items.get(position).getName() + "(" + items.get(position).getQty() + " Nos. )");
-        holder.desTV.setText(items.get(position).getDes());
+        //get quantity for the day of week
+        int qty = 1;
+        switch (dayOfWeek) {
+            case 1:
+                qty = holder.mItem.getMon();
+                break;
+            case 2:
+                qty = holder.mItem.getTue();
+                break;
+            case 3:
+                qty = holder.mItem.getWed();
+                break;
+            case 4:
+                qty = holder.mItem.getThu();
+                break;
+            case 5:
+                qty = holder.mItem.getFri();
+                break;
+            case 6:
+                qty = holder.mItem.getSat();
+                break;
+            case 7:
+                qty = holder.mItem.getSun();
+                break;
+        }
+        int ddPrice = holder.mItem.getPrice() * qty;
+        holder.nameTV.setText(holder.mItem.getName() + "(" + qty + " Nos. )");
+        holder.desTV.setText(holder.mItem.getDes());
         holder.priceTV.setText("Rs. " + ddPrice);
-        if (items.get(position).getDeliverySlot() == 0) {
+        if (holder.mItem.getDeliverySlot() == 0) {
             holder.slotTV.setText("Delivery: 5:30AM to 7:30AM");
-        } else if (items.get(position).getDeliverySlot() == 1) {
+        } else if (holder.mItem.getDeliverySlot() == 1) {
             holder.slotTV.setText("Delivery: 6 PM to 8 PM");
         }
         String status;
@@ -63,7 +91,6 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
         }
         status = "Status: " + status;
         holder.statusTV.setText(status);
-
     }
 
     @Override
@@ -89,13 +116,13 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
             this.statusTV = statusTV;
         }
 
-        public OneTimeOrderDetails mItem;
+        public RcOrderDetails mItem;
     }
 
-    public void updateData(List<OneTimeOrderDetails> list) {
+    public void updateData(List<RcOrderDetails> list, int dayOfWeek) {
         items.clear();
         items = list;
-
+        this.dayOfWeek = dayOfWeek;
         notifyDataSetChanged();
     }
 }

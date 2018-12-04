@@ -29,6 +29,7 @@ public class OrderDetailsFragment extends Fragment {
     DateTime tomo = today.plusDays(1);
     Button placeOrderBtn;
     String dateSelected;
+    int delivery_slot;
 
     public OrderDetailsFragment() {
         // Required empty public constructor
@@ -56,13 +57,14 @@ public class OrderDetailsFragment extends Fragment {
         spinner.setAdapter(adapter);
         calendarView = view.findViewById(R.id.calendarView);
         placeOrderBtn = view.findViewById(R.id.placeOrderBtn);
+        delivery_slot = cartList.get(0).getDelivery_slot();
         determineDeliveryState();
         setCalenderLimits();
         setTimeSlot(new DateTime().withMillis(calendarView.getDate()).getDayOfMonth());
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                setTimeSlot(dayOfMonth);
+                //setTimeSlot(dayOfMonth);
                 int month_n = month + 1;
                 dateSelected = String.valueOf((dayOfMonth < 10 ? ("0" + dayOfMonth) : dayOfMonth) + "-" + (month_n < 10 ? ("0" + month_n) : month_n) + "-" + year);
                 //Toast.makeText(getActivity(),"Date: " + dateSelected,Toast.LENGTH_SHORT).show();
@@ -73,15 +75,14 @@ public class OrderDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 placeOrderBtn.setEnabled(false);
-                mListener.onOrderDetailsFragmentInteraction(dateSelected, spinner.getSelectedItemPosition());
+                mListener.onOrderDetailsFragmentInteraction(dateSelected, spinner.getSelectedItemPosition() + 1);
             }
         });
         return view;
     }
 
-
     private void setTimeSlot(int day) {
-        if (day >= tomo.getDayOfMonth()) {
+        /*if (day >= tomo.getDayOfMonth()) {
             if (cartContainsWater()) {
                 spinner.setSelection(1);
                 spinner.setEnabled(false);
@@ -105,11 +106,14 @@ public class OrderDetailsFragment extends Fragment {
                 spinner.setSelection(0);
                 spinner.setEnabled(true);
             }
-        }
+            }*/
+        spinner.setSelection(delivery_slot - 1);
+        spinner.setEnabled(false);
+
     }
 
     private void setCalenderLimits() {
-        if (deliveryState == 1) {
+        if (deliveryState == 1 && delivery_slot == 2) {
             calendarView.setMinDate(today.getMillis());
             calendarView.setDate(today.getMillis());
             int date = Integer.parseInt(today.dayOfMonth().getAsString());

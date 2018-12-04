@@ -1,7 +1,9 @@
 package in.dailydelivery.dailydelivery.Fragments.products;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Paint;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,12 +36,14 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
     private final ProductDisplayFragmentInteractionListener mListener;
     private Context context;
     private int orderType;
+    private int deliverySlotInCart;
 
-    public MyProductRecyclerViewAdapter(List<Product> items, Context context_, ProductDisplayFragmentInteractionListener listener, int orderType) {
+    public MyProductRecyclerViewAdapter(List<Product> items, Context context_, ProductDisplayFragmentInteractionListener listener, int orderType, int deliverySlotInCart) {
         mValues = items;
         context = context_;
         mListener = listener;
         this.orderType = orderType;
+        this.deliverySlotInCart = deliverySlotInCart;
     }
 
     @Override
@@ -105,19 +109,38 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
         holder.addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
+                if (deliverySlotInCart == 0 || deliverySlotInCart == holder.mItem.getDeliverySlot()) {
+                    if (null != mListener) {
 
-                    if (orderType == 1) {
-                        // Notify the active callbacks interface (the activity, if the
-                        // fragment is attached to one) that an item has been selected.
-                        mListener.productDisplayFragmentInteraction(holder.mItem, 1);
-                        holder.addBtn.setText("ADDED");
-                        holder.numberPicker.setValue(1);
-                        holder.addBtn.setEnabled(false);
-                        holder.qtyLinLay.setVisibility(View.VISIBLE);
-                    } else {
-                        mListener.productDisplayFragmentInteraction(holder.mItem, 1);
+                        if (orderType == 1) {
+                            // Notify the active callbacks interface (the activity, if the
+                            // fragment is attached to one) that an item has been selected.
+                            mListener.productDisplayFragmentInteraction(holder.mItem, 1);
+                            holder.addBtn.setText("ADDED");
+                            holder.numberPicker.setValue(1);
+                            holder.addBtn.setEnabled(false);
+                            holder.qtyLinLay.setVisibility(View.VISIBLE);
+                        } else {
+                            mListener.productDisplayFragmentInteraction(holder.mItem, 1);
+                        }
                     }
+                } else {
+                    //show the user status with an alert dailogue
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Unable to Add Product!!")
+                            .setMessage("The Delivery Slots for Products in Cart and the selected product do not match.\n Please remove or first place order for products in cart.\n" +
+                                    "Milk Delivey Slot: 5:30 AM to 7:30 AM\n" +
+                                    "Water Delivery Slot: 6 PM tp 8:30 PM");
+                    builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                            dialog.dismiss();
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                    //Toast.makeText(context,"Delivery Slots Mismatch for Product and Products in Cart.")
                 }
             }
         });

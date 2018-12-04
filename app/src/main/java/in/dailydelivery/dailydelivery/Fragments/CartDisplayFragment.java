@@ -58,6 +58,8 @@ public class CartDisplayFragment extends Fragment implements onItemRemovedListne
         recyclerView = view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         new GetCartData().execute();
+
+        //TODO: CHeck items are in cart - cart not empty
         proceedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

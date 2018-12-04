@@ -121,7 +121,8 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
         //Create new fragment containing prodcuts of the category
         ProductDisplayFragment productDisplayFragment = new ProductDisplayFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("cat_id", item.id);
+        bundle.putInt("cat_id", item.getId());
+        bundle.putInt("delivery_slot", item.getDeliverySlot());
         bundle.putInt("order_type", 1);// 1 for 1 time order ; 2 for recurring order
         productDisplayFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, productDisplayFragment).addToBackStack(null).commit();
@@ -338,7 +339,7 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
                     db.userDao().updateQty(item.getId(), item.getCat_id(), qty);
                 } else {
                     //new item. insert in db
-                    db.userDao().insertCart(new Cart(item.getCat_id(), item.getId(), item.getProductName(), item.getProductDes(), item.getMrp(), item.getDdPrice(), qty, item.getThumbnailUrl()));
+                    db.userDao().insertCart(new Cart(item.getCat_id(), item.getId(), item.getProductName(), item.getProductDes(), item.getMrp(), item.getDdPrice(), qty, item.getThumbnailUrl(), item.getDeliverySlot()));
                 }
             } else if (qty == 0) {
                 //delete product from db

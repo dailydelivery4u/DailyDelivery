@@ -44,7 +44,6 @@ import in.dailydelivery.dailydelivery.UserHomeActivity;
 public class CategoryDisplayFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount = 1;
 
     private CategoryDisplayFragmentInteractionListener mListener;
     JSONArray categoryList;
@@ -58,22 +57,9 @@ public class CategoryDisplayFragment extends Fragment {
     public CategoryDisplayFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static CategoryDisplayFragment newInstance(int columnCount) {
-        CategoryDisplayFragment fragment = new CategoryDisplayFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override
@@ -155,7 +141,7 @@ public class CategoryDisplayFragment extends Fragment {
         for (int i = 0; i < categoryList.length(); i++) {
             try {
                 JSONObject obj = categoryList.getJSONObject(i);
-                Categories.category cat = new category(obj.getInt("id"), obj.getString("name"));
+                Categories.category cat = new category(obj.getInt("id"), obj.getInt("delivery_slot"), obj.getString("name"));
                 Categories.addItem(cat);
             } catch (JSONException e) {
                 e.printStackTrace();

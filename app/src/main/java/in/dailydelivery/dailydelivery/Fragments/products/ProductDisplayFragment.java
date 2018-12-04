@@ -47,6 +47,7 @@ public class ProductDisplayFragment extends Fragment {
     RecyclerView recyclerView;
     Context context;
     private int cat_id;
+    int delivery_slot, deliverySlotInCart;
     private int orderType;//1 for one time order; 2 for repeating order
     AppDatabase db;
     List<ProductTuple> productsIdsInCart;
@@ -75,6 +76,7 @@ public class ProductDisplayFragment extends Fragment {
             recyclerView = (RecyclerView) view;
         }
         cat_id = getArguments().getInt("cat_id");
+        delivery_slot = getArguments().getInt("delivery_slot");
         orderType = getArguments().getInt("orderType");
         return view;
     }
@@ -124,7 +126,7 @@ public class ProductDisplayFragment extends Fragment {
 
     public void displayProducts() {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(new MyProductRecyclerViewAdapter(Products.ITEMS, getActivity(), mListener, orderType));
+        recyclerView.setAdapter(new MyProductRecyclerViewAdapter(Products.ITEMS, getActivity(), mListener, orderType, deliverySlotInCart));
     }
 
     /**
@@ -257,7 +259,11 @@ public class ProductDisplayFragment extends Fragment {
                             qty = productsIdsInCart.get(j).getProductqty();
                         }
                     }
-                    Product product = new Product(product_id, cat_id, obj.getString("name"), obj.getString("description"), obj.getInt("price"), obj.getInt("discount_price"), obj.getString("thumbnail_url"), presentInCart, qty);
+                    if (productsIdsInCart.size() > 0)
+                        deliverySlotInCart = productsIdsInCart.get(0).getDelivery_slot();
+                    else deliverySlotInCart = 0;
+
+                    Product product = new Product(product_id, cat_id, obj.getString("name"), obj.getString("description"), obj.getInt("price"), obj.getInt("discount_price"), obj.getString("thumbnail_url"), presentInCart, qty, delivery_slot);
                     Products.addItem(product);
                 } catch (JSONException e) {
                     e.printStackTrace();

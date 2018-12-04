@@ -164,8 +164,6 @@ public class LoginActivity extends AppCompatActivity {
 
                     AlertDialog dialog = builder.create();
                     dialog.show();
-
-
                 } else {
                     Toast.makeText(LoginActivity.this, "Error in connection with Server.. Please try again later.", Toast.LENGTH_LONG).show();
                 }

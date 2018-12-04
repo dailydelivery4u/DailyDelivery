@@ -61,6 +61,9 @@ public class VacationActivity extends AppCompatActivity {
             new GetVacationDetails().execute();
         }
 
+        getSupportActionBar().setTitle("Vacations");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         startDateListner = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -95,6 +98,12 @@ public class VacationActivity extends AppCompatActivity {
 
             }
         };
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     public void onAddVacationBtnClicked(View view) {

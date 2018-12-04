@@ -60,7 +60,7 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
     public void categoryFragmentInteraction(Categories.category item) {
         ProductDisplayFragment productDisplayFragment = new ProductDisplayFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("cat_id", item.id);
+        bundle.putInt("cat_id", item.getId());
         bundle.putInt("order_type", 2);// 1 for 1 time order ; 2 for recurring order
         productDisplayFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, productDisplayFragment).addToBackStack(null).commit();
@@ -97,26 +97,22 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
                 obj.put("user_id", sharedPref.getInt(getString(R.string.sp_tag_user_id), 273));
                 obj.put("p_id", rcOrderDetails.getProductId());
                 obj.put("cat_id", rcOrderDetails.getCatId());
-                obj.put("delivery_slot", rcOrderDetails.getCatId());
-                obj.put("start_date", rcOrderDetails.getCatId());
-                obj.put("mon", rcOrderDetails.getCatId());
-                obj.put("tue", rcOrderDetails.getCatId());
-                obj.put("wed", rcOrderDetails.getCatId());
-                obj.put("thu", rcOrderDetails.getCatId());
-                obj.put("fri", rcOrderDetails.getCatId());
-                obj.put("sat", rcOrderDetails.getCatId());
-                obj.put("sun", rcOrderDetails.getCatId());
-
-
+                obj.put("delivery_slot", rcOrderDetails.getDeliverySlot());
+                obj.put("start_date", rcOrderDetails.getStartDate());
+                obj.put("mon", rcOrderDetails.getMon());
+                obj.put("tue", rcOrderDetails.getTue());
+                obj.put("wed", rcOrderDetails.getWed());
+                obj.put("thu", rcOrderDetails.getThu());
+                obj.put("fri", rcOrderDetails.getFri());
+                obj.put("sat", rcOrderDetails.getSat());
+                obj.put("sun", rcOrderDetails.getSun());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             //new RegisterActivity.GetHashFromServer(obj).execute(getString(R.string.server_addr) + "add_user.php");
             new PlaceOrder(obj).execute(getString(R.string.server_addr_release) + "add_rc_order.php");
         }
-
     }
-
     private class PlaceOrder extends AsyncTask<String, Void, String> {
         JSONObject orderDetails;
 

@@ -54,7 +54,8 @@
         android:src="@drawable/delete_btn"
         android:layout_below="@+id/deliverySlotTV"
         android:layout_alignParentRight="true"
-        android:padding="10dp"
+        android:padding="5dp"
+        android:layout_marginRight="10dp"
         android:tint="#6e1b1b" />
 
 

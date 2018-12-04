@@ -42,7 +42,10 @@ public class Cart {
     @ColumnInfo(name = "product_tn")
     private String productTnUrl;
 
-    public Cart(int catId, int productId, String productName, String productDes, int productMrp, int productDdprice, int productqty, String productTnUrl) {
+    @ColumnInfo(name = "delivery_slot")
+    private int delivery_slot;
+
+    public Cart(int catId, int productId, String productName, String productDes, int productMrp, int productDdprice, int productqty, String productTnUrl, int delivery_slot) {
         this.catId = catId;
         this.productId = productId;
         this.productName = productName;
@@ -51,6 +54,7 @@ public class Cart {
         this.productDdprice = productDdprice;
         this.productqty = productqty;
         this.productTnUrl = productTnUrl;
+        this.delivery_slot = delivery_slot;
     }
 
     public int getUid() {
@@ -118,4 +122,11 @@ public class Cart {
         this.productTnUrl = productTnUrl;
     }
 
+    public int getDelivery_slot() {
+        return delivery_slot;
+    }
+
+    public void setDelivery_slot(int delivery_slot) {
+        this.delivery_slot = delivery_slot;
+    }
 }

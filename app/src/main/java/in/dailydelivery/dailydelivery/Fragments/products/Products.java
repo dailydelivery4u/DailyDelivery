@@ -35,8 +35,9 @@ public class Products implements Serializable {
         private String thumbnailUrl;
         private boolean in_cart;
         private int qty;
+        private int deliverySlot;
 
-        public Product(int id, int cat_id, String productName, String productDes, int mrp, int ddPrice, String thumbnailUrl, boolean in_cart, int qty) {
+        public Product(int id, int cat_id, String productName, String productDes, int mrp, int ddPrice, String thumbnailUrl, boolean in_cart, int qty, int deliverySlot) {
             this.id = id;
             this.cat_id = cat_id;
             this.productName = productName;
@@ -46,6 +47,7 @@ public class Products implements Serializable {
             this.thumbnailUrl = thumbnailUrl;
             this.in_cart = in_cart;
             this.qty = qty;
+            this.deliverySlot = deliverySlot;
         }
 
         public int getId() {
@@ -82,6 +84,14 @@ public class Products implements Serializable {
 
         public int getMrp() {
             return mrp;
+        }
+
+        public int getDeliverySlot() {
+            return deliverySlot;
+        }
+
+        public void setDeliverySlot(int deliverySlot) {
+            this.deliverySlot = deliverySlot;
         }
 
         public void setMrp(int mrp) {

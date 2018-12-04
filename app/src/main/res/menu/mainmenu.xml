@@ -6,7 +6,7 @@
         android:title="Wallet" />
     <item
         android:id="@+id/vacation"
-        android:title="Set Vacation" />
+        android:title="Vacations" />
     <item
         android:id="@+id/profile"
         android:title="Profile" />
