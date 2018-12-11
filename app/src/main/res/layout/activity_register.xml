@@ -8,30 +8,32 @@
 
     <EditText
         android:id="@+id/nameInput"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="39dp"
+        android:layout_marginTop="89dp"
         android:ems="10"
         android:hint="Name"
         android:inputType="textPersonName"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/phInput"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="34dp"
         android:ems="10"
         android:hint="Phone Number"
         android:inputType="phone"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="@+id/nameInput"
         app:layout_constraintTop_toBottomOf="@+id/nameInput" />
 
     <EditText
         android:id="@+id/addInput"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="46dp"
         android:ems="10"
@@ -39,6 +41,7 @@
         android:inputType="textMultiLine"
         android:lines="3"
         android:maxLines="5"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="@+id/phInput"
         app:layout_constraintTop_toBottomOf="@+id/phInput" />
 
@@ -57,9 +60,10 @@
         android:id="@+id/registerBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="59dp"
         android:onClick="registerBtnOnClick"
         android:text="Register"
+        style="@style/buttonStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addInput" />
