@@ -64,23 +64,25 @@
 
         <Button
             android:id="@+id/createRecurringOrderButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="130dp"
             android:layout_weight="0.5"
+            android:layout_margin="10dp"
             android:onClick="createRecurringOrderBtnOnClick"
-            android:textSize="11dp"
+            android:textSize="14dp"
             android:text="New Recurring Order"
+            style="@style/buttonStyle"
             android:minHeight="0dp"
             android:minWidth="0dp" />
 
         <Button
             android:id="@+id/createOrderButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
             android:layout_weight="0.5"
-            android:textSize="11dp"
+            android:layout_margin="10dp"
+            android:textSize="14dp"
             android:onClick="createOrderBtnOnClick"
             android:text="New Order"
+            style="@style/buttonStyle"
             android:minHeight="0dp"
             android:minWidth="0dp" />
 

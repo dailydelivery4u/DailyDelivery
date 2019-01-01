@@ -37,7 +37,8 @@
                 android:layout_toRightOf="@+id/imageView"
                 android:layout_alignTop="@+id/imageView"
                 android:layout_marginLeft="30dp"
-                android:textAllCaps="true" />
+                android:textAllCaps="true"
+                android:textColor="@color/colorAccent" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -46,7 +47,8 @@
                 android:text="500ml Milk Packet"
                 android:layout_below="@+id/productNameTextView"
                 android:layout_alignLeft="@+id/productNameTextView"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:textColor="@color/colorAccent" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -56,7 +58,8 @@
                 android:textSize="12dp"
                 android:layout_below="@+id/productDescriptionTextView"
                 android:layout_alignLeft="@+id/productDescriptionTextView"
-                android:layout_marginTop="15dp" />
+                android:layout_marginTop="15dp"
+                android:textColor="@color/colorAccent" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -66,10 +69,12 @@
                 android:layout_below="@+id/mrpTextView"
                 android:layout_alignLeft="@+id/mrpTextView"
                 android:layout_alignBottom="@+id/imageView"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:textColor="@color/colorAccent" />
 
             <Button
                 android:id="@+id/addBtn"
+                style="@style/buttonStyle"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="Add"

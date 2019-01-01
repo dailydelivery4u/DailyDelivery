@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:+917730889469"));
+                    intent.setData(Uri.parse("tel:+919788528444"));
                     startActivity(intent);
                 }
             });
