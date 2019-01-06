@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -77,7 +78,8 @@ public class ProductDisplayFragment extends Fragment {
         }
         cat_id = getArguments().getInt("cat_id");
         delivery_slot = getArguments().getInt("delivery_slot");
-        orderType = getArguments().getInt("orderType");
+        orderType = getArguments().getInt("order_type");
+        //Toast.makeText(getActivity(),"order type: " + orderType + cat_id,Toast.LENGTH_LONG).show();
         return view;
     }
 
@@ -125,7 +127,11 @@ public class ProductDisplayFragment extends Fragment {
     }
 
     public void displayProducts() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setAdapter(new MyProductRecyclerViewAdapter(Products.ITEMS, getActivity(), mListener, orderType, deliverySlotInCart));
     }
 
@@ -239,6 +245,8 @@ public class ProductDisplayFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             productsIdsInCart = db.userDao().getpIdofCatId(cat_id);
+            deliverySlotInCart = db.userDao().getDeliverySLotInCart();
+            //Log.d("DD","deli " + deliverySlotInCart);
             return null;
         }
 
@@ -259,10 +267,10 @@ public class ProductDisplayFragment extends Fragment {
                             qty = productsIdsInCart.get(j).getProductqty();
                         }
                     }
-                    if (productsIdsInCart.size() > 0)
+                    /*if (productsIdsInCart.size() > 0)
                         deliverySlotInCart = productsIdsInCart.get(0).getDelivery_slot();
                     else deliverySlotInCart = 0;
-
+*/
                     Product product = new Product(product_id, cat_id, obj.getString("name"), obj.getString("description"), obj.getInt("price"), obj.getInt("discount_price"), obj.getString("thumbnail_url"), presentInCart, qty, delivery_slot);
                     Products.addItem(product);
                 } catch (JSONException e) {

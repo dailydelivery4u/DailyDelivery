@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -112,7 +113,6 @@ public class CategoryDisplayFragment extends Fragment {
         }
         //--------------------------------
 
-
     }
 
     @Override
@@ -132,7 +132,6 @@ public class CategoryDisplayFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface CategoryDisplayFragmentInteractionListener {
-        // TODO: Update argument type and name
         void categoryFragmentInteraction(category item);
     }
 
@@ -147,7 +146,11 @@ public class CategoryDisplayFragment extends Fragment {
                 e.printStackTrace();
             }
         }
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setAdapter(new MycategoryDisplayRecyclerViewAdapter(Categories.ITEMS, mListener));
 
     }

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -13,9 +14,11 @@ import in.dailydelivery.dailydelivery.DB.OneTimeOrderDetails;
 
 public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<OrdersDisplayRecylcerViewAdapter.ViewHolder> {
     List<OneTimeOrderDetails> items;
+    DeleteOto deleteOto;
 
-    public OrdersDisplayRecylcerViewAdapter(List<OneTimeOrderDetails> items) {
+    public OrdersDisplayRecylcerViewAdapter(List<OneTimeOrderDetails> items, DeleteOto deleteOto) {
         this.items = items;
+        this.deleteOto = deleteOto;
     }
 
     @NonNull
@@ -28,11 +31,12 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
         TextView priceTV = view.findViewById(R.id.priceTV);
         TextView slotTV = view.findViewById(R.id.deliverySlotTV);
         TextView statusTV = view.findViewById(R.id.statusTV);
-        return new ViewHolder(view, nameTV, desTV, priceTV, slotTV, statusTV);
+        ImageView delBtn = view.findViewById(R.id.delBtn);
+        return new ViewHolder(view, nameTV, desTV, priceTV, slotTV, statusTV, delBtn);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull OrdersDisplayRecylcerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final OrdersDisplayRecylcerViewAdapter.ViewHolder holder, int position) {
         holder.mItem = items.get(position);
         int ddPrice = items.get(position).getPrice() * items.get(position).getQty();
         holder.nameTV.setText(items.get(position).getName() + "(" + items.get(position).getQty() + " Nos. )");
@@ -49,21 +53,30 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
                 status = "Scheduled";
                 break;
             case 2:
-                status = "Paused (Vacation)";
+                status = "Cancelled";
                 break;
             case 3:
-                status = "On Hold (Insufficient Credit Balance)";
-                break;
-            case 4:
                 status = "Confirmed";
                 break;
+            case 4:
+                status = "Delivered";
+                break;
+            case 5:
+                status = "Un delivered";
+                break;
             default:
-                status = "";
+                status = "NA";
                 break;
         }
         status = "Status: " + status;
         holder.statusTV.setText(status);
-
+        holder.delBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //delete the order at server
+                deleteOto.deleteOto(holder.mItem.getOrderId());
+            }
+        });
     }
 
     @Override
@@ -78,8 +91,9 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
         public final TextView priceTV;
         public final TextView slotTV;
         public final TextView statusTV;
+        public final ImageView delBtn;
 
-        public ViewHolder(View mView, TextView nameTV, TextView desTV, TextView priceTV, TextView slotTV, TextView statusTV) {
+        public ViewHolder(View mView, TextView nameTV, TextView desTV, TextView priceTV, TextView slotTV, TextView statusTV, ImageView delBtn) {
             super(mView);
             this.mView = mView;
             this.nameTV = nameTV;
@@ -87,6 +101,7 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
             this.priceTV = priceTV;
             this.slotTV = slotTV;
             this.statusTV = statusTV;
+            this.delBtn = delBtn;
         }
 
         public OneTimeOrderDetails mItem;
@@ -98,4 +113,10 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
 
         notifyDataSetChanged();
     }
+
+    public interface DeleteOto {
+        void deleteOto(int otoId);
+    }
 }
+
+

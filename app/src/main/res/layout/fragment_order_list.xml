@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:text="Heritage Golden Cow Milk (2 Nos)"
         android:textSize="16dp"
+        android:textColor="#732525"
         android:padding="10dp" />
 
     <TextView
@@ -18,6 +19,7 @@
         android:layout_toRightOf="@+id/nameTV"
         android:layout_alignParentRight="true"
         android:gravity="right"
+        android:textColor="#732525"
         android:padding="10dp"
         android:text="Rs. 100" />
 
@@ -26,17 +28,19 @@
         android:layout_below="@+id/nameTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorBlack"
         android:text="500 ml Milk Packet"
-        android:padding="10dp" />
+        android:paddingLeft="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/deliverySlotTV"
         android:text="Delivery : 5:30 AM to 7:30 AM"
-        android:layout_toRightOf="@+id/desTV"
+        android:layout_alignTop="@+id/desTV"
         android:layout_below="@+id/priceTV"
-        android:padding="10dp"
+        android:textColor="@color/colorBlack"
+        android:paddingRight="10dp"
         android:layout_alignParentRight="true"
         android:gravity="right" />
 
@@ -45,10 +49,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Status: Scheduled"
+        android:textColor="#732525"
         android:layout_below="@+id/desTV"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:layout_marginTop="8dp" />
 
     <ImageView
+        android:id="@+id/delBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/delete_btn"
@@ -56,6 +63,17 @@
         android:layout_alignParentRight="true"
         android:padding="10dp"
         android:tint="#6e1b1b" />
+
+    <TextView
+        android:id="@+id/rcTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reccurring Order"
+        android:layout_below="@+id/desTV"
+        android:layout_alignParentRight="true"
+        android:padding="10dp"
+        android:textColor="#9c2438"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

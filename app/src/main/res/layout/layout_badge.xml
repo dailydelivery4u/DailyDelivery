@@ -6,7 +6,7 @@
     <!-- Menu Item Image -->
     <ImageView
         android:id="@+id/cartImage"
-        android:layout_width="40dp"
+        android:layout_width="35dp"
         android:layout_height="fill_parent"
         android:src="@drawable/ic_cart"
         android:clickable="true"
@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:text="99"
+        android:text="0"
         android:gravity="center"
         android:background="@drawable/circle"
         android:textColor="#FFF" />

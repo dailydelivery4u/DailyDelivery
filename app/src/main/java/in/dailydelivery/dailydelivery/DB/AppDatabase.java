@@ -6,7 +6,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 
-@Database(entities = {Cart.class, OneTimeOrderDetails.class, RcOrderDetails.class, Vacation.class}, version = 1, exportSchema = false)
+@Database(entities = {Cart.class, OneTimeOrderDetails.class, RcOrderDetails.class, Vacation.class, WalletTransaction.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract CartDao userDao();
 
@@ -15,6 +15,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract RcOrderDetailsDao rcOrderDetailsDao();
 
     public abstract VacationDao vacationDao();
+
+    public abstract WalletTransactionDao walletTransactionDao();
 
     private static AppDatabase INSTANCE;
 

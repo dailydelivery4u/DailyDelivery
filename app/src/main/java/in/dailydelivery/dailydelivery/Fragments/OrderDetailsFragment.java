@@ -6,10 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
@@ -20,7 +19,8 @@ import in.dailydelivery.dailydelivery.R;
 
 public class OrderDetailsFragment extends Fragment {
 
-    private Spinner spinner;
+    //private Spinner spinner;
+    TextView deliverySlotTV;
     private OnOrderDetailsFragmentInteractionListener mListener;
     public static List<Cart> cartList;
     private int deliveryState;
@@ -50,11 +50,12 @@ public class OrderDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_order_details, container, false);
-        spinner = view.findViewById(R.id.delivery_time_spinner);
+       /* spinner = view.findViewById(R.id.delivery_time_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.delivery_slots, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        spinner.setAdapter(adapter);*/
+        deliverySlotTV = view.findViewById(R.id.deliverySlotTV);
         calendarView = view.findViewById(R.id.calendarView);
         placeOrderBtn = view.findViewById(R.id.placeOrderBtn);
         delivery_slot = cartList.get(0).getDelivery_slot();
@@ -75,7 +76,7 @@ public class OrderDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 placeOrderBtn.setEnabled(false);
-                mListener.onOrderDetailsFragmentInteraction(dateSelected, spinner.getSelectedItemPosition() + 1);
+                mListener.onOrderDetailsFragmentInteraction(dateSelected, delivery_slot);
             }
         });
         return view;
@@ -106,10 +107,14 @@ public class OrderDetailsFragment extends Fragment {
                 spinner.setSelection(0);
                 spinner.setEnabled(true);
             }
-            }*/
+            }
         spinner.setSelection(delivery_slot - 1);
-        spinner.setEnabled(false);
-
+        spinner.setEnabled(false);*/
+        if (delivery_slot == 1) {
+            deliverySlotTV.setText("Delivery Time: 5:30 AM to 7:30 AM");
+        } else if (delivery_slot == 2) {
+            deliverySlotTV.setText("Delivery Time: 6 PM to 8:30 PM");
+        }
     }
 
     private void setCalenderLimits() {

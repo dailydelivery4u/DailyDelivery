@@ -15,4 +15,9 @@ public interface VacationDao {
     @Query("SELECT * FROM vacation")
     List<Vacation> getAll();
 
+    @Query("UPDATE vacation SET start_date = :sd, end_date = :ed WHERE vac_id = :id")
+    void updateVac(String sd, String ed, int id);
+
+    @Query("DELETE FROM vacation WHERE vac_id = :id")
+    void deleteVac(int id);
 }

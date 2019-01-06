@@ -34,8 +34,8 @@ public class RCOrderDetailsFragment extends Fragment {
     TextView productDesTV;
     TextView mrpTV;
     TextView ddPriceTV;
-    TextView deliverySlotTV;
-    TextView startDateTV;
+    TextView deliverySlotTV, dsChangeTV;
+    TextView startDateTV, sdChangeTV;
     Button placeRCOrderBtn;
 
     int deliverySlot = 0;
@@ -93,6 +93,8 @@ public class RCOrderDetailsFragment extends Fragment {
         placeRCOrderBtn = view.findViewById(R.id.placeRcOrdBtn);
         deliverySlotTV = view.findViewById(R.id.deliverySlotDisplayTV);
         startDateTV = view.findViewById(R.id.startDateDisplayTV);
+        sdChangeTV = view.findViewById(R.id.sdChangeTV);
+        dsChangeTV = view.findViewById(R.id.dsChangeTV);
 
         dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
 
@@ -126,10 +128,16 @@ public class RCOrderDetailsFragment extends Fragment {
         placeRCOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.rcOrderDetailsFragmentInteraction(new RcOrderDetails(1, product.getId(), product.getCat_id(), product.getProductName(), product.getProductDes(), product.getDdPrice(), 1, 0, new DateTime().plusDays(dateSelected).plusDays(2).toString(dtf), np[0].getValue(), np[1].getValue(), np[2].getValue(), np[3].getValue(), np[4].getValue(), np[5].getValue(), np[6].getValue()));
+                mListener.rcOrderDetailsFragmentInteraction(new RcOrderDetails(product.getId(), product.getCat_id(), product.getProductName(), product.getProductDes(), product.getDdPrice(), 1, 0, new DateTime().plusDays(dateSelected).plusDays(2).toString(dtf), np[0].getValue(), np[1].getValue(), np[2].getValue(), np[3].getValue(), np[4].getValue(), np[5].getValue(), np[6].getValue()));
             }
         });
-        deliverySlotTV.setOnClickListener(new View.OnClickListener() {
+        dsChangeTV.setEnabled(false);
+        if (product.getDeliverySlot() == 0) {
+            deliverySlotTV.setText(R.string.delivery_slot_0);
+        } else {
+            deliverySlotTV.setText(R.string.delivery_slot_1);
+        }
+        dsChangeTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -167,7 +175,7 @@ public class RCOrderDetailsFragment extends Fragment {
             }
         });
 
-        startDateTV.setOnClickListener(new View.OnClickListener() {
+        sdChangeTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -198,8 +206,6 @@ public class RCOrderDetailsFragment extends Fragment {
                 mDialog.show();
             }
         });
-
-
         return view;
     }
 
@@ -209,16 +215,6 @@ public class RCOrderDetailsFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface RCOrderDetailsFragmentInteractionListener {
         // TODO: Update argument type and name
         void rcOrderDetailsFragmentInteraction(RcOrderDetails rcOrderDetails);

@@ -11,35 +11,41 @@
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         tools:listitem="@layout/fragment_cartdisplay" />
 
-    <android.support.v7.widget.LinearLayoutCompat
+    <RelativeLayout
         android:id="@+id/bottomLL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#b19a9a"
-        android:gravity="center"
+        android:background="#faf2f2"
         android:layout_alignParentBottom="true">
 
         <TextView
             android:id="@+id/totalPriceTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:text="Total : Rs. 500"
-            android:textColor="#fff"
-            android:layout_weight="1"
-            android:padding="15dp" />
+            android:layout_marginLeft="20dp"
+            android:textColor="#732525"
+            android:textSize="16dp"
+            android:layout_centerVertical="true"
+            android:textStyle="normal" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:id="@+id/proceedBtn"
-            android:text="Proceed to Place Order"
-            android:layout_weight="1"
+            android:text="Proceed"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/button_background_green"
+            android:textColor="@color/colorWhite"
+            android:layout_marginBottom="10dp"
             android:gravity="center" />
 
-    </android.support.v7.widget.LinearLayoutCompat>
+    </RelativeLayout>
 
 </RelativeLayout>

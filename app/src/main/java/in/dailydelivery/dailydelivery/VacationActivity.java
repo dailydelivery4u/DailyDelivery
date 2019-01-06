@@ -49,6 +49,7 @@ public class VacationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vacation);
 
         vacationsListView = findViewById(R.id.vacationsListView);
+
         startDate = new DateTime();
         endDate = new DateTime();
         dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
@@ -61,7 +62,7 @@ public class VacationActivity extends AppCompatActivity {
             new GetVacationDetails().execute();
         }
 
-        getSupportActionBar().setTitle("Vacations");
+        getSupportActionBar().setTitle("My Vacations");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         startDateListner = new DatePickerDialog.OnDateSetListener() {
@@ -147,6 +148,7 @@ public class VacationActivity extends AppCompatActivity {
                 if (resultJson.getInt("responseCode") == 273) {
                     //int orderStatus = resultJson.getInt("status");
                     Toast.makeText(VacationActivity.this, "Vacation Set. Deliveries during the set period will be paused", Toast.LENGTH_LONG).show();
+                    vacationDetails.put("id", resultJson.getInt("id"));
                     new UpdateOrderInDb(vacationDetails).execute();
                 } else if (resultJson.getInt("responseCode") == 275) {
                     Toast.makeText(VacationActivity.this, "Some Error occured! Pls try again", Toast.LENGTH_LONG).show();
@@ -216,7 +218,7 @@ public class VacationActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... integers) {
             try {
-                db.vacationDao().addVacation(new Vacation(vacationJson.getString("start_date"), vacationJson.getString("end_date")));
+                db.vacationDao().addVacation(new Vacation(vacationJson.getInt("id"), vacationJson.getString("start_date"), vacationJson.getString("end_date")));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

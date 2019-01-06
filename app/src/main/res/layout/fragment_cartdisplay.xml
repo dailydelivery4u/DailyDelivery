@@ -35,6 +35,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/imageView"
                 android:layout_marginLeft="30dp"
+                android:textSize="16dp"
+                android:textColor="#732525"
                 android:layout_toRightOf="@+id/imageView"
                 android:text="Heritage Golden Cow Milk"
                 android:textAllCaps="true" />
@@ -46,6 +48,7 @@
                 android:layout_below="@+id/productNameTextView"
                 android:layout_alignLeft="@+id/productNameTextView"
                 android:layout_marginTop="5dp"
+                android:textSize="14dp"
                 android:text="500ml Milk Packet" />
 
             <TextView
@@ -63,20 +66,34 @@
                 android:id="@+id/ddPriceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/mrpTextView"
-                android:layout_alignLeft="@+id/mrpTextView"
-                android:layout_alignBottom="@+id/imageView"
-                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/mrpTextView"
+                android:layout_below="@+id/productDescriptionTextView"
+                android:textSize="15dp"
+                android:textColor="#732525"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="10dp"
                 android:text="Rs 21" />
+
+            <TextView
+                android:id="@+id/qtyTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quantity: "
+                android:textSize="18dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_toLeftOf="@+id/number_picker"
+                android:layout_alignTop="@+id/number_picker" />
 
             <com.travijuu.numberpicker.library.NumberPicker
                 android:id="@+id/number_picker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/productDescriptionTextView"
+                android:layout_below="@+id/ddPriceTextView"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
                 numberpicker:focusable="false"
                 numberpicker:max="10"
                 numberpicker:min="1"

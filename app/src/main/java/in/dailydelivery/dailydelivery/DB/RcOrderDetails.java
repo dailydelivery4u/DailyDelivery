@@ -6,8 +6,11 @@ import android.arch.persistence.room.PrimaryKey;
 
 @Entity(tableName = "rc_orderdetails")
 public class RcOrderDetails {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int uid;
+
+    @ColumnInfo(name = "order_id")
+    private int orderId;
 
     @ColumnInfo(name = "product_id")
     private int productId;
@@ -48,8 +51,7 @@ public class RcOrderDetails {
     @ColumnInfo(name = "sun")
     private int sun;
 
-    public RcOrderDetails(int uid, int productId, int catId, String name, String des, int price, int status, int deliverySlot, String startDate, int mon, int tue, int wed, int thu, int fri, int sat, int sun) {
-        this.uid = uid;
+    public RcOrderDetails(int productId, int catId, String name, String des, int price, int status, int deliverySlot, String startDate, int mon, int tue, int wed, int thu, int fri, int sat, int sun) {
         this.productId = productId;
         this.catId = catId;
         this.name = name;
@@ -65,6 +67,14 @@ public class RcOrderDetails {
         this.fri = fri;
         this.sat = sat;
         this.sun = sun;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
     public int getUid() {

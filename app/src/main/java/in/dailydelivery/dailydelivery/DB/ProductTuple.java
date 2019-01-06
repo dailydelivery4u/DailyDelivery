@@ -9,9 +9,6 @@ public class ProductTuple {
     @ColumnInfo(name = "product_qty")
     private int productqty;
 
-    @ColumnInfo(name = "delivery_slot")
-    private int delivery_slot;
-
     public int getProductId() {
         return productId;
     }
@@ -28,11 +25,4 @@ public class ProductTuple {
         this.productqty = productqty;
     }
 
-    public int getDelivery_slot() {
-        return delivery_slot;
-    }
-
-    public void setDelivery_slot(int delivery_slot) {
-        this.delivery_slot = delivery_slot;
-    }
 }

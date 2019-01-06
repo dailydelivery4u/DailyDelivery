@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -31,12 +32,16 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
         TextView priceTV = view.findViewById(R.id.priceTV);
         TextView slotTV = view.findViewById(R.id.deliverySlotTV);
         TextView statusTV = view.findViewById(R.id.statusTV);
-        return new RcOrdersDisplayRecyclerviewAdapter.ViewHolder(view, nameTV, desTV, priceTV, slotTV, statusTV);
+        ImageView delBtn = view.findViewById(R.id.delBtn);
+        TextView rcTv = view.findViewById(R.id.rcTV);
+        return new RcOrdersDisplayRecyclerviewAdapter.ViewHolder(view, nameTV, desTV, priceTV, slotTV, statusTV, delBtn, rcTv);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RcOrdersDisplayRecyclerviewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RcOrdersDisplayRecyclerviewAdapter.ViewHolder holder, int position) {
         holder.mItem = items.get(position);
+        holder.delBtn.setVisibility(View.GONE);
+        holder.rcTV.setVisibility(View.VISIBLE);
         //get quantity for the day of week
         int qty = 1;
         switch (dayOfWeek) {
@@ -63,7 +68,7 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
                 break;
         }
         int ddPrice = holder.mItem.getPrice() * qty;
-        holder.nameTV.setText(holder.mItem.getName() + "(" + qty + " Nos. )");
+        holder.nameTV.setText(holder.mItem.getName() + "(" + qty + " Nos.)");
         holder.desTV.setText(holder.mItem.getDes());
         holder.priceTV.setText("Rs. " + ddPrice);
         if (holder.mItem.getDeliverySlot() == 0) {
@@ -85,6 +90,15 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
             case 4:
                 status = "Confirmed";
                 break;
+            case 5:
+                status = "Delivered";
+                break;
+            case 6:
+                status = "Unelivered";
+                break;
+            case 7:
+                status = "Cancelled (Insufficient Balance)";
+                break;
             default:
                 status = "";
                 break;
@@ -105,8 +119,10 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
         public final TextView priceTV;
         public final TextView slotTV;
         public final TextView statusTV;
+        public final ImageView delBtn;
+        public final TextView rcTV;
 
-        public ViewHolder(View mView, TextView nameTV, TextView desTV, TextView priceTV, TextView slotTV, TextView statusTV) {
+        public ViewHolder(View mView, TextView nameTV, TextView desTV, TextView priceTV, TextView slotTV, TextView statusTV, ImageView delBtn, TextView rcTV) {
             super(mView);
             this.mView = mView;
             this.nameTV = nameTV;
@@ -114,6 +130,8 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
             this.priceTV = priceTV;
             this.slotTV = slotTV;
             this.statusTV = statusTV;
+            this.delBtn = delBtn;
+            this.rcTV = rcTV;
         }
 
         public RcOrderDetails mItem;
@@ -125,4 +143,10 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
         this.dayOfWeek = dayOfWeek;
         notifyDataSetChanged();
     }
+
+    public void clearData() {
+        items.clear();
+        notifyDataSetChanged();
+    }
+
 }

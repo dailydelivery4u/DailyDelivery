@@ -20,13 +20,11 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
                 app:srcCompat="@drawable/background_day_selected"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="20dp"
                 android:layout_marginBottom="20dp" />
 
             <TextView
@@ -34,16 +32,18 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/productNameTextView"
                 android:text="Heritage Golden Cow Milk"
-                android:layout_toRightOf="@+id/imageView"
-                android:layout_alignTop="@+id/imageView"
-                android:layout_marginLeft="30dp"
+                android:textSize="16dp"
+                android:textColor="#732525"
+                android:layout_below="@+id/imageView"
                 android:textAllCaps="true" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/productDescriptionTextView"
+                android:textSize="14dp"
                 android:text="500ml Milk Packet"
+                android:textColor="#000"
                 android:layout_below="@+id/productNameTextView"
                 android:layout_alignLeft="@+id/productNameTextView"
                 android:layout_marginTop="5dp" />
@@ -63,20 +63,24 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/ddPriceTextView"
                 android:text="DD Price: Rs 21"
-                android:layout_below="@+id/mrpTextView"
-                android:layout_alignLeft="@+id/mrpTextView"
-                android:layout_alignBottom="@+id/imageView"
-                android:layout_marginTop="5dp" />
+                android:textSize="15dp"
+                android:textColor="#732525"
+                android:layout_below="@+id/productDescriptionTextView"
+                android:layout_toRightOf="@+id/mrpTextView"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="10dp" />
 
             <Button
                 android:id="@+id/addBtn"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="Add"
-                android:layout_alignTop="@+id/mrpTextView"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
-                android:layout_alignBottom="@+id/imageView" />
+                android:layout_alignTop="@+id/productDescriptionTextView"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/button_background_green" />
 
             <android.support.v7.widget.LinearLayoutCompat
                 android:id="@+id/qtyLinLay"

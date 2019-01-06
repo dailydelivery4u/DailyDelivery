@@ -18,7 +18,7 @@ public interface CartDao {
     @Query("SELECT uid FROM cart WHERE product_id = :pId")
     int getId(int pId);
 
-    @Query("SELECT product_id,product_qty,delivery_slot FROM cart WHERE cat_id = :catId")
+    @Query("SELECT product_id,product_qty FROM cart WHERE cat_id = :catId")
     List<ProductTuple> getpIdofCatId(int catId);
 
     @Query("SELECT product_ddprice,product_qty FROM cart")
@@ -32,6 +32,9 @@ public interface CartDao {
 
     @Query("DELETE FROM cart")
     void emptyCart();
+
+    @Query("SELECT delivery_slot FROM cart LIMIT 1")
+    int getDeliverySLotInCart();
 
     @Insert
     void insertCart(Cart cart);

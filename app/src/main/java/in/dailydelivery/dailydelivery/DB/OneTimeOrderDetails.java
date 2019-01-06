@@ -9,6 +9,9 @@ public class OneTimeOrderDetails {
     @PrimaryKey(autoGenerate = true)
     private int uid;
 
+    @ColumnInfo(name = "order_id")
+    private int orderId;
+
     @ColumnInfo(name = "product_id")
     private int productId;
 
@@ -36,7 +39,8 @@ public class OneTimeOrderDetails {
     @ColumnInfo(name = "delivery_slot")
     private int deliverySlot;
 
-    public OneTimeOrderDetails(int productId, int catId, int qty, String name, String des, int price, int status, String date, int deliverySlot) {
+    public OneTimeOrderDetails(int orderId, int productId, int catId, int qty, String name, String des, int price, int status, String date, int deliverySlot) {
+        this.orderId = orderId;
         this.productId = productId;
         this.catId = catId;
         this.qty = qty;
@@ -46,6 +50,14 @@ public class OneTimeOrderDetails {
         this.status = status;
         this.date = date;
         this.deliverySlot = deliverySlot;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
     public int getUid() {

@@ -1,74 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorGray"
     tools:context=".LoginActivity">
 
-    <EditText
-        android:id="@+id/phnoInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:ems="10"
-        android:hint="Phone No."
-        android:inputType="phone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="@color/colorPrimary"
+        android:id="@+id/topRL">
 
-    <EditText
-        android:id="@+id/pinInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="33dp"
-        android:ems="10"
-        android:hint="Pin"
-        android:inputType="numberPassword"
-        app:layout_constraintStart_toStartOf="@+id/phnoInput"
-        app:layout_constraintTop_toBottomOf="@+id/phnoInput" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="DAILY DELIVERY"
+            android:textStyle="normal"
+            android:fontFamily="serif"
+            android:inputType="number"
+            android:textColor="@color/colorWhite"
+            android:textAlignment="center"
+            android:layout_marginTop="60dp"
+            android:textSize="35dp" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:onClick="onLoginBtnClicked"
-        android:text="Login"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pinInput" />
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="59dp"
-        android:text="New Here? Come Register!!!"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="68dp"
-        android:layout_marginLeft="68dp"
-        android:layout_marginTop="24dp"
-        android:onClick="onRegisterBrnClicked"
-        android:text="Register"
-        app:layout_constraintStart_toStartOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+    <RelativeLayout
+        android:id="@+id/phInputRL"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/topRL"
+        android:layout_marginTop="-40dp"
+        android:background="@color/colorWhite">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="33dp"
-        android:text="We are here for you! Directly Call us!!"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
-</android.support.constraint.ConstraintLayout>
+        <EditText
+            android:id="@+id/phInput"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:inputType="number"
+            android:hint="Mobile Number" />
+
+        <Button
+            android:id="@+id/getOtpBtn"
+            android:onClick="onGetOtpClicked"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="Sign In with OTP"
+            android:layout_below="@+id/phInput"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/button_background_green" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/otpInputRL"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/topRL"
+        android:layout_marginTop="-40dp"
+        android:visibility="gone"
+        android:background="@color/colorWhite">
+
+        <TextView
+            android:id="@+id/otpInputTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ENTER OTP"
+            android:textSize="16dp"
+            android:textAlignment="center"
+            android:padding="15dp" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="250dp"
+            android:layout_height="1dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/otpInputTV"
+            android:background="?android:attr/listDivider" />
+
+        <EditText
+            android:id="@+id/otpInputET"
+            android:inputType="number"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp" />
+
+        <Button
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:layout_below="@+id/otpInputET"
+            android:layout_centerHorizontal="true"
+            android:onClick="onLoginBtnClicked"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/button_background" />
+    </RelativeLayout>
+
+</RelativeLayout>

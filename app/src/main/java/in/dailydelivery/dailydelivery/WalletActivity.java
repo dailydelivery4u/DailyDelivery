@@ -22,6 +22,9 @@ import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPGService;
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,6 +47,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import in.dailydelivery.dailydelivery.DB.AppDatabase;
+import in.dailydelivery.dailydelivery.DB.WalletTransaction;
+
 public class WalletActivity extends AppCompatActivity {
 
     private String checksumHash;
@@ -54,6 +60,7 @@ public class WalletActivity extends AppCompatActivity {
     EditText amountET;
     private String orderId;
     String amountToRecharge;
+    AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +73,12 @@ public class WalletActivity extends AppCompatActivity {
         progress = new ProgressDialog(this);
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progress.setCanceledOnTouchOutside(false);
+
+        db = AppDatabase.getAppDatabase(this);
+
+        getSupportActionBar().setTitle("My Wallet");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setElevation(0);
 
         //----------------------------------Connect to Server
         ConnectivityManager connMgr = (ConnectivityManager)
@@ -117,6 +130,12 @@ public class WalletActivity extends AppCompatActivity {
             progress.dismiss();
             Toast.makeText(this, "No Network Connection detected!", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     public String generateOrderId(int count) {
@@ -239,6 +258,10 @@ public class WalletActivity extends AppCompatActivity {
         return result.toString();
     }
 
+    public void onRequestCashColClicked(View view) {
+        //TODO: Update in DB
+    }
+
     private class GetHashFromServer extends AsyncTask<String, Void, String> {
         String dataToServer;
 
@@ -344,14 +367,8 @@ public class WalletActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             if (result.equals("timeout")) {
                 Toast.makeText(WalletActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
-            }
-            Log.d("DD", "Result from webserver After server validation: " + result);
-            try {
-                JSONObject resultJson = new JSONObject(result);
-                evaluateResult(resultJson.getString("STATUS"));
-
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } else {
+                evaluateResult(result);
             }
         }
 
@@ -391,11 +408,27 @@ public class WalletActivity extends AppCompatActivity {
 
                 // Convert the InputStream into a string
                 //Log.d("NetworkDebugTag", "The text is: " + contentAsString);
-                return readIt(is, len);
+                String result = readIt(is, len);
+                Log.d("DD", "Result from webserver After server validation: " + result);
+                JSONObject resultJson = new JSONObject(result);
+                int response = resultJson.getInt("responseCode");
+                if (response == 273) {
+                    //Transaction succesfull
+                    DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
+                    DateTime d = new DateTime();
+                    db.walletTransactionDao().insertWalletTransaction(new WalletTransaction(resultJson.getInt("wallettx_id"), 1, "Online Recharge", resultJson.getInt("amount"), d.toString(dtf)));
+                    return "AISH";
+                } else {
+                    return "FAIL";
+                }
+
 
                 // Makes sure that the InputStream is closed after the app is
                 // finished using it.
             } catch (SocketTimeoutException e) {
+                return "timeout";
+            } catch (JSONException e) {
+                e.printStackTrace();
                 return "timeout";
             } finally {
                 if (is != null) {
@@ -417,7 +450,7 @@ public class WalletActivity extends AppCompatActivity {
         if (status.equals("AISH")) {
             Toast.makeText(this, "Recharge Success", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(this, "Recharge Failed", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Recharge Failed.\n Contact Customer Care for any queries", Toast.LENGTH_LONG).show();
         }
         this.recreate();
     }
@@ -486,6 +519,7 @@ public class WalletActivity extends AppCompatActivity {
                 out.close();
                 is = conn.getInputStream();
                 return readIt(is, len);
+
             } catch (SocketTimeoutException e) {
                 return "timeout";
             } finally {

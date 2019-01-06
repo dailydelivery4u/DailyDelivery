@@ -109,39 +109,45 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
         holder.addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (deliverySlotInCart == 0 || deliverySlotInCart == holder.mItem.getDeliverySlot()) {
-                    if (null != mListener) {
-
                         if (orderType == 1) {
+                            //Log.d("DD","delivery slot in cart: " + deliverySlotInCart + "; item delivery slot: "+ holder.mItem.getDeliverySlot());
                             // Notify the active callbacks interface (the activity, if the
                             // fragment is attached to one) that an item has been selected.
-                            mListener.productDisplayFragmentInteraction(holder.mItem, 1);
-                            holder.addBtn.setText("ADDED");
-                            holder.numberPicker.setValue(1);
-                            holder.addBtn.setEnabled(false);
-                            holder.qtyLinLay.setVisibility(View.VISIBLE);
+                            if (deliverySlotInCart == 0 || deliverySlotInCart == holder.mItem.getDeliverySlot()) {
+                                mListener.productDisplayFragmentInteraction(holder.mItem, 1);
+                                holder.addBtn.setText("ADDED");
+                                holder.numberPicker.setValue(1);
+                                holder.addBtn.setEnabled(false);
+                                holder.qtyLinLay.setVisibility(View.VISIBLE);
+                            } else {
+                                //show the user status with an alert dailogue
+                                String message;
+                                if (deliverySlotInCart == 1) {
+                                    //Milk in cart
+                                    message = "Milk already in Cart!You cannot add Milk and Water at the same time in Cart, due to different delivery timings.\n" +
+                                            "Complete your Milk order first and order water seperately again";
+                                } else {
+                                    //Water in cart
+                                    message = "Water already in Cart!You cannot add Milk and Water at the same time in Cart, due to different delivery timings.\n" +
+                                            "Complete your Water order first and order milk seperately again";
+                                }
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setTitle("Cannot Add Product!!")
+                                        .setMessage(message);
+                                builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        // User cancelled the dialog
+                                        dialog.dismiss();
+                                    }
+                                });
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+                                //Toast.makeText(context,"Delivery Slots Mismatch for Product and Products in Cart.")
+                            }
                         } else {
                             mListener.productDisplayFragmentInteraction(holder.mItem, 1);
                         }
-                    }
-                } else {
-                    //show the user status with an alert dailogue
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Unable to Add Product!!")
-                            .setMessage("The Delivery Slots for Products in Cart and the selected product do not match.\n Please remove or first place order for products in cart.\n" +
-                                    "Milk Delivey Slot: 5:30 AM to 7:30 AM\n" +
-                                    "Water Delivery Slot: 6 PM tp 8:30 PM");
-                    builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                            dialog.dismiss();
-                        }
-                    });
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-
-                    //Toast.makeText(context,"Delivery Slots Mismatch for Product and Products in Cart.")
-                }
             }
         });
     }

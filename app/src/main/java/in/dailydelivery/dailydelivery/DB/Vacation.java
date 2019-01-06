@@ -10,13 +10,17 @@ public class Vacation {
     @PrimaryKey(autoGenerate = true)
     private int uid;
 
+    @ColumnInfo(name = "vac_id")
+    private int vacId;
+
     @ColumnInfo(name = "start_date")
     private String startDate;
 
     @ColumnInfo(name = "end_date")
     private String endDate;
 
-    public Vacation(String startDate, String endDate) {
+    public Vacation(int vacId, String startDate, String endDate) {
+        this.vacId = vacId;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -43,5 +47,13 @@ public class Vacation {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public int getVacId() {
+        return vacId;
+    }
+
+    public void setVacId(int vacId) {
+        this.vacId = vacId;
     }
 }

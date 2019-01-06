@@ -2,6 +2,7 @@ package in.dailydelivery.dailydelivery;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
@@ -50,6 +52,7 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
     AppDatabase db;
     ProgressDialog progress;
     SharedPreferences sharedPref;
+    int walletBal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +67,11 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
 
         fragmentFrame = findViewById(R.id.fragment_frame);
         if (fragmentNum == 3) {
+            getSupportActionBar().setTitle("Cart");
             CartDisplayFragment frag = new CartDisplayFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, frag).commit();
         } else {
+            getSupportActionBar().setTitle("Categories");
             CategoryDisplayFragment frag = new CategoryDisplayFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, frag).commit();
         }
@@ -216,9 +221,12 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
                 //If result is OK, update user Id in editor
                 JSONObject resultJson = resultArrayJson.getJSONObject("result");
                 if (resultJson.getInt("responseCode") == 273) {
-                    int orderStatus = resultJson.getInt("status");
-
-                    Toast.makeText(CreateOrderActivity.this, "Order Placed", Toast.LENGTH_SHORT).show();
+                    int orderStatus = 1;
+                    walletBal = resultJson.getInt("wallet");
+                    for (Cart c : OrderDetailsFragment.cartList) {
+                        c.setUid(resultArrayJson.getInt(String.valueOf(c.getProductId())));
+                    }
+                    //Toast.makeText(CreateOrderActivity.this, "Order Placed", Toast.LENGTH_SHORT).show();
                     new UpdateOrderInDb(orderDetails.getString("date"), orderDetails.getInt("delivery_slot"), orderStatus).execute();
 
                 } else if (resultJson.getInt("responseCode") == 275) {
@@ -307,7 +315,8 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
         @Override
         protected Void doInBackground(Void... integers) {
             for (Cart c : cartItems) {
-                db.oneTimeOrderDetailsDao().insertOnetimeOrderDetails(new OneTimeOrderDetails(c.getProductId(), c.getCatId(), c.getProductqty(), c.getProductName(), c.getProductDes(), c.getProductDdprice(), status, date, deliverySlot));
+                Log.d("dd", "Pid - " + String.valueOf(c.getProductId()) + "UId: " + String.valueOf(c.getUid()));
+                db.oneTimeOrderDetailsDao().insertOnetimeOrderDetails(new OneTimeOrderDetails(c.getUid(), c.getProductId(), c.getCatId(), c.getProductqty(), c.getProductName(), c.getProductDes(), c.getProductDdprice(), status, date, deliverySlot));
             }
             db.userDao().emptyCart();
             return null;
@@ -316,9 +325,35 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
         @Override
         protected void onPostExecute(Void aVoid) {
             Toast.makeText(CreateOrderActivity.this, "Order Placed", Toast.LENGTH_SHORT).show();
-            Intent userHomeActivityIntent = new Intent(CreateOrderActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(userHomeActivityIntent);
-            finish();
+            if (walletBal <= 200) {
+                //show the user status with an alert dailogue
+                AlertDialog.Builder builder = new AlertDialog.Builder(CreateOrderActivity.this);
+                builder.setTitle("Low Wallet Balance - Rs." + walletBal)
+                        .setMessage("You are running low on balance. Orders will be confirmed only if sufficient credit balance is present.\n*Balance will be deducted only after delivery.");
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        dialog.dismiss();
+                        Intent userHomeActivityIntent = new Intent(CreateOrderActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(userHomeActivityIntent);
+                        finish();
+                    }
+                });
+                builder.setPositiveButton("Recharge Now", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent walletActivityIntent = new Intent(CreateOrderActivity.this, WalletActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(walletActivityIntent);
+                        finish();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                Intent userHomeActivityIntent = new Intent(CreateOrderActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(userHomeActivityIntent);
+            }
+
         }
     }
 

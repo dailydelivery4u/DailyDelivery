@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -56,7 +57,11 @@ public class CartDisplayFragment extends Fragment implements onItemRemovedListne
         proceedButton = view.findViewById(R.id.proceedBtn);
         Context context = view.getContext();
         recyclerView = view.findViewById(R.id.list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
         new GetCartData().execute();
 
         //TODO: CHeck items are in cart - cart not empty
@@ -106,7 +111,7 @@ public class CartDisplayFragment extends Fragment implements onItemRemovedListne
         for (int p = 0; p < cartItems.size(); p++) {
             totalPrice += cartItems.get(p).getProductDdprice() * cartItems.get(p).getProductqty();
         }
-        totalPriceTV.setText("Total Amount: Rs. " + String.valueOf(totalPrice));
+        totalPriceTV.setText("Total: Rs. " + String.valueOf(totalPrice));
     }
 
 
@@ -131,7 +136,7 @@ public class CartDisplayFragment extends Fragment implements onItemRemovedListne
             for (int p = 0; p < cartItems.size(); p++) {
                 totalPrice += cartItems.get(p).getProductDdprice() * cartItems.get(p).getProductqty();
             }
-            totalPriceTV.setText("Total Amount: Rs. " + String.valueOf(totalPrice));
+            totalPriceTV.setText("Total: Rs. " + String.valueOf(totalPrice));
         }
     }
 

@@ -1,66 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     tools:context=".RegisterActivity">
+
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_width="250dp"
+        android:textAlignment="center"
+        android:layout_height="wrap_content"
+        android:text="Give us your basic info..."
+        android:textSize="20dp"
+        android:textColor="#5c1313" />
 
     <EditText
         android:id="@+id/nameInput"
+        android:layout_below="@+id/tv1"
+        android:layout_marginTop="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="39dp"
         android:ems="10"
+        android:width="250dp"
         android:hint="Name"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/phInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="34dp"
-        android:ems="10"
-        android:hint="Phone Number"
-        android:inputType="phone"
-        app:layout_constraintStart_toStartOf="@+id/nameInput"
-        app:layout_constraintTop_toBottomOf="@+id/nameInput" />
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/addInput"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="46dp"
         android:ems="10"
+        android:layout_marginTop="15dp"
         android:hint="Delivery Address"
         android:inputType="textMultiLine"
         android:lines="3"
-        android:maxLines="5"
-        app:layout_constraintStart_toStartOf="@+id/phInput"
-        app:layout_constraintTop_toBottomOf="@+id/phInput" />
+        android:layout_below="@+id/nameInput"
+        android:maxLines="5" />
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="31dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginBottom="28dp"
-        android:text="* We are currently delivering only at\nTriveni Nagar, Balapur X Roads, Hyd"
-        app:layout_constraintBottom_toTopOf="@+id/registerBtn"
-        app:layout_constraintStart_toStartOf="@+id/addInput" />
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/addInput"
+        android:text="* We are currently delivering only at\nTriveni Nagar, Balapur X Roads, Hyd" />
 
     <Button
         android:id="@+id/registerBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
+        android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_below="@+id/textView3"
+        android:background="@drawable/button_background"
         android:onClick="registerBtnOnClick"
-        android:text="Register"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addInput" />
-</android.support.constraint.ConstraintLayout>
+        android:textColor="@color/colorWhite"
+        android:text="Register" />
+</RelativeLayout>

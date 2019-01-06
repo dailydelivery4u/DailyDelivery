@@ -2,13 +2,12 @@ package in.dailydelivery.dailydelivery;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -29,8 +28,8 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 
 public class RegisterActivity extends AppCompatActivity {
-    EditText nameInput, phoneInput, addInput;
-
+    EditText nameInput, addInput;
+    SharedPreferences sharedPref;
     ProgressDialog progress;
 
 
@@ -38,11 +37,11 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        nameInput = (EditText) findViewById(R.id.nameInput);
-        phoneInput = (EditText) findViewById(R.id.phInput);
-        addInput = (EditText) findViewById(R.id.addInput);
+        sharedPref = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
+        nameInput = findViewById(R.id.nameInput);
+        addInput = findViewById(R.id.addInput);
         progress = new ProgressDialog(this);
+        getSupportActionBar().setTitle("Welcome");
 
     }
 
@@ -66,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             try {
                 obj.put("name", nameInput.getText().toString());
-                obj.put("ph", phoneInput.getText().toString());
+                obj.put("id", sharedPref.getInt(getString(R.string.sp_tag_user_id), 0));
                 obj.put("add", addInput.getText().toString());
 
             } catch (JSONException e) {
@@ -117,42 +116,16 @@ public class RegisterActivity extends AppCompatActivity {
                 JSONObject resultJson = resultArrayJson.getJSONObject("result");
                 if (resultJson.getInt("responseCode") == 273) {
                     //Registered succesfully
-                    int userId = resultJson.getInt("userId");
-
-                    //show the user status with an alert dailogue
-                    AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-                    builder.setTitle("Registration Success!!")
-                            .setMessage("YAYY! You are now our prvileged customer!! We will send you your pin in 1-2 hrs after verifying your delivery address.\nYou can login and place orders after that.");
-                    builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                            dialog.dismiss();
-                            Intent loginActivityIntent = new Intent(RegisterActivity.this, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(loginActivityIntent);
-                            finish();
-                        }
-                    });
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-
-
+                    Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putBoolean("logged_in", true);
+                    editor.commit();
+                    Intent userHomeActivityIntent = new Intent(RegisterActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(userHomeActivityIntent);
+                    finish();
                 } else if (resultJson.getInt("responseCode") == 275) {
-                    //Toast.makeText(LoginActivity.this,"User already Exists",Toast.LENGTH_LONG).show();
-
-                    //show the user status with an alert dailogue
-                    AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-                    builder.setTitle("User Exists")
-                            .setMessage("Looks like you are already registered! If facing trouble logging in, contact our customer care!");
-                    builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                            dialog.dismiss();
-                            Intent loginActivityIntent = new Intent(RegisterActivity.this, LoginActivity.class);
-                            startActivity(loginActivityIntent);
-                        }
-                    });
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
+                    //Regsitration failed
+                    Toast.makeText(RegisterActivity.this, "Something went wrong.. try again later", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(RegisterActivity.this, "Error in connection with Server.. Please try again later.", Toast.LENGTH_LONG).show();
                 }

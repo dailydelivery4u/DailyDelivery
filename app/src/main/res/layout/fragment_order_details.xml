@@ -7,10 +7,19 @@
 
     <TextView
         android:id="@+id/textview"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Choose your order date"
+        android:textSize="16dp"
+        android:textColor="#732525"
         android:padding="10dp" />
+
+    <View
+        android:id="@+id/divider10"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/textview"
+        android:background="?android:attr/listDivider" />
 
     <CalendarView
         android:id="@+id/calendarView"
@@ -20,29 +29,35 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:id="@+id/textview2"
+        android:id="@+id/deliverySlotTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Your Delivery Time Slot"
+        android:textSize="16dp"
+        android:textColor="#732525"
+        android:text="Delivery Time: 5:30 AM to 7:30 AM"
         android:layout_marginBottom="10dp"
         android:padding="10dp"
         android:layout_below="@+id/calendarView" />
 
-    <Spinner
+    <!--Spinner
         android:id="@+id/delivery_time_spinner"
         android:layout_below="@+id/textview2"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
+        android:textColor="#9c0808"
         android:layout_centerHorizontal="true"
-        android:padding="10dp" />
+        android:padding="10dp" /-->
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:id="@+id/placeOrderBtn"
         android:text="Place Order"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/button_background"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp" />
+
 
 </RelativeLayout>

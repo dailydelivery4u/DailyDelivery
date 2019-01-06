@@ -145,10 +145,9 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
                 JSONObject resultJson = resultArrayJson.getJSONObject("result");
                 if (resultJson.getInt("responseCode") == 273) {
                     int orderId = resultJson.getInt("order_id");
-                    rcOrderDetails.setUid(orderId);
+                    rcOrderDetails.setOrderId(orderId);
                     //rcOrderDetails.setStatus(1);
                     new UpdateOrderInDb().execute();
-
                 } else if (resultJson.getInt("responseCode") == 275) {
                     Toast.makeText(CreateRecurringOrderActivity.this, "Some Error occured! Pls try again", Toast.LENGTH_LONG).show();
                 } else {
