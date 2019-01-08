@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -48,6 +49,7 @@ public class ProductDisplayFragment extends Fragment {
     RecyclerView recyclerView;
     Context context;
     private int cat_id;
+    Button goToCartBtn;
     int delivery_slot, deliverySlotInCart;
     private int orderType;//1 for one time order; 2 for repeating order
     AppDatabase db;
@@ -72,13 +74,25 @@ public class ProductDisplayFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_product_list, container, false);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
             context = view.getContext();
-            recyclerView = (RecyclerView) view;
-        }
+        recyclerView = view.findViewById(R.id.list);
+        goToCartBtn = view.findViewById(R.id.goToCartBtn);
+
         cat_id = getArguments().getInt("cat_id");
         delivery_slot = getArguments().getInt("delivery_slot");
+        Log.d("DD", "Delivery SLot: " + delivery_slot);
         orderType = getArguments().getInt("order_type");
+
+        if (orderType == 2) {
+            goToCartBtn.setVisibility(View.GONE);
+        } else {
+            goToCartBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.goToCart();
+                }
+            });
+        }
         //Toast.makeText(getActivity(),"order type: " + orderType + cat_id,Toast.LENGTH_LONG).show();
         return view;
     }
@@ -148,6 +162,8 @@ public class ProductDisplayFragment extends Fragment {
     public interface ProductDisplayFragmentInteractionListener {
         // TODO: Update argument type and name
         void productDisplayFragmentInteraction(Product item, int qty);
+
+        void goToCart();
     }
 
     private class PostDataToServer extends AsyncTask<String, Void, String> {

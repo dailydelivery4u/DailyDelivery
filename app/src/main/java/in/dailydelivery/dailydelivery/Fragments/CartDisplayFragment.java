@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -68,8 +69,12 @@ public class CartDisplayFragment extends Fragment implements onItemRemovedListne
         proceedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OrderDetailsFragment.cartList = cartItems;
-                mListener.onCartDisplayFragmentInteraction(1);
+                if (cartItems.size() > 0) {
+                    OrderDetailsFragment.cartList = cartItems;
+                    mListener.onCartDisplayFragmentInteraction(1);
+                } else {
+                    Toast.makeText(getActivity(), "Please Add Items in Cart to Proceed.", Toast.LENGTH_LONG).show();
+                }
             }
         });
         return view;

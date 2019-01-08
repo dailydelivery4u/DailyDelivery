@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
         android:id="@+id/wallet"
         android:title="Wallet" />
     <item
         android:id="@+id/vacation"
         android:title="Vacations" />
+
     <item
-        android:id="@+id/accountHistory"
-        android:title="Account History" />
+        android:id="@+id/rcOrders"
+        android:title="Repeating Orders" />
 
     <item
         android:id="@+id/profile"
         android:title="Profile" />
+
+    <item
+        android:id="@+id/help"
+        android:title="Help" />
 
     <item
         android:id="@+id/logout"

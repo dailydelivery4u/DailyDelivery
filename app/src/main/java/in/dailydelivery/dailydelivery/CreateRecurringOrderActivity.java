@@ -52,6 +52,7 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
         sharedPref = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
 
         CategoryDisplayFragment frag = new CategoryDisplayFragment();
+        getSupportActionBar().setTitle("Categories");
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, frag).commit();
         db = AppDatabase.getAppDatabase(this);
     }
@@ -61,6 +62,7 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
         ProductDisplayFragment productDisplayFragment = new ProductDisplayFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("cat_id", item.getId());
+        bundle.putInt("delivery_slot", item.getDeliverySlot());
         bundle.putInt("order_type", 2);// 1 for 1 time order ; 2 for recurring order
         productDisplayFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, productDisplayFragment).addToBackStack(null).commit();
@@ -74,6 +76,11 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
         b.putSerializable("product", item);
         frag.setArguments(b);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, frag).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void goToCart() {
+        //DO nothing
     }
 
     @Override

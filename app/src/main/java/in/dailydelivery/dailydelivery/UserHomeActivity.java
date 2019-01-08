@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -92,8 +93,19 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
         noOrdersTV = findViewById(R.id.noOrdersTV);
         ordersforthedayRV = findViewById(R.id.ordersforthedayRV);
         rcOrdersforthedayRV = findViewById(R.id.rcOrdersforthedayRV);
-        ordersforthedayRV.setLayoutManager(new LinearLayoutManager(this));
-        rcOrdersforthedayRV.setLayoutManager(new LinearLayoutManager(this));
+
+        LinearLayoutManager l1 = new LinearLayoutManager(this);
+        LinearLayoutManager l2 = new LinearLayoutManager(this);
+        ordersforthedayRV.setLayoutManager(l1);
+        rcOrdersforthedayRV.setLayoutManager(l2);
+        DividerItemDecoration dividerItemDecoration1 = new DividerItemDecoration(ordersforthedayRV.getContext(),
+                l1.getOrientation());
+        ordersforthedayRV.addItemDecoration(dividerItemDecoration1);
+
+        DividerItemDecoration dividerItemDecoration2 = new DividerItemDecoration(rcOrdersforthedayRV.getContext(),
+                l2.getOrientation());
+        rcOrdersforthedayRV.addItemDecoration(dividerItemDecoration2);
+
         dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
         oneTimeUpdate = true;
         displayingRcOrderFirstTime = true;
@@ -166,9 +178,19 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                 startActivity(intent1);
                 break;
 
-            case R.id.accountHistory:
-                Intent intent2 = new Intent(UserHomeActivity.this, AccountHistoryActivity.class);
+            case R.id.rcOrders:
+                Intent intent4 = new Intent(UserHomeActivity.this, ReccurringOrdersActivity.class);
+                startActivity(intent4);
+                break;
+
+            case R.id.profile:
+                Intent intent2 = new Intent(UserHomeActivity.this, ProfileActivity.class);
                 startActivity(intent2);
+                break;
+
+            case R.id.help:
+                Intent intent3 = new Intent(UserHomeActivity.this, HelpActivity.class);
+                startActivity(intent3);
                 break;
 
             case R.id.logout:
@@ -243,11 +265,31 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
 
 
     @Override
-    public void deleteOto(int otoId) {
+    public void deleteOto(final int otoId) {
         //Toast.makeText(this,"Oto Id: " + otoId,Toast.LENGTH_LONG).show();
         if (checkForOrderDeletion()) {
-            String query = "orderId=" + otoId;
-            new DeleteOrder(query, otoId).execute(getString(R.string.server_addr_release) + "del_one_time_order.php");
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            // Set the dialog title
+            builder.setTitle("Confirm Order Delete");
+            builder.setMessage("Are you sure you want to delete the order?");
+
+            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String query = "orderId=" + otoId;
+                    new DeleteOrder(query, otoId).execute(getString(R.string.server_addr_release) + "del_one_time_order.php");
+                    dialog.dismiss();
+                }
+            });
+
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog mDialog = builder.create();
+            mDialog.show();
         }
     }
 
@@ -317,8 +359,24 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
         if (rcOrders.size() > 0) {
             List<RcOrderDetails> rcOrdersForTheDay = new ArrayList<>();
             DateTime startDate, vStartDate, vEndDate;
-            for (RcOrderDetails rcOrderDetails : rcOrders) {
-                //Log.d("DD","Start Date: " + rcOrderDetails.getStartDate());
+            for (RcOrderDetails rcO : rcOrders) {
+
+                RcOrderDetails rcOrderDetails = new RcOrderDetails(rcO.getProductId(), rcO.getCatId(), rcO.getName(), rcO.getDes(), rcO.getPrice(), rcO.getStatus(), rcO.getDeliverySlot(), rcO.getStartDate(), rcO.getMon(), rcO.getTue(), rcO.getWed(), rcO.getThu(), rcO.getFri(), rcO.getSat(), rcO.getSun());
+                /*
+                String key1 = "del_rco_"+rcO.getOrderId();
+                if(sharedPreferences.getBoolean(key1,false)){
+                    String key = rcOrderDetails.getStartDate() + rcOrderDetails.getOrderId();
+                    int s = sharedPreferences.getInt(key, 273);
+                    if (s != 273) {
+                        if (s == 1) rcOrderDetails.setStatus(4);
+                        else if (s == 2) rcOrderDetails.setStatus(7);
+                        else if (s == 3) rcOrderDetails.setStatus(5);
+                        else if (s == 4) rcOrderDetails.setStatus(6);
+                        rcOrdersForTheDay.add(rcOrderDetails);
+                    }
+                    continue;
+                }
+                */
                 startDate = dtf.parseDateTime(rcOrderDetails.getStartDate());
                 if (dateSelected.isAfter(startDate.minusDays(1))) {
                     String key = rcOrderDetails.getStartDate() + rcOrderDetails.getOrderId();
@@ -332,16 +390,17 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                         for (Vacation v : vacations) {
                             vStartDate = dtf.parseDateTime(v.getStartDate());
                             vEndDate = dtf.parseDateTime(v.getEndDate());
+                            Log.d("DD", "Start Date: " + v.getStartDate());
+                            Log.d("DD", "End Date: " + v.getEndDate());
                             if (dateSelected.isAfter(vStartDate.minusDays(1)) && dateSelected.isBefore(vEndDate.plusDays(1))) {
                                 rcOrderDetails.setStatus(2);
                             }
                         }
                     }
                     rcOrdersForTheDay.add(rcOrderDetails);
-                    //Log.d("dd","Rc Orders for the Day size: " + rcOrdersForTheDay.size() + ",Date selected " + dateSelected.toString(dtf) + ", StartDate: "+ startDate.toString(dtf));
                 }
+
             }
-            //Log.d("dd","Rc Orders for the Day size: " + rcOrdersForTheDay.size() + ",Date selected " + dateSelected.toString(dtf));
 
             if (rcOrdersForTheDay.size() > 0) {
                 ordersPresent = true;
@@ -616,7 +675,10 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
     }
 
     private void refreshActivity() {
-        this.recreate();
+        //this.recreate();
+        Intent self = new Intent(this, UserHomeActivity.class);
+        startActivity(self);
+        finish();
     }
 
     private class DeleteOrder extends AsyncTask<String, Void, String> {

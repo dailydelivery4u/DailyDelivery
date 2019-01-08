@@ -27,6 +27,7 @@ public class OrderDetailsFragment extends Fragment {
     private CalendarView calendarView;
     DateTime today = new DateTime();
     DateTime tomo = today.plusDays(1);
+    DateTime dayAfterTom = today.plusDays(2);
     Button placeOrderBtn;
     String dateSelected;
     int delivery_slot;
@@ -118,23 +119,48 @@ public class OrderDetailsFragment extends Fragment {
     }
 
     private void setCalenderLimits() {
-        if (deliveryState == 1 && delivery_slot == 2) {
-            calendarView.setMinDate(today.getMillis());
-            calendarView.setDate(today.getMillis());
-            int date = Integer.parseInt(today.dayOfMonth().getAsString());
-            int month = Integer.parseInt(today.monthOfYear().getAsString());
-            int year = Integer.parseInt(today.year().getAsString());
-            dateSelected = String.valueOf((date < 10 ? ("0" + date) : date) + "-" + (month < 10 ? ("0" + month) : month) + "-" + year);
-            //Log.d("dd", "Date selected" + dateSelected);
-        } else {
-            calendarView.setMinDate(tomo.getMillis());
-            calendarView.setDate(tomo.getMillis());
-            //dateSelected = String.valueOf((dayOfMonth<10?("0"+dayOfMonth):dayOfMonth) +"-"+(month<10?("0"+month):month)+"-"+year);
-            int date = Integer.parseInt(tomo.dayOfMonth().getAsString());
-            int month = Integer.parseInt(tomo.monthOfYear().getAsString());
-            int year = Integer.parseInt(tomo.year().getAsString());
-            dateSelected = String.valueOf((date < 10 ? ("0" + date) : date) + "-" + (month < 10 ? ("0" + month) : month) + "-" + year);
-            //Log.d("dd", "Date selected" + dateSelected);
+        if (delivery_slot == 1) {
+            //Milk order - Min delivery tomorrow if before 10 PM
+            if (deliveryState == 1 || deliveryState == 2) {
+                calendarView.setMinDate(tomo.getMillis());
+                calendarView.setDate(tomo.getMillis());
+                //dateSelected = String.valueOf((dayOfMonth<10?("0"+dayOfMonth):dayOfMonth) +"-"+(month<10?("0"+month):month)+"-"+year);
+                int date = Integer.parseInt(tomo.dayOfMonth().getAsString());
+                int month = Integer.parseInt(tomo.monthOfYear().getAsString());
+                int year = Integer.parseInt(tomo.year().getAsString());
+                dateSelected = String.valueOf((date < 10 ? ("0" + date) : date) + "-" + (month < 10 ? ("0" + month) : month) + "-" + year);
+
+            } else if (deliveryState == 3) {
+                //Order cannot be placed for tomo. should be placed only for day after tomo
+                calendarView.setMinDate(dayAfterTom.getMillis());
+                calendarView.setDate(dayAfterTom.getMillis());
+                //dateSelected = String.valueOf((dayOfMonth<10?("0"+dayOfMonth):dayOfMonth) +"-"+(month<10?("0"+month):month)+"-"+year);
+                int date = Integer.parseInt(dayAfterTom.dayOfMonth().getAsString());
+                int month = Integer.parseInt(dayAfterTom.monthOfYear().getAsString());
+                int year = Integer.parseInt(dayAfterTom.year().getAsString());
+                dateSelected = String.valueOf((date < 10 ? ("0" + date) : date) + "-" + (month < 10 ? ("0" + month) : month) + "-" + year);
+            }
+        } else if (delivery_slot == 2) {
+            //water order
+            if (deliveryState == 1 || deliveryState == 2) {
+                calendarView.setMinDate(today.getMillis());
+                calendarView.setDate(today.getMillis());
+                //dateSelected = String.valueOf((dayOfMonth<10?("0"+dayOfMonth):dayOfMonth) +"-"+(month<10?("0"+month):month)+"-"+year);
+                int date = Integer.parseInt(today.dayOfMonth().getAsString());
+                int month = Integer.parseInt(today.monthOfYear().getAsString());
+                int year = Integer.parseInt(today.year().getAsString());
+                dateSelected = String.valueOf((date < 10 ? ("0" + date) : date) + "-" + (month < 10 ? ("0" + month) : month) + "-" + year);
+
+            } else if (deliveryState == 3) {
+                //Order cannot be placed for tomo. should be placed only for day after tomo
+                calendarView.setMinDate(tomo.getMillis());
+                calendarView.setDate(tomo.getMillis());
+                //dateSelected = String.valueOf((dayOfMonth<10?("0"+dayOfMonth):dayOfMonth) +"-"+(month<10?("0"+month):month)+"-"+year);
+                int date = Integer.parseInt(tomo.dayOfMonth().getAsString());
+                int month = Integer.parseInt(tomo.monthOfYear().getAsString());
+                int year = Integer.parseInt(tomo.year().getAsString());
+                dateSelected = String.valueOf((date < 10 ? ("0" + date) : date) + "-" + (month < 10 ? ("0" + month) : month) + "-" + year);
+            }
         }
     }
 

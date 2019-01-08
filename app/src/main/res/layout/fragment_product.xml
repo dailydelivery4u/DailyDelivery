@@ -33,6 +33,7 @@
                 android:id="@+id/productNameTextView"
                 android:text="Heritage Golden Cow Milk"
                 android:textSize="16dp"
+                android:layout_marginLeft="15dp"
                 android:textColor="#732525"
                 android:layout_below="@+id/imageView"
                 android:textAllCaps="true" />

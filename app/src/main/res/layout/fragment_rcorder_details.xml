@@ -21,6 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/imageView"
+        android:textSize="16dp"
         android:layout_marginLeft="30dp"
         android:layout_toRightOf="@+id/imageView"
         android:text="Heritage Golden Cow Milk"
@@ -30,6 +31,7 @@
     <TextView
         android:id="@+id/productDescriptionTextView"
         android:layout_width="wrap_content"
+        android:textColor="@color/colorBlack"
         android:layout_height="wrap_content"
         android:layout_below="@+id/productNameTextView"
         android:layout_alignLeft="@+id/productNameTextView"
@@ -71,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider3"
         android:padding="10dp"
-        android:textColor="#732525"
+        android:textColor="#ed2a2a"
         android:text="Weekly Order Details" />
 
     <View
@@ -218,7 +220,7 @@
         android:layout_below="@+id/npLL"
         android:layout_marginTop="10dp"
         android:paddingLeft="10dp"
-        android:textColor="#732525"
+        android:textColor="#ed2a2a"
         android:text="Delivery Slot" />
 
     <TextView
@@ -243,6 +245,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider7"
+        android:textColor="@color/colorBlack"
         android:padding="10dp"
         android:text="5:30AM to 7:30AM" />
 
@@ -258,7 +261,7 @@
         android:id="@+id/startDateTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#732525"
+        android:textColor="#ed2a2a"
         android:paddingLeft="10dp"
         android:layout_below="@+id/divider8"
         android:text="Start Date" />
@@ -287,6 +290,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider9"
         android:padding="10dp"
+        android:textColor="@color/colorBlack"
         android:text="Monday, 26 November 2018" />
 
     <View
@@ -307,6 +311,6 @@
         android:padding="10dp"
         android:textColor="@color/colorWhite"
         android:background="@drawable/button_background"
-        android:text="Place Recurring Order" />
+        android:text="Place Repeating Order" />
 
 </RelativeLayout>

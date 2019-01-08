@@ -217,8 +217,10 @@ public class LoginActivity extends AppCompatActivity {
                         editor.commit();
                         if (resultJson.getInt("newUser") == 0) {
                             editor.putBoolean("logged_in", true);
+                            editor.putString(getString(R.string.sp_tag_user_name), resultJson.getString("name"));
+                            editor.putString(getString(R.string.sp_tag_user_phone), resultJson.getString("phone"));
+                            editor.putString(getString(R.string.sp_tag_user_add), resultJson.getString("add"));
                             editor.commit();
-
                             JSONArray otoJson = resultArrayJson.getJSONArray("oto");
                             //Log.d("DD",otoJson.toString());
                             for (int i = 0; i < otoJson.length(); i++) {
@@ -226,8 +228,6 @@ public class LoginActivity extends AppCompatActivity {
                                 db.oneTimeOrderDetailsDao().insertOnetimeOrderDetails(new OneTimeOrderDetails(j.getInt("id"), j.getInt("product_id"), j.getInt("cat_id"), j.getInt("qty"),
                                         j.getString("name"), j.getString("description"), j.getInt("discount_price"), j.getInt("status"), j.getString("order_date"), j.getInt("delivery_slot")));
                             }
-
-
                             JSONArray rcoJson = resultArrayJson.getJSONArray("rco");
                             //Log.d("DD",rcoJson.toString());
                             for (int i = 0; i < rcoJson.length(); i++) {

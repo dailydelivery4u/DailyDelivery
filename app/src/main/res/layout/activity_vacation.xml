@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VacationActivity">
+    tools:context=".VacationActivity"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv1"
@@ -24,23 +25,22 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/divider6"
-        android:layout_above="@+id/newVacBtn"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:id="@+id/vacationsListView" />
 
     <Button
         android:id="@+id/newVacBtn"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:text="Add Vacation"
         android:textColor="@color/colorWhite"
         android:onClick="onAddVacationBtnClicked"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
         android:background="@drawable/button_background"
         android:layout_marginBottom="15dp"
         android:layout_marginTop="10dp" />
 
 
-</RelativeLayout>
+</LinearLayout>

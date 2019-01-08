@@ -119,6 +119,9 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putBoolean("logged_in", true);
+                    editor.putString(getString(R.string.sp_tag_user_name), resultJson.getString("name"));
+                    editor.putString(getString(R.string.sp_tag_user_phone), resultJson.getString("phone"));
+                    editor.putString(getString(R.string.sp_tag_user_add), resultJson.getString("add"));
                     editor.commit();
                     Intent userHomeActivityIntent = new Intent(RegisterActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(userHomeActivityIntent);

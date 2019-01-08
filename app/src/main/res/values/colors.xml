@@ -14,4 +14,8 @@
     <color name="colorBlack">#000</color>
     <color name="colorOrange">#fa7414</color>
     <color name="colorGray">#efe4dd</color>
+    <color name="colorBrown">#732525</color>
+
+
+    <color name="color">#e41b2b</color>
 </resources>

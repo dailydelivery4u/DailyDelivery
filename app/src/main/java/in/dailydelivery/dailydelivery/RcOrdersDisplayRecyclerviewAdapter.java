@@ -1,5 +1,6 @@
 package in.dailydelivery.dailydelivery;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -80,24 +81,31 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
         switch (holder.mItem.getStatus()) {
             case 1:
                 status = "Scheduled";
+                holder.statusTV.setTextColor(Color.parseColor("#732525"));
                 break;
             case 2:
                 status = "Paused (Vacation)";
+                holder.statusTV.setTextColor(Color.parseColor("#e41b2b"));
                 break;
             case 3:
                 status = "On Hold (Insufficient Credit Balance)";
+                holder.statusTV.setTextColor(Color.parseColor("#e41b2b"));
                 break;
             case 4:
                 status = "Confirmed";
+                holder.statusTV.setTextColor(Color.parseColor("#33862e"));
                 break;
             case 5:
                 status = "Delivered";
+                holder.statusTV.setTextColor(Color.parseColor("#33862e"));
                 break;
             case 6:
                 status = "Unelivered";
+                holder.statusTV.setTextColor(Color.parseColor("#e41b2b"));
                 break;
             case 7:
                 status = "Cancelled (Insufficient Balance)";
+                holder.statusTV.setTextColor(Color.parseColor("#e41b2b"));
                 break;
             default:
                 status = "";

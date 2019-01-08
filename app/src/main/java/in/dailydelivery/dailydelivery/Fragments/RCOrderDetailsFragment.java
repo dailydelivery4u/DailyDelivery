@@ -61,7 +61,7 @@ public class RCOrderDetailsFragment extends Fragment {
         }
         dates = new String[5];
         DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
-        DateTime date = new DateTime().plusDays(2);
+        DateTime date = new DateTime().plusDays(1);
         for (int i = 0; i < 5; i++) {
             dates[i] = date.toString(dtf);
             date = date.plusDays(1);
@@ -118,7 +118,7 @@ public class RCOrderDetailsFragment extends Fragment {
         mrpTV.setText("Mrp: Rs." + String.valueOf(product.getMrp()));
         mrpTV.setPaintFlags(mrpTV.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         ddPriceTV.setText("DD Price: Rs." + String.valueOf(product.getDdPrice()));
-        startDateTV.setText(new DateTime().plusDays(2).toString(dtf));
+        startDateTV.setText(new DateTime().plusDays(1).toString(dtf));
         Glide.with(getActivity())
                 .load(product.getThumbnailUrl())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -128,15 +128,15 @@ public class RCOrderDetailsFragment extends Fragment {
         placeRCOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.rcOrderDetailsFragmentInteraction(new RcOrderDetails(product.getId(), product.getCat_id(), product.getProductName(), product.getProductDes(), product.getDdPrice(), 1, 0, new DateTime().plusDays(dateSelected).plusDays(2).toString(dtf), np[0].getValue(), np[1].getValue(), np[2].getValue(), np[3].getValue(), np[4].getValue(), np[5].getValue(), np[6].getValue()));
+                mListener.rcOrderDetailsFragmentInteraction(new RcOrderDetails(product.getId(), product.getCat_id(), product.getProductName(), product.getProductDes(), product.getDdPrice(), 1, product.getDeliverySlot(), new DateTime().plusDays(dateSelected).plusDays(1).toString(dtf), np[0].getValue(), np[1].getValue(), np[2].getValue(), np[3].getValue(), np[4].getValue(), np[5].getValue(), np[6].getValue()));
             }
         });
         dsChangeTV.setEnabled(false);
-        if (product.getDeliverySlot() == 0) {
+        if (product.getDeliverySlot() == 1) {
             deliverySlotTV.setText(R.string.delivery_slot_0);
         } else {
             deliverySlotTV.setText(R.string.delivery_slot_1);
-        }
+        }/*
         dsChangeTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,7 +155,7 @@ public class RCOrderDetailsFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deliverySlot = selectedSlot;
-                        if (deliverySlot == 0) {
+                        if (deliverySlot == 1) {
                             deliverySlotTV.setText(R.string.delivery_slot_0);
                         } else {
                             deliverySlotTV.setText(R.string.delivery_slot_1);
@@ -173,7 +173,7 @@ public class RCOrderDetailsFragment extends Fragment {
                 AlertDialog mDialog = builder.create();
                 mDialog.show();
             }
-        });
+        });*/
 
         sdChangeTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,7 +190,7 @@ public class RCOrderDetailsFragment extends Fragment {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DateTime dt = new DateTime().plusDays(dateSelected).plusDays(2);
+                        DateTime dt = new DateTime().plusDays(dateSelected).plusDays(1);
                         startDateTV.setText(dt.toString(dtf));
                         dialog.dismiss();
                     }

@@ -1,6 +1,7 @@
 package in.dailydelivery.dailydelivery;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -103,8 +104,16 @@ public class VacationActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        finish();
+        Intent userHomeActivityIntent = new Intent(VacationActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(userHomeActivityIntent);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent userHomeActivityIntent = new Intent(VacationActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(userHomeActivityIntent);
+        finish();
     }
 
     public void onAddVacationBtnClicked(View view) {
@@ -147,7 +156,7 @@ public class VacationActivity extends AppCompatActivity {
                 JSONObject resultJson = resultArrayJson.getJSONObject("result");
                 if (resultJson.getInt("responseCode") == 273) {
                     //int orderStatus = resultJson.getInt("status");
-                    Toast.makeText(VacationActivity.this, "Vacation Set. Deliveries during the set period will be paused", Toast.LENGTH_LONG).show();
+                    Toast.makeText(VacationActivity.this, "Vacation Set.\nRepeating Orders during the set period will be paused", Toast.LENGTH_LONG).show();
                     vacationDetails.put("id", resultJson.getInt("id"));
                     new UpdateOrderInDb(vacationDetails).execute();
                 } else if (resultJson.getInt("responseCode") == 275) {

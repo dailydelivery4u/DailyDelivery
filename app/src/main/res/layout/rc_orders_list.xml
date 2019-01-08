@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/nameTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textSize="17dp"
+        android:textColor="@color/colorBlack"
+        android:text="Product: Heritage Golden Cow" />
+
+    <TextView
+        android:id="@+id/priceTV"
+        android:layout_marginLeft="15dp"
+        android:layout_below="@+id/nameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBlack"
+        android:text="Price: Rs. 21" />
+
+    <TextView
+        android:id="@+id/startDateTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:textColor="@color/colorBlack"
+        android:layout_below="@+id/nameTV"
+        android:text="Start Date: 20 Jan 018" />
+
+    <View
+        android:id="@+id/divider4"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/startDateTV"
+        android:background="?android:attr/listDivider" />
+
+
+    <LinearLayout
+        android:id="@+id/weekListLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider4"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:weightSum="7">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="Mon"
+            android:textAlignment="center"
+            android:textColor="#732525" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="Tue"
+            android:textAlignment="center"
+            android:textColor="#732525" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="Wed"
+            android:textAlignment="center"
+            android:textColor="#732525" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="Thu"
+            android:textAlignment="center"
+            android:textColor="#732525" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="Fri"
+            android:textAlignment="center"
+            android:textColor="#732525" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="Sat"
+            android:textAlignment="center"
+            android:textColor="#732525" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="Sun"
+            android:textAlignment="center"
+            android:textColor="#732525" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider5"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/weekListLL"
+        android:background="?android:attr/listDivider" />
+
+    <LinearLayout
+        android:id="@+id/weekQtyListLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider5"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:weightSum="7">
+
+        <TextView
+            android:id="@+id/mon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="Mon"
+            android:textAlignment="center"
+            android:textColor="#732525" />
+
+        <TextView
+            android:id="@+id/tue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="Tue"
+            android:textAlignment="center"
+            android:textColor="#732525" />
+
+        <TextView
+            android:id="@+id/wed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="Wed"
+            android:textAlignment="center"
+            android:textColor="#732525" />
+
+        <TextView
+            android:id="@+id/thu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="Thu"
+            android:textAlignment="center"
+            android:textColor="#732525" />
+
+        <TextView
+            android:id="@+id/fri"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="Fri"
+            android:textAlignment="center"
+            android:textColor="#732525" />
+
+        <TextView
+            android:id="@+id/sat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="Sat"
+            android:textAlignment="center"
+            android:textColor="#732525" />
+
+        <TextView
+            android:id="@+id/sun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:text="Sun"
+            android:textAlignment="center"
+            android:textColor="#732525" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider6"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/weekQtyListLL"
+        android:background="?android:attr/listDivider" />
+
+    <!--Button
+        android:id="@+id/delBtn"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/divider6"
+        android:text="Delete"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_background_red"
+        android:layout_marginTop="20dp"/ -->
+
+</RelativeLayout>

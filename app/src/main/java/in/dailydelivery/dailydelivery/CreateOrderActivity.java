@@ -141,6 +141,13 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
     }
 
     @Override
+    public void goToCart() {
+        getSupportActionBar().setTitle("Cart");
+        CartDisplayFragment cartDisplayFragment = new CartDisplayFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, cartDisplayFragment).addToBackStack(null).commit();
+    }
+
+    @Override
     public void onCartDisplayFragmentInteraction(int proceed) {
         if (proceed == 1) {
             getSupportActionBar().setTitle("Order Details");
@@ -329,7 +336,8 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
                 //show the user status with an alert dailogue
                 AlertDialog.Builder builder = new AlertDialog.Builder(CreateOrderActivity.this);
                 builder.setTitle("Low Wallet Balance - Rs." + walletBal)
-                        .setMessage("You are running low on balance. Orders will be confirmed only if sufficient credit balance is present.\n*Balance will be deducted only after delivery.");
+                        .setMessage("You are running low on balance.\n Your Order is scheduled. Orders will be confirmed only if sufficient credit balance is present before 10 PM for morning delivery" +
+                                "and 4 PM for evening delivery.\n*Balance will be deducted only after delivery.");
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog

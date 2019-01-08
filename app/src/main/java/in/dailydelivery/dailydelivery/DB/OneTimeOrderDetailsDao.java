@@ -16,6 +16,9 @@ public interface OneTimeOrderDetailsDao {
     @Query("SELECT * FROM onetime_orderdetails WHERE date = :date")
     List<OneTimeOrderDetails> getOrdersForTheDay(String date);
 
+    @Query("SELECT * FROM onetime_orderdetails")
+    List<OneTimeOrderDetails> getAllOrders();
+
     @Query("DELETE FROM onetime_orderdetails WHERE order_id = :orderId")
     void deleteByOrderId(int orderId);
 

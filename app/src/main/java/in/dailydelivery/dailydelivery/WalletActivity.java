@@ -3,6 +3,8 @@ package in.dailydelivery.dailydelivery;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
@@ -11,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -48,6 +51,8 @@ import java.util.List;
 import java.util.Set;
 
 import in.dailydelivery.dailydelivery.DB.AppDatabase;
+import in.dailydelivery.dailydelivery.DB.OneTimeOrderDetails;
+import in.dailydelivery.dailydelivery.DB.RcOrderDetails;
 import in.dailydelivery.dailydelivery.DB.WalletTransaction;
 
 public class WalletActivity extends AppCompatActivity {
@@ -56,11 +61,12 @@ public class WalletActivity extends AppCompatActivity {
     private ProgressDialog progress;
     int userId;
     SharedPreferences sharedPref;
-    TextView balanceDisplayTV;
+    TextView balanceDisplayTV, monthlyTV, weeklyTV;
     EditText amountET;
     private String orderId;
     String amountToRecharge;
     AppDatabase db;
+    int rcWeeklyProjection = 0, otoWeeklyProjection = 0, otoMonthlyProjection = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +75,8 @@ public class WalletActivity extends AppCompatActivity {
 
         balanceDisplayTV = findViewById(R.id.balanceDisplayTV);
         amountET = findViewById(R.id.amountET);
+        monthlyTV = findViewById(R.id.monthlyCostTV);
+        weeklyTV = findViewById(R.id.weeklyCostTV);
 
         progress = new ProgressDialog(this);
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -79,6 +87,8 @@ public class WalletActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("My Wallet");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setElevation(0);
+
+        new GetAmountProjections().execute();
 
         //----------------------------------Connect to Server
         ConnectivityManager connMgr = (ConnectivityManager)
@@ -100,6 +110,41 @@ public class WalletActivity extends AppCompatActivity {
         //--------------------------------
     }
 
+    private class GetAmountProjections extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            int monthlyProjection = rcWeeklyProjection * 4 + otoMonthlyProjection;
+            int weeklyProjection = rcWeeklyProjection + otoWeeklyProjection;
+            monthlyTV.setText("Monthly Orders Value: Rs." + monthlyProjection);
+            weeklyTV.setText("Weekly Orders Value: Rs." + weeklyProjection);
+            amountET.setText(String.valueOf(monthlyProjection));
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            List<RcOrderDetails> rcOrders = db.rcOrderDetailsDao().getRcOrders();
+            List<OneTimeOrderDetails> oto = db.oneTimeOrderDetailsDao().getAllOrders();
+            for (RcOrderDetails rc : rcOrders) {
+                rcWeeklyProjection += rc.getPrice() * (rc.getMon() + rc.getTue() + rc.getWed() + rc.getThu() + rc.getFri() + rc.getSat() + rc.getSun());
+            }
+            DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
+            DateTime today = new DateTime();
+            for (OneTimeOrderDetails oneTimeOrderDetails : oto) {
+                DateTime orderDate = dtf.parseDateTime(oneTimeOrderDetails.getDate());
+                if (orderDate.isBefore(today.plusDays(8))) {
+                    otoWeeklyProjection += oneTimeOrderDetails.getPrice() * oneTimeOrderDetails.getQty();
+                }
+                if (orderDate.isBefore(today.plusDays(31))) {
+                    otoMonthlyProjection += oneTimeOrderDetails.getPrice() * oneTimeOrderDetails.getQty();
+                }
+            }
+
+
+            return null;
+        }
+    }
+
     public void onPayBtnClicked(View view) {
         progress.show();
         amountToRecharge = amountET.getText().toString() + ".00";
@@ -119,8 +164,8 @@ public class WalletActivity extends AppCompatActivity {
             params.add(new AbstractMap.SimpleEntry("INDUSTRY_TYPE_ID", "Retail"));
             params.add(new AbstractMap.SimpleEntry("CHANNEL_ID", "WAP"));
             params.add(new AbstractMap.SimpleEntry("TXN_AMOUNT", amountToRecharge));
-            params.add(new AbstractMap.SimpleEntry("WEBSITE", "WEBSTAGING"));
-            params.add(new AbstractMap.SimpleEntry("CALLBACK_URL", "https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=" + orderId));
+            params.add(new AbstractMap.SimpleEntry("WEBSITE", "DEFAULT"));
+            params.add(new AbstractMap.SimpleEntry("CALLBACK_URL", "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=" + orderId));
             try {
                 new GetHashFromServer(getQuery(params)).execute(getString(R.string.server_addr_release) + "wallet/generateChecksum.php");
             } catch (UnsupportedEncodingException e) {
@@ -161,7 +206,7 @@ public class WalletActivity extends AppCompatActivity {
         }
 
         //TODO: Update Paytm Release function and params before release
-        PaytmPGService Service = PaytmPGService.getStagingService();
+        PaytmPGService Service = PaytmPGService.getProductionService();
 
         HashMap<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("MID", getString(R.string.paytm_mid));
@@ -172,11 +217,11 @@ public class WalletActivity extends AppCompatActivity {
         //paramMap.put( "EMAIL" , "username@emailprovider.com");
         paramMap.put("CHANNEL_ID", "WAP");
         paramMap.put("TXN_AMOUNT", amountToRecharge);
-        paramMap.put("WEBSITE", "WEBSTAGING");
+        paramMap.put("WEBSITE", "DEFAULT");
 // This is the staging value. Production value is available in your dashboard
         paramMap.put("INDUSTRY_TYPE_ID", "Retail");
 // This is the staging value. Production value is available in your dashboard
-        paramMap.put("CALLBACK_URL", "https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=" + orderId);
+        paramMap.put("CALLBACK_URL", "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=" + orderId);
         paramMap.put("CHECKSUMHASH", checksumHash);
         PaytmOrder Order = new PaytmOrder(paramMap);
         progress.dismiss();
@@ -207,15 +252,19 @@ public class WalletActivity extends AppCompatActivity {
             }
 
             public void clientAuthenticationFailed(String inErrorMessage) {
+                Toast.makeText(getApplicationContext(), "Authentication failed: Server error" + inErrorMessage.toString(), Toast.LENGTH_LONG).show();
             }
 
             public void onErrorLoadingWebPage(int iniErrorCode, String inErrorMessage, String inFailingUrl) {
+                Toast.makeText(getApplicationContext(), "Unable to load webpage " + inErrorMessage.toString(), Toast.LENGTH_LONG).show();
             }
 
             public void onBackPressedCancelTransaction() {
+                Toast.makeText(getApplicationContext(), "Transaction cancelled", Toast.LENGTH_LONG).show();
             }
 
             public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
+                Toast.makeText(getApplicationContext(), "Transaction Cancelled" + inResponse.toString(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -254,12 +303,122 @@ public class WalletActivity extends AppCompatActivity {
             result.append("=");
             result.append(URLEncoder.encode(pair.getValue().toString(), "UTF-8"));
         }
-
         return result.toString();
     }
 
     public void onRequestCashColClicked(View view) {
-        //TODO: Update in DB
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("id", sharedPref.getInt(getString(R.string.sp_tag_user_id), 273));
+            new ReqCashCol(obj).execute(getString(R.string.server_addr_release) + "wallet/req_cc.php");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onViewWalTxClicked(View view) {
+        Intent intent2 = new Intent(this, AccountHistoryActivity.class);
+        startActivity(intent2);
+    }
+
+    private class ReqCashCol extends AsyncTask<String, Void, String> {
+        JSONObject orderDetails;
+
+        public ReqCashCol(JSONObject orderDetails) {
+            this.orderDetails = orderDetails;
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            progress.setProgress(50);
+            // params comes from the execute() call: params[0] is the url.
+            try {
+                return downloadUrl(urls[0]);
+            } catch (IOException e) {
+                return "Unable to retrieve web page. URL may be invalid.";
+            }
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("timeout")) {
+                Toast.makeText(WalletActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
+            }
+            Log.d("DD", "Result from webserver: " + result);
+            try {
+                JSONObject resultArrayJson = new JSONObject(result);
+                //Check for Result COde
+                //If result is OK, update user Id in editor
+                JSONObject resultJson = resultArrayJson.getJSONObject("result");
+                if (resultJson.getInt("responseCode") == 273) {
+                    Toast.makeText(WalletActivity.this, "Your request recorded!\nOur executives will get in touch with you soon!", Toast.LENGTH_LONG).show();
+                } else if (resultJson.getInt("responseCode") == 275) {
+                    Toast.makeText(WalletActivity.this, "Some Error occured!\nPls Contact Customer Care", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(WalletActivity.this, "Error in connection with Server.. \nPlease try again later.", Toast.LENGTH_LONG).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+                progress.dismiss();
+            }
+        }
+
+        // Given a URL, establishes an HttpUrlConnection and retrieves
+        // the web page content as a InputStream, which it returns as
+        // a string.
+        private String downloadUrl(String myurl) throws IOException {
+            InputStream is = null;
+            // Only display the first 500 characters of the retrieved
+            // web page content.
+            int len = 1500;
+
+            try {
+                URL url = new URL(myurl);
+                //Using httpurlconnection
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(10000);//* milliseconds *//*);
+                conn.setConnectTimeout(15000); //* milliseconds *//*);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                // Starts the query
+                conn.connect();
+                String query = "json=" + orderDetails.toString();
+                OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+                //out.write(Integer.parseInt(URLEncoder.encode(userDetails.toString(), "UTF-8")));
+                out.write(query.getBytes());
+                out.flush();
+                out.close();
+
+                //int response = conn.getResponseCode();
+                //Log.d("NetworkDebugTag", "The response is: " + response);
+                is = conn.getInputStream();
+
+                // Convert the InputStream into a string
+                //Log.d("NetworkDebugTag", "The text is: " + contentAsString);
+                return readIt(is, len);
+
+                // Makes sure that the InputStream is closed after the app is
+                // finished using it.
+            } catch (SocketTimeoutException e) {
+                return "timeout";
+            } finally {
+                if (is != null) {
+                    is.close();
+                }
+            }
+        }
+
+        // Reads an InputStream and converts it to a String.
+        public String readIt(InputStream stream, int len) throws IOException {
+            Reader reader = new InputStreamReader(stream, "UTF-8");
+            char[] buffer = new char[len];
+            reader.read(buffer);
+            return new String(buffer);
+        }
+
     }
 
     private class GetHashFromServer extends AsyncTask<String, Void, String> {
@@ -447,12 +606,28 @@ public class WalletActivity extends AppCompatActivity {
     }
 
     private void evaluateResult(String status) {
+        String message;
         if (status.equals("AISH")) {
-            Toast.makeText(this, "Recharge Success", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Recharge Success", Toast.LENGTH_LONG).show();
+            message = "Recharge Success!!";
         } else {
-            Toast.makeText(this, "Recharge Failed.\n Contact Customer Care for any queries", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Recharge Failed.\n Contact Customer Care for any queries", Toast.LENGTH_LONG).show();
+            message = "Recharge Failed!! Pls contact customer care";
         }
-        this.recreate();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent userHomeActivityIntent = new Intent(WalletActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(userHomeActivityIntent);
+                finish();
+                dialog.dismiss();
+            }
+        });
+        AlertDialog mDialog = builder.create();
+        mDialog.show();
+
     }
 
     private class GetBalance extends AsyncTask<String, Void, String> {

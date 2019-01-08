@@ -8,9 +8,11 @@
         android:layout_height="wrap_content" />
 
     <android.support.v7.widget.CardView
+        android:id="@+id/cv1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/datePicker">
+        android:layout_below="@+id/datePicker"
+        android:layout_above="@+id/createOrderButton">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -41,6 +43,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <View
+                android:id="@+id/divider11"
+                android:layout_below="@+id/ordersforthedayRV"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rcOrdersforthedayRV"
                 android:layout_below="@+id/ordersforthedayRV"
@@ -64,15 +73,15 @@
     </android.support.v7.widget.CardView>
 
     <Button
-            android:id="@+id/createOrderButton"
+        android:id="@+id/createOrderButton"
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
-            android:layout_height="wrap_content"
+        android:layout_height="wrap_content"
         android:textSize="15dp"
         android:textColor="@color/colorWhite"
         android:layout_margin="10dp"
         android:background="@drawable/button_background"
-            android:onClick="createOrderBtnOnClick"
+        android:onClick="createOrderBtnOnClick"
         android:text="New Order" />
 
 

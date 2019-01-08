@@ -26,6 +26,7 @@
         android:id="@+id/desTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorBlack"
         android:text="Cash Collection"
         android:paddingLeft="10dp"
         android:layout_below="@id/dateTV" />

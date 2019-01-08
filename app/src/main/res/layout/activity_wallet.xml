@@ -38,6 +38,7 @@
         android:layout_height="wrap_content"
         android:text="Add Balance:"
         android:layout_below="@+id/rl1"
+        android:textColor="@color/colorBlack"
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true" />
 
@@ -52,10 +53,27 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp" />
 
+    <TextView
+        android:id="@+id/monthlyCostTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Estimated Monthly Order Cost: Rs. 500"
+        android:layout_below="@+id/amountET"
+        android:padding="10dp"
+        android:textColor="#732525" />
+
+    <TextView
+        android:id="@+id/weeklyCostTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Estimated Weekly Order Cost: Rs. 150"
+        android:layout_below="@+id/monthlyCostTV"
+        android:padding="10dp"
+        android:textColor="#732525" />
 
     <Button
         android:id="@+id/payOnlineBtn"
-        android:layout_below="@+id/amountET"
+        android:layout_below="@+id/weeklyCostTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -77,4 +95,17 @@
         android:textSize="16dp"
         android:onClick="onRequestCashColClicked"
         android:textColor="#5372be" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Wallet Transactions History"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="onViewWalTxClicked"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_background"
+        android:textColor="@color/colorWhite"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" />
 </RelativeLayout>
