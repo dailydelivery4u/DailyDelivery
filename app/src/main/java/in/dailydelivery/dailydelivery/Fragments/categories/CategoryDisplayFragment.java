@@ -12,7 +12,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,20 +35,14 @@ import in.dailydelivery.dailydelivery.Fragments.categories.Categories.category;
 import in.dailydelivery.dailydelivery.R;
 import in.dailydelivery.dailydelivery.UserHomeActivity;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {CategoryDisplayFragmentInteractionListener}
- * interface.
- */
+
 public class CategoryDisplayFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
-
-    private CategoryDisplayFragmentInteractionListener mListener;
     JSONArray categoryList;
     Context context;
     RecyclerView recyclerView;
+    private CategoryDisplayFragmentInteractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -75,7 +68,6 @@ public class CategoryDisplayFragment extends Fragment {
         }
         return view;
     }
-
 
 
     @Override
@@ -121,20 +113,6 @@ public class CategoryDisplayFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface CategoryDisplayFragmentInteractionListener {
-        void categoryFragmentInteraction(category item);
-    }
-
     public void displayCategories() {
         Categories.ITEMS.clear();
         for (int i = 0; i < categoryList.length(); i++) {
@@ -173,6 +151,19 @@ public class CategoryDisplayFragment extends Fragment {
         dialog.show();
     }
 
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface CategoryDisplayFragmentInteractionListener {
+        void categoryFragmentInteraction(category item);
+    }
 
     // Uses AsyncTask to create a task away from the main UI thread. This task takes a
     // URL string and uses it to create an HttpUrlConnection. Once the connection
@@ -192,7 +183,7 @@ public class CategoryDisplayFragment extends Fragment {
             try {
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid." + e.getMessage();
+                return "Unable to retrieve contact server!";
             }
         }
 
@@ -200,9 +191,9 @@ public class CategoryDisplayFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("timeout")) {
-                //Toast.makeText(CreateOrderActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             } else {
-                Log.d("DD", "Result from webserver in Category fetching: " + result);
+                //Log.d("DD", "Result from webserver in Category fetching: " + result);
                 try {
                     categoryList = new JSONArray(result);
                     displayCategories();
@@ -228,7 +219,7 @@ public class CategoryDisplayFragment extends Fragment {
                 //Using httpurlconnection
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(10000);//* milliseconds *//*);
-                conn.setConnectTimeout(15000); //* milliseconds *//*);
+                conn.setConnectTimeout(10000); //* milliseconds *//*);
                 conn.setRequestMethod("POST");
                 conn.setDoInput(true);
                 conn.setDoOutput(true);

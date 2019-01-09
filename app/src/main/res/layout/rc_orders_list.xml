@@ -8,35 +8,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="15dp"
-        android:textSize="17dp"
+        android:text="Product: Heritage Golden Cow"
         android:textColor="@color/colorBlack"
-        android:text="Product: Heritage Golden Cow" />
+        android:textSize="17dp" />
 
     <TextView
         android:id="@+id/priceTV"
-        android:layout_marginLeft="15dp"
-        android:layout_below="@+id/nameTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorBlack"
-        android:text="Price: Rs. 21" />
+        android:layout_below="@+id/nameTV"
+        android:layout_marginLeft="15dp"
+        android:text="Price: Rs. 21"
+        android:textColor="@color/colorBlack" />
 
     <TextView
         android:id="@+id/startDateTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/nameTV"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
-        android:textColor="@color/colorBlack"
-        android:layout_below="@+id/nameTV"
-        android:text="Start Date: 20 Jan 018" />
+        android:text="Start Date: 20 Jan 018"
+        android:textColor="@color/colorBlack" />
 
     <View
         android:id="@+id/divider4"
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/startDateTV"
+        android:layout_marginTop="10dp"
         android:background="?android:attr/listDivider" />
 
 
@@ -45,8 +45,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider4"
-        android:orientation="horizontal"
         android:layout_marginTop="10dp"
+        android:orientation="horizontal"
         android:weightSum="7">
 
         <TextView
@@ -115,10 +115,10 @@
 
     <View
         android:id="@+id/divider5"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/weekListLL"
+        android:layout_marginTop="5dp"
         android:background="?android:attr/listDivider" />
 
     <LinearLayout
@@ -126,8 +126,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider5"
-        android:orientation="horizontal"
         android:layout_marginTop="5dp"
+        android:orientation="horizontal"
         android:weightSum="7">
 
         <TextView
@@ -203,10 +203,10 @@
 
     <View
         android:id="@+id/divider6"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/weekQtyListLL"
+        android:layout_marginTop="5dp"
         android:background="?android:attr/listDivider" />
 
     <!--Button

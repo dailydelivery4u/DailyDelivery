@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="in.dailydelivery.dailydelivery">
 
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_SMS" />
@@ -50,10 +51,18 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".AccountHistoryActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".HelpActivity" />
-        <activity android:name=".ReccurringOrdersActivity"></activity>
+        <activity
+            android:name=".AccountHistoryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".HelpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ReccurringOrdersActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

@@ -38,8 +38,8 @@ public class RCOrderDetailsFragment extends Fragment {
     TextView startDateTV, sdChangeTV;
     Button placeRCOrderBtn;
 
-    int deliverySlot = 0;
-    int selectedSlot;
+    //    int deliverySlot = 0;
+    //   int selectedSlot;
     int dateSelected = 0;
 
     String[] dates;
@@ -216,7 +216,6 @@ public class RCOrderDetailsFragment extends Fragment {
     }
 
     public interface RCOrderDetailsFragmentInteractionListener {
-        // TODO: Update argument type and name
         void rcOrderDetailsFragmentInteraction(RcOrderDetails rcOrderDetails);
     }
 }

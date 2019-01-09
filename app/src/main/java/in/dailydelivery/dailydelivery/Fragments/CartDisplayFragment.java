@@ -21,26 +21,25 @@ import in.dailydelivery.dailydelivery.DB.Cart;
 import in.dailydelivery.dailydelivery.R;
 
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnCartDisplayFragmentInteractionListener}
- * interface.
- */
+interface onItemRemovedListner {
+    void onItemRemoved(int product_id, int cat_id, int position);
+}
+
+interface onQtyChangedListner {
+    void onQtyChanged(int pId, int catId, int qty, int position);
+}
+
+
 public class CartDisplayFragment extends Fragment implements onItemRemovedListner, onQtyChangedListner {
     AppDatabase db;
-    private OnCartDisplayFragmentInteractionListener mListener;
     List<Cart> cartItems;
     RecyclerView recyclerView;
     MycartDisplayRecyclerViewAdapter mycartDisplayRecyclerViewAdapter;
     TextView totalPriceTV;
     int totalPrice;
     Button proceedButton;
+    private OnCartDisplayFragmentInteractionListener mListener;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public CartDisplayFragment() {
     }
 
@@ -65,7 +64,6 @@ public class CartDisplayFragment extends Fragment implements onItemRemovedListne
         recyclerView.addItemDecoration(dividerItemDecoration);
         new GetCartData().execute();
 
-        //TODO: CHeck items are in cart - cart not empty
         proceedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,7 +119,6 @@ public class CartDisplayFragment extends Fragment implements onItemRemovedListne
 
 
     public interface OnCartDisplayFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onCartDisplayFragmentInteraction(int proceed);
     }
 
@@ -172,12 +169,4 @@ public class CartDisplayFragment extends Fragment implements onItemRemovedListne
         }
     }
 
-}
-
-interface onItemRemovedListner {
-    void onItemRemoved(int product_id, int cat_id, int position);
-}
-
-interface onQtyChangedListner {
-    void onQtyChanged(int pId, int catId, int qty, int position);
 }

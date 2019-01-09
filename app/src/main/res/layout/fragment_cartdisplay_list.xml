@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".Fragments.CartDisplayFragment"
     android:name="in.dailydelivery.dailydelivery.Fragments.cartDisplayFragment"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".Fragments.CartDisplayFragment">
 
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_above="@+id/bottomLL"
+        android:layout_alignParentTop="true"
         tools:listitem="@layout/fragment_cartdisplay" />
 
     <RelativeLayout
@@ -28,24 +28,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="Total : Rs. 500"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
+            android:text="Total : Rs. 500"
             android:textColor="#732525"
             android:textSize="16dp"
-            android:layout_centerVertical="true"
             android:textStyle="normal" />
 
         <Button
+            android:id="@+id/proceedBtn"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:id="@+id/proceedBtn"
-            android:text="Proceed"
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
-            android:background="@drawable/button_background_green"
-            android:textColor="@color/colorWhite"
             android:layout_marginBottom="10dp"
-            android:gravity="center" />
+            android:background="@drawable/button_background_green"
+            android:gravity="center"
+            android:text="Proceed"
+            android:textColor="@color/colorWhite" />
 
     </RelativeLayout>
 

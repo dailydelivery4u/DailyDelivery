@@ -21,22 +21,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/imageView"
-        android:textSize="16dp"
         android:layout_marginLeft="30dp"
         android:layout_toRightOf="@+id/imageView"
         android:text="Heritage Golden Cow Milk"
         android:textAllCaps="true"
-        android:textColor="#732525" />
+        android:textColor="#732525"
+        android:textSize="16dp" />
 
     <TextView
         android:id="@+id/productDescriptionTextView"
         android:layout_width="wrap_content"
-        android:textColor="@color/colorBlack"
         android:layout_height="wrap_content"
         android:layout_below="@+id/productNameTextView"
         android:layout_alignLeft="@+id/productNameTextView"
         android:layout_marginTop="5dp"
-        android:text="500ml Milk Packet" />
+        android:text="500ml Milk Packet"
+        android:textColor="@color/colorBlack" />
 
     <TextView
         android:id="@+id/mrpTextView"
@@ -73,8 +73,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider3"
         android:padding="10dp"
-        android:textColor="#ed2a2a"
-        android:text="Weekly Order Details" />
+        android:text="Weekly Order Details"
+        android:textColor="#ed2a2a" />
 
     <View
         android:id="@+id/divider4"
@@ -220,18 +220,18 @@
         android:layout_below="@+id/npLL"
         android:layout_marginTop="10dp"
         android:paddingLeft="10dp"
-        android:textColor="#ed2a2a"
-        android:text="Delivery Slot" />
+        android:text="Delivery Slot"
+        android:textColor="#ed2a2a" />
 
     <TextView
         android:id="@+id/dsChangeTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Change"
-        android:layout_marginRight="20dp"
-        android:textColor="#c8cbef"
         android:layout_alignTop="@+id/deliverySlotTV"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:text="Change"
+        android:textColor="#c8cbef" />
 
     <View
         android:id="@+id/divider7"
@@ -245,9 +245,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider7"
-        android:textColor="@color/colorBlack"
         android:padding="10dp"
-        android:text="5:30AM to 7:30AM" />
+        android:text="5:30AM to 7:30AM"
+        android:textColor="@color/colorBlack" />
 
     <View
         android:id="@+id/divider8"
@@ -261,20 +261,20 @@
         android:id="@+id/startDateTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#ed2a2a"
-        android:paddingLeft="10dp"
         android:layout_below="@+id/divider8"
-        android:text="Start Date" />
+        android:paddingLeft="10dp"
+        android:text="Start Date"
+        android:textColor="#ed2a2a" />
 
     <TextView
         android:id="@+id/sdChangeTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Change"
-        android:layout_marginRight="20dp"
-        android:textColor="#2f3dd4"
         android:layout_alignTop="@+id/startDateTV"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:text="Change"
+        android:textColor="#2f3dd4" />
 
     <View
         android:id="@+id/divider9"
@@ -290,8 +290,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/divider9"
         android:padding="10dp"
-        android:textColor="@color/colorBlack"
-        android:text="Monday, 26 November 2018" />
+        android:text="Monday, 26 November 2018"
+        android:textColor="@color/colorBlack" />
 
     <View
         android:id="@+id/divider5"
@@ -308,9 +308,9 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
-        android:padding="10dp"
-        android:textColor="@color/colorWhite"
         android:background="@drawable/button_background"
-        android:text="Place Repeating Order" />
+        android:padding="10dp"
+        android:text="Place Repeating Order"
+        android:textColor="@color/colorWhite" />
 
 </RelativeLayout>

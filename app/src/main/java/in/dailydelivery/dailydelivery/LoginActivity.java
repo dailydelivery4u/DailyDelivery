@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -63,61 +62,74 @@ public class LoginActivity extends AppCompatActivity {
         db = AppDatabase.getAppDatabase(this);
     }
 
-    public void onLoginBtnClicked(View view){
+    public void onLoginBtnClicked(View view) {
 
-        //Toast.makeText(this,"Login",Toast.LENGTH_LONG).show();
-        progress.setMessage("Hang on!! Logging You in...");
-        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progress.setIndeterminate(true);
-        progress.setProgress(30);
-        progress.setCanceledOnTouchOutside(false);
+        if (pinInput.getText().length() == 4) {
+            //Toast.makeText(this,"Login",Toast.LENGTH_LONG).show();
+            progress.setMessage("Hang on!! Logging You in...");
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setIndeterminate(true);
+            progress.setProgress(30);
+            progress.setCanceledOnTouchOutside(false);
 //----------------------------------Connect to Server
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            progress.show();
-            //Create a JSONObject for sending to server
-            JSONObject obj = new JSONObject();
+            ConnectivityManager connMgr = (ConnectivityManager)
+                    getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.isConnected()) {
+                progress.show();
+                //Create a JSONObject for sending to server
+                JSONObject obj = new JSONObject();
 
-            try {
-                obj.put("ph", userPh);
-                obj.put("pin", pinInput.getText().toString());
+                try {
+                    obj.put("ph", userPh);
+                    obj.put("pin", pinInput.getText().toString());
 
-            } catch (JSONException e) {
-                e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                new PostDataToServer(obj).execute(getString(R.string.server_addr_release) + "login.php");
+            } else {
+                Toast.makeText(this, "No Network Connection detected!", Toast.LENGTH_LONG).show();
             }
-            new PostDataToServer(obj).execute(getString(R.string.server_addr_release) + "login.php");
         } else {
-            Toast.makeText(this, "No Network Connection detected!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please Enter correct OTP", Toast.LENGTH_LONG).show();
+
         }
-        //--------------------------------
+    }
+
+    private boolean validPhoneNumber(String s) {
+        String regexStr = "^[0-9]{10}$";
+        return s.matches(regexStr);
     }
 
     public void onGetOtpClicked(View view) {
-        progress.setMessage("Sending OTP...");
-        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progress.setIndeterminate(true);
-        progress.setProgress(30);
-        progress.setCanceledOnTouchOutside(false);
+        if (validPhoneNumber(phInput.getText().toString())) {
+            progress.setMessage("Sending OTP...");
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setIndeterminate(true);
+            progress.setProgress(30);
+            progress.setCanceledOnTouchOutside(false);
 
-        //----------------------------------Connect to Server
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            progress.show();
-            //Create a JSONObject for sending to server
-            JSONObject obj = new JSONObject();
-            userPh = phInput.getText().toString();
-            try {
-                obj.put("ph", userPh);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            //----------------------------------Connect to Server
+            ConnectivityManager connMgr = (ConnectivityManager)
+                    getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.isConnected()) {
+                progress.show();
+                //Create a JSONObject for sending to server
+                JSONObject obj = new JSONObject();
+                userPh = phInput.getText().toString();
+                try {
+                    obj.put("ph", userPh);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                new GetOtpFromServer(obj).execute(getString(R.string.server_addr_release) + "req_otp.php");
+            } else {
+                Toast.makeText(this, "No Network Connection detected!", Toast.LENGTH_LONG).show();
             }
-            new GetOtpFromServer(obj).execute(getString(R.string.server_addr_release) + "req_otp.php");
         } else {
-            Toast.makeText(this, "No Network Connection detected!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please enter valid phone number to proceed.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -205,7 +217,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (result.equals("timeout")) {
                     return "TIMEOUT";
                 }
-                Log.d("DD", "Result from webserver: " + result);
+                //Log.d("DD", "Result from webserver: " + result);
                 try {
                     JSONObject resultArrayJson = new JSONObject(result);
                     //Check for Result COde
@@ -320,7 +332,7 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
+                return "Unable to reach server...";
             }
         }
 
@@ -328,7 +340,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             progress.dismiss();
-            Log.d("DD", "Result from server for sending otp: " + result);
+            //Log.d("DD", "Result from server for sending otp: " + result);
             try {
                 JSONObject resultArrayJson = new JSONObject(result);
                 JSONObject resultJson = resultArrayJson.getJSONObject("result");
@@ -377,9 +389,9 @@ public class LoginActivity extends AppCompatActivity {
                 return result;
                 // Makes sure that the InputStream is closed after the app is
                 // finished using it.
-            } catch (SocketTimeoutException e){
+            } catch (SocketTimeoutException e) {
                 return "timeout";
-            }finally {
+            } finally {
                 if (is != null) {
                     is.close();
                 }

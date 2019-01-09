@@ -71,6 +71,10 @@ public class RCOrdersAdapter extends RecyclerView.Adapter<RCOrdersAdapter.ViewHo
         return items.size();
     }
 
+    public interface DeleteRco {
+        void deleteRco(int rcoId);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTV;
         public TextView priceTV;
@@ -78,6 +82,7 @@ public class RCOrdersAdapter extends RecyclerView.Adapter<RCOrdersAdapter.ViewHo
         public TextView mon, tue, wed, thu, fri, sat, sun;
 
         //public Button delBtn;
+        public RcOrderDetails mItem;
 
         public ViewHolder(@NonNull View itemView, TextView nameTV, TextView priceTV, TextView startDateTV, TextView mon, TextView tue, TextView wed, TextView thu, TextView fri, TextView sat, TextView sun) {
             super(itemView);
@@ -93,12 +98,6 @@ public class RCOrdersAdapter extends RecyclerView.Adapter<RCOrdersAdapter.ViewHo
             this.sun = sun;
             // this.delBtn = delBtn;
         }
-
-        public RcOrderDetails mItem;
-    }
-
-    public interface DeleteRco {
-        void deleteRco(int rcoId);
     }
 
 }

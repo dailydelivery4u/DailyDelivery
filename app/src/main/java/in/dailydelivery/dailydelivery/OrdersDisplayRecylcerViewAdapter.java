@@ -3,7 +3,6 @@ package in.dailydelivery.dailydelivery;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
         holder.nameTV.setText(items.get(position).getName() + "(" + items.get(position).getQty() + " Nos. )");
         holder.desTV.setText(items.get(position).getDes());
         holder.priceTV.setText("Rs. " + ddPrice);
-        Log.d("DD", "Delivery Slot: " + items.get(position).getDeliverySlot());
+        //Log.d("DD", "Delivery Slot: " + items.get(position).getDeliverySlot());
         if (items.get(position).getDeliverySlot() == 1) {
             holder.slotTV.setText("Delivery: 5:30AM to 7:30AM");
         } else if (items.get(position).getDeliverySlot() == 2) {
@@ -55,22 +54,27 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
             case 1:
                 status = "Scheduled";
                 holder.statusTV.setTextColor(Color.parseColor("#732525"));
+                holder.delBtn.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 status = "Cancelled";
                 holder.statusTV.setTextColor(Color.parseColor("#e41b2b"));
+                holder.delBtn.setVisibility(View.GONE);
                 break;
             case 3:
                 status = "Confirmed";
                 holder.statusTV.setTextColor(Color.parseColor("#33862e"));
+                holder.delBtn.setVisibility(View.GONE);
                 break;
             case 4:
                 status = "Delivered";
                 holder.statusTV.setTextColor(Color.parseColor("#33862e"));
+                holder.delBtn.setVisibility(View.GONE);
                 break;
             case 5:
                 status = "Un delivered";
                 holder.statusTV.setTextColor(Color.parseColor("#e41b2b"));
+                holder.delBtn.setVisibility(View.GONE);
                 break;
             default:
                 status = "NA";
@@ -78,12 +82,6 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
         }
         status = "Status: " + status;
         holder.statusTV.setText(status);
-        if (holder.mItem.getStatus() == 2 || holder.mItem.getStatus() == 4 || holder.mItem.getStatus() == 5) {
-            holder.delBtn.setVisibility(View.GONE);
-            //holder.statusTV.setTextColor(Color.parseColor("#12345F"));
-        } else {
-            holder.delBtn.setVisibility(View.VISIBLE);
-        }
         holder.delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,14 +96,26 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
         return items.size();
     }
 
+    public void updateData(List<OneTimeOrderDetails> list) {
+        items.clear();
+        items = list;
+
+        notifyDataSetChanged();
+    }
+
+    public interface DeleteOto {
+        void deleteOto(int otoId);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public View mView;
         public final TextView nameTV;
         public final TextView desTV;
         public final TextView priceTV;
         public final TextView slotTV;
         public final TextView statusTV;
         public final ImageView delBtn;
+        public View mView;
+        public OneTimeOrderDetails mItem;
 
         public ViewHolder(View mView, TextView nameTV, TextView desTV, TextView priceTV, TextView slotTV, TextView statusTV, ImageView delBtn) {
             super(mView);
@@ -117,19 +127,6 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
             this.statusTV = statusTV;
             this.delBtn = delBtn;
         }
-
-        public OneTimeOrderDetails mItem;
-    }
-
-    public void updateData(List<OneTimeOrderDetails> list) {
-        items.clear();
-        items = list;
-
-        notifyDataSetChanged();
-    }
-
-    public interface DeleteOto {
-        void deleteOto(int otoId);
     }
 }
 

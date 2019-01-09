@@ -11,8 +11,8 @@
         android:id="@+id/cv1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/datePicker"
-        android:layout_above="@+id/createOrderButton">
+        android:layout_above="@+id/createOrderButton"
+        android:layout_below="@+id/datePicker">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -20,53 +20,53 @@
 
             <TextView
                 android:id="@+id/ordersforthedayTV"
-                android:textAlignment="center"
-                android:padding="10dp"
-                android:textSize="16dp"
-                android:textColor="@color/white"
-                android:background="#3b80b4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Orders for the Day" />
+                android:background="#3b80b4"
+                android:padding="10dp"
+                android:text="Orders for the Day"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16dp" />
 
             <View
                 android:id="@+id/divider"
-                android:layout_below="@+id/ordersforthedayTV"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:outlineAmbientShadowColor="@color/colorPrimaryDark"
-                android:background="?android:attr/listDivider" />
+                android:layout_below="@+id/ordersforthedayTV"
+                android:background="?android:attr/listDivider"
+                android:outlineAmbientShadowColor="@color/colorPrimaryDark" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/ordersforthedayRV"
-                android:layout_below="@+id/divider"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider" />
 
             <View
                 android:id="@+id/divider11"
-                android:layout_below="@+id/ordersforthedayRV"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_below="@+id/ordersforthedayRV"
                 android:background="?android:attr/listDivider" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rcOrdersforthedayRV"
-                android:layout_below="@+id/ordersforthedayRV"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ordersforthedayRV" />
 
             <TextView
                 android:id="@+id/noOrdersTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No Orders for the day"
+                android:layout_below="@+id/divider"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:textSize="15dp"
                 android:gravity="center"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/divider" />
+                android:text="No Orders for the day"
+                android:textSize="15dp" />
 
         </RelativeLayout>
 
@@ -75,14 +75,14 @@
     <Button
         android:id="@+id/createOrderButton"
         android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
         android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:textColor="@color/colorWhite"
+        android:layout_alignParentBottom="true"
         android:layout_margin="10dp"
         android:background="@drawable/button_background"
         android:onClick="createOrderBtnOnClick"
-        android:text="New Order" />
+        android:text="New Order"
+        android:textColor="@color/colorWhite"
+        android:textSize="15dp" />
 
 
 </RelativeLayout>

@@ -14,21 +14,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Your Balance"
-            android:textColor="#fff"
             android:layout_above="@+id/balanceDisplayTV"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
-            android:layout_centerHorizontal="true" />
+            android:text="Your Balance"
+            android:textColor="#fff" />
 
         <TextView
             android:id="@+id/balanceDisplayTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#fff"
-            android:text="Rs. - - . - -"
-            android:textSize="18dp"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            android:text="Rs. - - -"
+            android:textColor="#fff"
+            android:textSize="18sp" />
 
     </RelativeLayout>
 
@@ -36,76 +36,77 @@
         android:id="@+id/tv1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Balance:"
         android:layout_below="@+id/rl1"
-        android:textColor="@color/colorBlack"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:layout_centerHorizontal="true" />
+        android:text="Add Balance:"
+        android:textColor="@color/colorBlack" />
 
     <EditText
         android:id="@+id/amountET"
-        android:text="200"
-        android:gravity="center"
-        android:backgroundTint="@color/colorPrimary"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"
+        android:inputType="number"
+        android:backgroundTint="@color/colorPrimary"
+        android:gravity="center"
+        android:text="" />
 
     <TextView
         android:id="@+id/monthlyCostTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Estimated Monthly Order Cost: Rs. 500"
         android:layout_below="@+id/amountET"
         android:padding="10dp"
+        android:text="Monthly Order Cost: Rs. 500"
         android:textColor="#732525" />
 
     <TextView
         android:id="@+id/weeklyCostTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Estimated Weekly Order Cost: Rs. 150"
         android:layout_below="@+id/monthlyCostTV"
         android:padding="10dp"
+        android:text="Weekly Order Cost: Rs. 150"
         android:textColor="#732525" />
 
     <Button
         android:id="@+id/payOnlineBtn"
-        android:layout_below="@+id/weeklyCostTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/weeklyCostTV"
         android:layout_centerHorizontal="true"
-        android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="15dp"
-        android:textColor="@color/colorWhite"
+        android:layout_marginRight="20dp"
         android:background="@drawable/button_background"
         android:onClick="onPayBtnClicked"
-        android:text="Pay Online" />
+        android:text="Pay Online"
+        android:textColor="@color/colorWhite" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Request Cash Collection"
         android:layout_below="@+id/payOnlineBtn"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:textSize="16dp"
         android:onClick="onRequestCashColClicked"
-        android:textColor="#5372be" />
+        android:text="Request Cash Collection"
+        android:textColor="#5372be"
+        android:textSize="16sp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="View Wallet Transactions History"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:onClick="onViewWalTxClicked"
         android:layout_marginBottom="10dp"
         android:background="@drawable/button_background"
-        android:textColor="@color/colorWhite"
+        android:onClick="onViewWalTxClicked"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp" />
+        android:paddingRight="10dp"
+        android:text="View Wallet Transactions History"
+        android:textColor="@color/colorWhite" />
 </RelativeLayout>

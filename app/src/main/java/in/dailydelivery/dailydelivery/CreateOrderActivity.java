@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -88,6 +87,7 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
         bottomNavigationView.setDefaultBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
         bottomNavigationView.setAccentColor(Color.WHITE);
         bottomNavigationView.setInactiveColor(Color.WHITE);
+
         db = AppDatabase.getAppDatabase(this);
 
         new GetCartQty().execute();
@@ -211,17 +211,17 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
             try {
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
+                return "Unable to Connect to Server";
             }
         }
 
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            if(result.equals("timeout")){
+            if (result.equals("timeout")) {
                 Toast.makeText(CreateOrderActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             }
-            Log.d("DD", "Result from webserver: " + result);
+            //Log.d("DD", "Result from webserver: " + result);
             try {
                 JSONObject resultArrayJson = new JSONObject(result);
                 //Check for Result COde
@@ -287,9 +287,9 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
 
                 // Makes sure that the InputStream is closed after the app is
                 // finished using it.
-            } catch (SocketTimeoutException e){
+            } catch (SocketTimeoutException e) {
                 return "timeout";
-            }finally {
+            } finally {
                 if (is != null) {
                     is.close();
                 }
@@ -322,7 +322,7 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
         @Override
         protected Void doInBackground(Void... integers) {
             for (Cart c : cartItems) {
-                Log.d("dd", "Pid - " + String.valueOf(c.getProductId()) + "UId: " + String.valueOf(c.getUid()));
+                //Log.d("dd", "Pid - " + String.valueOf(c.getProductId()) + "UId: " + String.valueOf(c.getUid()));
                 db.oneTimeOrderDetailsDao().insertOnetimeOrderDetails(new OneTimeOrderDetails(c.getUid(), c.getProductId(), c.getCatId(), c.getProductqty(), c.getProductName(), c.getProductDes(), c.getProductDdprice(), status, date, deliverySlot));
             }
             db.userDao().emptyCart();
@@ -331,37 +331,31 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            Toast.makeText(CreateOrderActivity.this, "Order Placed", Toast.LENGTH_SHORT).show();
-            if (walletBal <= 200) {
-                //show the user status with an alert dailogue
-                AlertDialog.Builder builder = new AlertDialog.Builder(CreateOrderActivity.this);
-                builder.setTitle("Low Wallet Balance - Rs." + walletBal)
-                        .setMessage("You are running low on balance.\n Your Order is scheduled. Orders will be confirmed only if sufficient credit balance is present before 10 PM for morning delivery" +
-                                "and 4 PM for evening delivery.\n*Balance will be deducted only after delivery.");
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                        dialog.dismiss();
-                        Intent userHomeActivityIntent = new Intent(CreateOrderActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(userHomeActivityIntent);
-                        finish();
-                    }
-                });
-                builder.setPositiveButton("Recharge Now", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent walletActivityIntent = new Intent(CreateOrderActivity.this, WalletActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(walletActivityIntent);
-                        finish();
-                    }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            } else {
-                Intent userHomeActivityIntent = new Intent(CreateOrderActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(userHomeActivityIntent);
-            }
+            //Toast.makeText(CreateOrderActivity.this, "Order Placed", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(CreateOrderActivity.this);
+            builder.setTitle("Yay!! Order is scheduled")
+                    .setMessage("Ensure sufficient wallet balance for order confirmation\n(See Help for more Info).\n" +
+                            "Current wallet Balance: Rs." + walletBal);
 
+            builder.setPositiveButton("Recharge Now", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent walletActivityIntent = new Intent(CreateOrderActivity.this, WalletActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(walletActivityIntent);
+                    finish();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                    dialog.dismiss();
+                    Intent userHomeActivityIntent = new Intent(CreateOrderActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(userHomeActivityIntent);
+                    finish();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
     }
 

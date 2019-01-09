@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -112,33 +111,6 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
 
         sharedPreferences = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
         userId = sharedPreferences.getInt(getString(R.string.sp_tag_user_id), 12705);
-        if (!sharedPreferences.getBoolean(getString(R.string.gcm_token_saved_at_server_file_variable), false)) {
-            FirebaseInstanceId.getInstance().getInstanceId()
-                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                            if (!task.isSuccessful()) {
-                                Log.w("MyFirebaseMsgService", "getInstanceId failed", task.getException());
-                                return;
-                            }
-                            // Get new Instance ID token
-                            String token = task.getResult().getToken();
-                            Log.d("MyFirebaseMsgService", "Token " + token);
-                            String query = "userId=" + userId + "&serverKey=" + token;
-                            new UpdateGCMToken(query).execute(getString(R.string.server_addr_release) + "insert_gcm_server_key.php");
-                            /*Uri.Builder uri = new Uri.Builder();
-                            uri.scheme("http")
-                                    .authority("www.scoollife.com")
-                                    .appendPath("dd")
-                                    .appendPath("insert_gcm_server_key.php");
-                            String url = uri.build().toString();
-                            */
-                            //new UpdateGCMToken(query).execute(url);
-                        }
-                    });
-        }
-
-        checkForUserUpdates();
     }
 
     private void checkForUserUpdates() {
@@ -225,7 +197,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
         new GetOrders(dateSelected.toString(dtf)).execute();
     }
 
-    public void createOrderBtnOnClick(View view){
+    public void createOrderBtnOnClick(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Set the dialog title
         builder.setTitle("Choose Order Type");
@@ -301,33 +273,6 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
         return true;
     }
 
-
-    private class GetOrders extends AsyncTask<Void, Void, Void> {
-        String date;
-        List<OneTimeOrderDetails> orders;
-
-        public GetOrders(String date) {
-            this.date = date;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            orders = db.oneTimeOrderDetailsDao().getOrdersForTheDay(date);
-            if (oneTimeUpdate) {
-                rcOrders = db.rcOrderDetailsDao().getRcOrders();
-                vacations = db.vacationDao().getAll();
-                oneTimeUpdate = false;
-                Log.d("dd", "Rc Orders First time size: " + rcOrders.size());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            updateRecyclerView(orders);
-        }
-    }
-
     private void updateRecyclerView(List<OneTimeOrderDetails> orders) {
         if (isLoadingFirstTime) {
             if (orders.size() > 0) {
@@ -377,6 +322,34 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                     continue;
                 }
                 */
+                int dayOfWeek = dateSelected.getDayOfWeek();
+                int qty = 1;
+                switch (dayOfWeek) {
+                    case 1:
+                        qty = rcOrderDetails.getMon();
+                        break;
+                    case 2:
+                        qty = rcOrderDetails.getTue();
+                        break;
+                    case 3:
+                        qty = rcOrderDetails.getWed();
+                        break;
+                    case 4:
+                        qty = rcOrderDetails.getThu();
+                        break;
+                    case 5:
+                        qty = rcOrderDetails.getFri();
+                        break;
+                    case 6:
+                        qty = rcOrderDetails.getSat();
+                        break;
+                    case 7:
+                        qty = rcOrderDetails.getSun();
+                        break;
+                }
+                if (qty == 0) {
+                    continue;
+                }
                 startDate = dtf.parseDateTime(rcOrderDetails.getStartDate());
                 if (dateSelected.isAfter(startDate.minusDays(1))) {
                     String key = rcOrderDetails.getStartDate() + rcOrderDetails.getOrderId();
@@ -390,8 +363,8 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                         for (Vacation v : vacations) {
                             vStartDate = dtf.parseDateTime(v.getStartDate());
                             vEndDate = dtf.parseDateTime(v.getEndDate());
-                            Log.d("DD", "Start Date: " + v.getStartDate());
-                            Log.d("DD", "End Date: " + v.getEndDate());
+                            //Log.d("DD", "Start Date: " + v.getStartDate());
+                            //Log.d("DD", "End Date: " + v.getEndDate());
                             if (dateSelected.isAfter(vStartDate.minusDays(1)) && dateSelected.isBefore(vEndDate.plusDays(1))) {
                                 rcOrderDetails.setStatus(2);
                             }
@@ -405,12 +378,12 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
             if (rcOrdersForTheDay.size() > 0) {
                 ordersPresent = true;
                 if (displayingRcOrderFirstTime) {
-                    Log.d("dd", "Setting Adapter");
+                    //Log.d("dd", "Setting Adapter");
                     rcOrdersDisplayRecyclerviewAdapter = new RcOrdersDisplayRecyclerviewAdapter(rcOrdersForTheDay, dateSelected.getDayOfWeek());
                     rcOrdersforthedayRV.setAdapter(rcOrdersDisplayRecyclerviewAdapter);
                     displayingRcOrderFirstTime = false;
                 } else {
-                    Log.d("dd", "Updating Rc Orders for the Day size: " + rcOrdersForTheDay.size() + ",Date selected " + dateSelected.toString(dtf));
+                    //Log.d("dd", "Updating Rc Orders for the Day size: " + rcOrdersForTheDay.size() + ",Date selected " + dateSelected.toString(dtf));
                     rcOrdersDisplayRecyclerviewAdapter.updateData(rcOrdersForTheDay, dateSelected.getDayOfWeek());
                 }
             } else {
@@ -424,6 +397,57 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
             noOrdersTV.setVisibility(View.VISIBLE);
         } else {
             noOrdersTV.setVisibility(View.GONE);
+        }
+        if (!sharedPreferences.getBoolean(getString(R.string.gcm_token_saved_at_server_file_variable), false)) {
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                            if (!task.isSuccessful()) {
+                                //Log.w("MyFirebaseMsgService", "getInstanceId failed", task.getException());
+                                return;
+                            }
+                            // Get new Instance ID token
+                            String token = task.getResult().getToken();
+                            //Log.d("MyFirebaseMsgService", "Token " + token);
+                            String query = "userId=" + userId + "&serverKey=" + token;
+                            new UpdateGCMToken(query).execute(getString(R.string.server_addr_release) + "insert_gcm_server_key.php");
+                        }
+                    });
+        }
+        checkForUserUpdates();
+    }
+
+    private void refreshActivity() {
+        //this.recreate();
+        Intent self = new Intent(this, UserHomeActivity.class);
+        startActivity(self);
+        finish();
+    }
+
+    private class GetOrders extends AsyncTask<Void, Void, Void> {
+        String date;
+        List<OneTimeOrderDetails> orders;
+
+        public GetOrders(String date) {
+            this.date = date;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            orders = db.oneTimeOrderDetailsDao().getOrdersForTheDay(date);
+            if (oneTimeUpdate) {
+                rcOrders = db.rcOrderDetailsDao().getRcOrders();
+                vacations = db.vacationDao().getAll();
+                oneTimeUpdate = false;
+                //Log.d("dd", "Rc Orders First time size: " + rcOrders.size());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            updateRecyclerView(orders);
         }
     }
 
@@ -456,21 +480,21 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
             try {
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid." + e.getMessage();
+                return "Check internet connection";
             }
         }
 
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            Log.d("DD", "Result from webserver: " + result);
+            //Log.d("DD", "Result from webserver: " + result);
             try {
                 JSONObject resultJson = new JSONObject(result);
                 //Check for Result COde
                 //If result is OK, update user Id in editor
                 //JSONObject resultJson = resultArrayJson.getJSONObject("result");
                 if (resultJson.getInt("result") == 273) {
-                    Log.d("MyFirebaseMsgService", "Token Logged at server");
+                    //Log.d("MyFirebaseMsgService", "Token Logged at server");
                     //SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean(getString(R.string.gcm_token_saved_at_server_file_variable), true);
@@ -540,15 +564,16 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
             try {
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid." + e.getMessage();
+                return "Pls Check internet connection";
             }
         }
 
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(UserHomeActivity.this, result, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(UserHomeActivity.this, result, Toast.LENGTH_SHORT).show();
             if (result.equals("Updating...")) {
+                Toast.makeText(UserHomeActivity.this, result, Toast.LENGTH_SHORT).show();
                 refreshActivity();
             }
         }
@@ -579,7 +604,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                 is = conn.getInputStream();
 
                 String result = readIt(is, len);
-                Log.d("DD", "Result from server - user updates: " + result);
+                //Log.d("DD", "Result from server - user updates: " + result);
                 if (is != null) {
                     is.close();
                 }
@@ -590,7 +615,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                 JSONObject resultJson = resultArrayJson.getJSONObject("result");
                 if (resultJson.getInt("responseCode") == 273) {
                     int updateCnt = resultJson.getInt("row_cnt");
-                    Log.d("DD", "Row Count: " + updateCnt);
+                    //Log.d("DD", "Row Count: " + updateCnt);
                     if (updateCnt == 0) return "NOUP";
                     JSONArray updateTypes = resultArrayJson.getJSONArray("update_types");
                     for (int i = 0; i < updateCnt; i++) {
@@ -674,13 +699,6 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
         }
     }
 
-    private void refreshActivity() {
-        //this.recreate();
-        Intent self = new Intent(this, UserHomeActivity.class);
-        startActivity(self);
-        finish();
-    }
-
     private class DeleteOrder extends AsyncTask<String, Void, String> {
         String query;
         int orderId;
@@ -697,14 +715,14 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
             try {
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid." + e.getMessage();
+                return "Check internet connection!";
             }
         }
 
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            Log.d("dd", "refreshing " + dateSelected.toString(dtf));
+            //Log.d("dd", "refreshing " + dateSelected.toString(dtf));
             new GetOrders(dateSelected.toString(dtf)).execute();
             //refreshActivity();
         }
@@ -736,7 +754,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
 
                 String result = readIt(is, len);
 
-                Log.d("DD", "Result from webserver: " + result);
+                //Log.d("DD", "Result from webserver: " + result);
                 try {
                     JSONObject resultJson = new JSONObject(result);
                     //Log.d("DD","Result:" + resultJson.getInt("result") + orderId);

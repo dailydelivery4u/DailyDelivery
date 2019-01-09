@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:numberpicker="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:numberpicker="http://schemas.android.com/tools"
     android:orientation="horizontal">
 
     <!-- A CardView that contains a TextView -->
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         card_view:cardCornerRadius="4dp">
 
         <RelativeLayout
@@ -22,66 +22,66 @@
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                app:srcCompat="@drawable/background_day_selected"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginBottom="20dp" />
+                android:layout_marginBottom="20dp"
+                app:srcCompat="@drawable/background_day_selected" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/productNameTextView"
-                android:text="Heritage Golden Cow Milk"
-                android:textSize="16dp"
-                android:layout_marginLeft="15dp"
-                android:textColor="#732525"
-                android:layout_below="@+id/imageView"
-                android:textAllCaps="true" />
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView"
+                android:layout_marginLeft="15dp"
+                android:text="Heritage Golden Cow Milk"
+                android:textAllCaps="true"
+                android:textColor="#732525"
+                android:textSize="16dp" />
+
+            <TextView
                 android:id="@+id/productDescriptionTextView"
-                android:textSize="14dp"
-                android:text="500ml Milk Packet"
-                android:textColor="#000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/productNameTextView"
                 android:layout_alignLeft="@+id/productNameTextView"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:text="500ml Milk Packet"
+                android:textColor="#000"
+                android:textSize="14dp" />
 
             <TextView
+                android:id="@+id/mrpTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/mrpTextView"
-                android:text="MRP: Rs 21"
-                android:textSize="12dp"
                 android:layout_below="@+id/productDescriptionTextView"
                 android:layout_alignLeft="@+id/productDescriptionTextView"
-                android:layout_marginTop="15dp" />
+                android:layout_marginTop="15dp"
+                android:text="MRP: Rs 21"
+                android:textSize="12dp" />
 
             <TextView
+                android:id="@+id/ddPriceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/ddPriceTextView"
-                android:text="DD Price: Rs 21"
-                android:textSize="15dp"
-                android:textColor="#732525"
                 android:layout_below="@+id/productDescriptionTextView"
-                android:layout_toRightOf="@+id/mrpTextView"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="15dp"
-                android:layout_marginLeft="10dp" />
+                android:layout_toRightOf="@+id/mrpTextView"
+                android:text="DD Price: Rs 21"
+                android:textColor="#732525"
+                android:textSize="15dp" />
 
             <Button
                 android:id="@+id/addBtn"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Add"
+                android:layout_alignTop="@+id/productDescriptionTextView"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
-                android:layout_alignTop="@+id/productDescriptionTextView"
-                android:textColor="@color/colorWhite"
-                android:background="@drawable/button_background_green" />
+                android:background="@drawable/button_background_green"
+                android:text="Add"
+                android:textColor="@color/colorWhite" />
 
             <android.support.v7.widget.LinearLayoutCompat
                 android:id="@+id/qtyLinLay"
@@ -98,19 +98,20 @@
                     android:id="@+id/qtyTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/colorBlack"
                     android:text="Quantity: "
-                    android:textSize="18dp"
-                    android:layout_marginTop="10dp" />
+                    android:textSize="18dp" />
 
                 <com.travijuu.numberpicker.library.NumberPicker
                     android:id="@+id/number_picker"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    numberpicker:min="0"
-                    numberpicker:max="10"
-                    numberpicker:unit="1"
+                    android:layout_marginLeft="30dp"
                     numberpicker:focusable="false"
-                    android:layout_marginLeft="30dp" />
+                    numberpicker:max="10"
+                    numberpicker:min="0"
+                    numberpicker:unit="1" />
 
             </android.support.v7.widget.LinearLayoutCompat>
         </RelativeLayout>

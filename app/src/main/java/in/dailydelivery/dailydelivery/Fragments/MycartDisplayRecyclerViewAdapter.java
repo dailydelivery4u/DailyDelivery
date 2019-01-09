@@ -21,10 +21,7 @@ import in.dailydelivery.dailydelivery.DB.Cart;
 import in.dailydelivery.dailydelivery.Fragments.CartDisplayFragment.OnCartDisplayFragmentInteractionListener;
 import in.dailydelivery.dailydelivery.R;
 
-/**
- * specified {@link CartDisplayFragment.OnCartDisplayFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
+
 public class MycartDisplayRecyclerViewAdapter extends RecyclerView.Adapter<MycartDisplayRecyclerViewAdapter.ViewHolder> {
 
     private final List<Cart> mValues;

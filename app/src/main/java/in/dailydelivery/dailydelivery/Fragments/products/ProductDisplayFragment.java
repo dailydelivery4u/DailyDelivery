@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -36,29 +35,19 @@ import in.dailydelivery.dailydelivery.DB.ProductTuple;
 import in.dailydelivery.dailydelivery.Fragments.products.Products.Product;
 import in.dailydelivery.dailydelivery.R;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link ProductDisplayFragmentInteractionListener}
- * interface.
- */
+
 public class ProductDisplayFragment extends Fragment {
 
-    private ProductDisplayFragmentInteractionListener mListener;
     JSONArray productList;
     RecyclerView recyclerView;
     Context context;
-    private int cat_id;
-    Button goToCartBtn;
     int delivery_slot, deliverySlotInCart;
-    private int orderType;//1 for one time order; 2 for repeating order
     AppDatabase db;
     List<ProductTuple> productsIdsInCart;
+    private ProductDisplayFragmentInteractionListener mListener;
+    private int cat_id;
+    private int orderType;//1 for one time order; 2 for repeating order
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public ProductDisplayFragment() {
     }
 
@@ -74,25 +63,14 @@ public class ProductDisplayFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_product_list, container, false);
 
         // Set the adapter
-            context = view.getContext();
+        context = view.getContext();
         recyclerView = view.findViewById(R.id.list);
-        goToCartBtn = view.findViewById(R.id.goToCartBtn);
 
         cat_id = getArguments().getInt("cat_id");
         delivery_slot = getArguments().getInt("delivery_slot");
         Log.d("DD", "Delivery SLot: " + delivery_slot);
         orderType = getArguments().getInt("order_type");
 
-        if (orderType == 2) {
-            goToCartBtn.setVisibility(View.GONE);
-        } else {
-            goToCartBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.goToCart();
-                }
-            });
-        }
         //Toast.makeText(getActivity(),"order type: " + orderType + cat_id,Toast.LENGTH_LONG).show();
         return view;
     }
@@ -149,20 +127,9 @@ public class ProductDisplayFragment extends Fragment {
         recyclerView.setAdapter(new MyProductRecyclerViewAdapter(Products.ITEMS, getActivity(), mListener, orderType, deliverySlotInCart));
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface ProductDisplayFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void productDisplayFragmentInteraction(Product item, int qty);
 
+    public interface ProductDisplayFragmentInteractionListener {
+        void productDisplayFragmentInteraction(Product item, int qty);
         void goToCart();
     }
 
@@ -179,7 +146,7 @@ public class ProductDisplayFragment extends Fragment {
             try {
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
+                return "Unable to reach server!";
             }
         }
 
@@ -187,7 +154,7 @@ public class ProductDisplayFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("timeout")) {
-                //Toast.makeText(ProductDisplayFragment.getA, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             } else {
                 Log.d("DD", "Result from webserver in Create Order Activity: " + result);
                 try {
@@ -198,7 +165,6 @@ public class ProductDisplayFragment extends Fragment {
                 } finally {
                 }
             }
-
         }
 
         // Given a URL, establishes an HttpUrlConnection and retrieves
@@ -215,7 +181,7 @@ public class ProductDisplayFragment extends Fragment {
                 //Using httpurlconnection
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(10000);//* milliseconds *//*);
-                conn.setConnectTimeout(15000); //* milliseconds *//*);
+                conn.setConnectTimeout(10000); //* milliseconds *//*);
                 conn.setRequestMethod("POST");
                 conn.setDoInput(true);
                 conn.setDoOutput(true);

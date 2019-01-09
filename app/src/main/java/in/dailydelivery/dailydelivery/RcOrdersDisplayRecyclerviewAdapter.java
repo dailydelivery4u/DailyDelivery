@@ -72,9 +72,9 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
         holder.nameTV.setText(holder.mItem.getName() + "(" + qty + " Nos.)");
         holder.desTV.setText(holder.mItem.getDes());
         holder.priceTV.setText("Rs. " + ddPrice);
-        if (holder.mItem.getDeliverySlot() == 0) {
+        if (holder.mItem.getDeliverySlot() == 1) {
             holder.slotTV.setText("Delivery: 5:30AM to 7:30AM");
-        } else if (holder.mItem.getDeliverySlot() == 1) {
+        } else if (holder.mItem.getDeliverySlot() == 2) {
             holder.slotTV.setText("Delivery: 6 PM to 8 PM");
         }
         String status;
@@ -120,6 +120,18 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
         return items.size();
     }
 
+    public void updateData(List<RcOrderDetails> list, int dayOfWeek) {
+        items.clear();
+        items = list;
+        this.dayOfWeek = dayOfWeek;
+        notifyDataSetChanged();
+    }
+
+    public void clearData() {
+        items.clear();
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView nameTV;
@@ -129,6 +141,7 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
         public final TextView statusTV;
         public final ImageView delBtn;
         public final TextView rcTV;
+        public RcOrderDetails mItem;
 
         public ViewHolder(View mView, TextView nameTV, TextView desTV, TextView priceTV, TextView slotTV, TextView statusTV, ImageView delBtn, TextView rcTV) {
             super(mView);
@@ -141,20 +154,6 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
             this.delBtn = delBtn;
             this.rcTV = rcTV;
         }
-
-        public RcOrderDetails mItem;
-    }
-
-    public void updateData(List<RcOrderDetails> list, int dayOfWeek) {
-        items.clear();
-        items = list;
-        this.dayOfWeek = dayOfWeek;
-        notifyDataSetChanged();
-    }
-
-    public void clearData() {
-        items.clear();
-        notifyDataSetChanged();
     }
 
 }

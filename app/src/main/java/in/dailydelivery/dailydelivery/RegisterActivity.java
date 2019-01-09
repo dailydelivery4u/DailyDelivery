@@ -9,7 +9,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -45,37 +44,39 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    public void registerBtnOnClick(View view){
+    public void registerBtnOnClick(View view) {
         progress.setMessage("Hang on!! Registering Our Beloved Customer...");
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progress.setIndeterminate(true);
         progress.setProgress(30);
         progress.setCanceledOnTouchOutside(false);
 
-        //TODO: Ensure fields are filled before contacting server
+        if (nameInput.getText().equals("") || addInput.getText().equals("")) {
+            Toast.makeText(this, "Please fill your name and address", Toast.LENGTH_LONG).show();
+        } else {
 
 //----------------------------------Connect to Server
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            progress.show();
-            //Create a JSONObject for sending to server
-            JSONObject obj = new JSONObject();
+            ConnectivityManager connMgr = (ConnectivityManager)
+                    getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.isConnected()) {
+                progress.show();
+                //Create a JSONObject for sending to server
+                JSONObject obj = new JSONObject();
 
-            try {
-                obj.put("name", nameInput.getText().toString());
-                obj.put("id", sharedPref.getInt(getString(R.string.sp_tag_user_id), 0));
-                obj.put("add", addInput.getText().toString());
+                try {
+                    obj.put("name", nameInput.getText().toString());
+                    obj.put("id", sharedPref.getInt(getString(R.string.sp_tag_user_id), 0));
+                    obj.put("add", addInput.getText().toString());
 
-            } catch (JSONException e) {
-                e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                new RegisterActivity.PostDataToServer(obj).execute(getString(R.string.server_addr_release) + "add_user.php");
+            } else {
+                Toast.makeText(this, "No Network Connection detected!", Toast.LENGTH_LONG).show();
             }
-            new RegisterActivity.PostDataToServer(obj).execute(getString(R.string.server_addr_release) + "add_user.php");
-        } else {
-            Toast.makeText(this, "No Network Connection detected!", Toast.LENGTH_LONG).show();
         }
-        //--------------------------------
     }
 
 
@@ -98,17 +99,17 @@ public class RegisterActivity extends AppCompatActivity {
             try {
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
+                return "Unable to contact server... check net connection";
             }
         }
 
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            if(result.equals("timeout")){
+            if (result.equals("timeout")) {
                 Toast.makeText(RegisterActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             }
-            Log.d("DD","Result from webserver: "+ result);
+            //Log.d("DD", "Result from webserver: " + result);
             try {
                 JSONObject resultArrayJson = new JSONObject(result);
                 //Check for Result COde
@@ -176,9 +177,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                 // Makes sure that the InputStream is closed after the app is
                 // finished using it.
-            } catch (SocketTimeoutException e){
+            } catch (SocketTimeoutException e) {
                 return "timeout";
-            }finally {
+            } finally {
                 if (is != null) {
                     is.close();
                 }

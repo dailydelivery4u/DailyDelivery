@@ -9,39 +9,22 @@ public class Cart {
 
     @PrimaryKey(autoGenerate = true)
     private int uid;
-
-    public int getCatId() {
-        return catId;
-    }
-
-    public void setCatId(int catId) {
-        this.catId = catId;
-    }
-
     @ColumnInfo(name = "cat_id")
     private int catId;
-
     @ColumnInfo(name = "product_id")
     private int productId;
-
     @ColumnInfo(name = "product_name")
     private String productName;
-
     @ColumnInfo(name = "product_des")
     private String productDes;
-
     @ColumnInfo(name = "product_mrp")
     private int productMrp;
-
     @ColumnInfo(name = "product_ddprice")
     private int productDdprice;
-
     @ColumnInfo(name = "product_qty")
     private int productqty;
-
     @ColumnInfo(name = "product_tn")
     private String productTnUrl;
-
     @ColumnInfo(name = "delivery_slot")
     private int delivery_slot;
 
@@ -55,6 +38,14 @@ public class Cart {
         this.productqty = productqty;
         this.productTnUrl = productTnUrl;
         this.delivery_slot = delivery_slot;
+    }
+
+    public int getCatId() {
+        return catId;
+    }
+
+    public void setCatId(int catId) {
+        this.catId = catId;
     }
 
     public int getUid() {

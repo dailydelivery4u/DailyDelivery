@@ -9,10 +9,10 @@
         android:id="@+id/textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="10dp"
         android:text="Choose your order date"
-        android:textSize="16dp"
         android:textColor="#732525"
-        android:padding="10dp" />
+        android:textSize="16dp" />
 
     <View
         android:id="@+id/divider10"
@@ -23,21 +23,21 @@
 
     <CalendarView
         android:id="@+id/calendarView"
-        android:layout_below="@+id/textview"
         android:layout_width="wrap_content"
         android:layout_height="310dp"
+        android:layout_below="@+id/textview"
         android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/deliverySlotTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16dp"
-        android:textColor="#732525"
-        android:text="Delivery Time: 5:30 AM to 7:30 AM"
+        android:layout_below="@+id/calendarView"
         android:layout_marginBottom="10dp"
         android:padding="10dp"
-        android:layout_below="@+id/calendarView" />
+        android:text="Delivery Time: 5:30 AM to 7:30 AM"
+        android:textColor="#732525"
+        android:textSize="16dp" />
 
     <!--Spinner
         android:id="@+id/delivery_time_spinner"
@@ -49,15 +49,15 @@
         android:padding="10dp" /-->
 
     <Button
+        android:id="@+id/placeOrderBtn"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:id="@+id/placeOrderBtn"
-        android:text="Place Order"
-        android:textColor="@color/colorWhite"
-        android:background="@drawable/button_background"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button_background"
+        android:text="Place Order"
+        android:textColor="@color/colorWhite" />
 
 
 </RelativeLayout>

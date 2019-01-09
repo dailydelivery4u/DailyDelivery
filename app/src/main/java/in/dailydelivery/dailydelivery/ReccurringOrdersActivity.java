@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import java.util.List;
 
@@ -84,7 +83,7 @@ public class ReccurringOrdersActivity extends AppCompatActivity implements RCOrd
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            Log.d("DD", "RC ORders size" + rcOrders.size());
+            //Log.d("DD", "RC ORders size" + rcOrders.size());
             rcOrdersAdapter = new RCOrdersAdapter(rcOrders, ReccurringOrdersActivity.this);
             recyclerView.setAdapter(rcOrdersAdapter);
         }

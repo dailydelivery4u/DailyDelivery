@@ -19,18 +19,18 @@ import in.dailydelivery.dailydelivery.R;
 
 public class OrderDetailsFragment extends Fragment {
 
+    public static List<Cart> cartList;
     //private Spinner spinner;
     TextView deliverySlotTV;
-    private OnOrderDetailsFragmentInteractionListener mListener;
-    public static List<Cart> cartList;
-    private int deliveryState;
-    private CalendarView calendarView;
     DateTime today = new DateTime();
     DateTime tomo = today.plusDays(1);
     DateTime dayAfterTom = today.plusDays(2);
     Button placeOrderBtn;
     String dateSelected;
     int delivery_slot;
+    private OnOrderDetailsFragmentInteractionListener mListener;
+    private int deliveryState;
+    private CalendarView calendarView;
 
     public OrderDetailsFragment() {
         // Required empty public constructor
@@ -202,7 +202,6 @@ public class OrderDetailsFragment extends Fragment {
 
 
     public interface OnOrderDetailsFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onOrderDetailsFragmentInteraction(String date, int deliverySlot);
     }
 }

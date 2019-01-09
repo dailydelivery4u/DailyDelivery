@@ -7,22 +7,22 @@
     tools:context=".LoginActivity">
 
     <RelativeLayout
+        android:id="@+id/topRL"
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        android:background="@color/colorPrimary"
-        android:id="@+id/topRL">
+        android:background="@color/colorPrimary">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="DAILY DELIVERY"
-            android:textStyle="normal"
+            android:layout_marginTop="60dp"
             android:fontFamily="serif"
             android:inputType="number"
-            android:textColor="@color/colorWhite"
+            android:text="DAILY DELIVERY"
             android:textAlignment="center"
-            android:layout_marginTop="60dp"
-            android:textSize="35dp" />
+            android:textColor="@color/colorWhite"
+            android:textSize="35dp"
+            android:textStyle="normal" />
 
     </RelativeLayout>
 
@@ -31,8 +31,8 @@
         android:id="@+id/phInputRL"
         android:layout_width="300dp"
         android:layout_height="200dp"
-        android:layout_centerHorizontal="true"
         android:layout_below="@+id/topRL"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="-40dp"
         android:background="@color/colorWhite">
 
@@ -42,69 +42,69 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:padding="10dp"
+            android:hint="Mobile Number"
             android:inputType="number"
-            android:hint="Mobile Number" />
+            android:padding="10dp" />
 
         <Button
             android:id="@+id/getOtpBtn"
-            android:onClick="onGetOtpClicked"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:text="Sign In with OTP"
             android:layout_below="@+id/phInput"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
-            android:textColor="@color/colorWhite"
-            android:background="@drawable/button_background_green" />
+            android:background="@drawable/button_background_green"
+            android:onClick="onGetOtpClicked"
+            android:text="Sign In with OTP"
+            android:textColor="@color/colorWhite" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/otpInputRL"
         android:layout_width="300dp"
         android:layout_height="250dp"
-        android:layout_centerHorizontal="true"
         android:layout_below="@+id/topRL"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="-40dp"
-        android:visibility="gone"
-        android:background="@color/colorWhite">
+        android:background="@color/colorWhite"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/otpInputTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="15dp"
             android:text="ENTER OTP"
-            android:textSize="16dp"
             android:textAlignment="center"
-            android:padding="15dp" />
+            android:textSize="16dp" />
 
         <View
             android:id="@+id/divider2"
             android:layout_width="250dp"
             android:layout_height="1dp"
-            android:layout_centerHorizontal="true"
             android:layout_below="@+id/otpInputTV"
+            android:layout_centerHorizontal="true"
             android:background="?android:attr/listDivider" />
 
         <EditText
             android:id="@+id/otpInputET"
-            android:inputType="number"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/divider2"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="20dp"
+            android:inputType="number" />
 
         <Button
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:text="Login"
             android:layout_below="@+id/otpInputET"
             android:layout_centerHorizontal="true"
-            android:onClick="onLoginBtnClicked"
             android:layout_marginTop="30dp"
-            android:textColor="@color/colorWhite"
-            android:background="@drawable/button_background" />
+            android:background="@drawable/button_background"
+            android:onClick="onLoginBtnClicked"
+            android:text="Login"
+            android:textColor="@color/colorWhite" />
     </RelativeLayout>
 
 </RelativeLayout>

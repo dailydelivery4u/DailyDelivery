@@ -25,11 +25,7 @@ import in.dailydelivery.dailydelivery.Fragments.products.ProductDisplayFragment.
 import in.dailydelivery.dailydelivery.Fragments.products.Products.Product;
 import in.dailydelivery.dailydelivery.R;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link Product} and makes a call to the
- * specified {@link ProductDisplayFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
+
 public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProductRecyclerViewAdapter.ViewHolder> {
 
     private final List<Product> mValues;
@@ -109,45 +105,45 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
         holder.addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                        if (orderType == 1) {
-                            //Log.d("DD","delivery slot in cart: " + deliverySlotInCart + "; item delivery slot: "+ holder.mItem.getDeliverySlot());
-                            // Notify the active callbacks interface (the activity, if the
-                            // fragment is attached to one) that an item has been selected.
-                            if (deliverySlotInCart == 0 || deliverySlotInCart == holder.mItem.getDeliverySlot()) {
-                                mListener.productDisplayFragmentInteraction(holder.mItem, 1);
-                                holder.addBtn.setText("ADDED");
-                                holder.numberPicker.setValue(1);
-                                holder.addBtn.setEnabled(false);
-                                holder.qtyLinLay.setVisibility(View.VISIBLE);
-                            } else {
-                                //show the user status with an alert dailogue
-                                String message;
-                                if (deliverySlotInCart == 1) {
-                                    //Milk in cart
-                                    message = "Milk already in Cart!You cannot add Milk and Water at the same time in Cart, due to different delivery timings.\n" +
-                                            "Complete your Milk order first and order water seperately again";
-                                } else {
-                                    //Water in cart
-                                    message = "Water already in Cart!You cannot add Milk and Water at the same time in Cart, due to different delivery timings.\n" +
-                                            "Complete your Water order first and order milk seperately again";
-                                }
-
-                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                builder.setTitle("Cannot Add Product!!")
-                                        .setMessage(message);
-                                builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        // User cancelled the dialog
-                                        dialog.dismiss();
-                                    }
-                                });
-                                AlertDialog dialog = builder.create();
-                                dialog.show();
-                                //Toast.makeText(context,"Delivery Slots Mismatch for Product and Products in Cart.")
-                            }
+                if (orderType == 1) {
+                    //Log.d("DD","delivery slot in cart: " + deliverySlotInCart + "; item delivery slot: "+ holder.mItem.getDeliverySlot());
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    if (deliverySlotInCart == 0 || deliverySlotInCart == holder.mItem.getDeliverySlot()) {
+                        mListener.productDisplayFragmentInteraction(holder.mItem, 1);
+                        holder.addBtn.setText("ADDED");
+                        holder.numberPicker.setValue(1);
+                        holder.addBtn.setEnabled(false);
+                        holder.qtyLinLay.setVisibility(View.VISIBLE);
+                    } else {
+                        //show the user status with an alert dailogue
+                        String message;
+                        if (deliverySlotInCart == 1) {
+                            //Milk in cart
+                            message = "Milk already in Cart!Water cannot be added due to different delivery timings.\n" +
+                                    "Complete your Milk order first and order water seperately again";
                         } else {
-                            mListener.productDisplayFragmentInteraction(holder.mItem, 1);
+                            //Water in cart
+                            message = "Water already in Cart!Milk cannot be added due to different delivery timings.\n" +
+                                    "Complete your Water order first and order milk seperately again";
                         }
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Cannot Add Product!!")
+                                .setMessage(message);
+                        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                                dialog.dismiss();
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                        //Toast.makeText(context,"Delivery Slots Mismatch for Product and Products in Cart.")
+                    }
+                } else {
+                    mListener.productDisplayFragmentInteraction(holder.mItem, 1);
+                }
             }
         });
     }

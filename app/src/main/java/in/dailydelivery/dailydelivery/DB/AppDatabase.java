@@ -8,16 +8,6 @@ import android.content.Context;
 
 @Database(entities = {Cart.class, OneTimeOrderDetails.class, RcOrderDetails.class, Vacation.class, WalletTransaction.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
-    public abstract CartDao userDao();
-
-    public abstract OneTimeOrderDetailsDao oneTimeOrderDetailsDao();
-
-    public abstract RcOrderDetailsDao rcOrderDetailsDao();
-
-    public abstract VacationDao vacationDao();
-
-    public abstract WalletTransactionDao walletTransactionDao();
-
     private static AppDatabase INSTANCE;
 
     public static AppDatabase getAppDatabase(Context context) {
@@ -32,6 +22,16 @@ public abstract class AppDatabase extends RoomDatabase {
     public static void destroyInstance() {
         INSTANCE = null;
     }
+
+    public abstract CartDao userDao();
+
+    public abstract OneTimeOrderDetailsDao oneTimeOrderDetailsDao();
+
+    public abstract RcOrderDetailsDao rcOrderDetailsDao();
+
+    public abstract VacationDao vacationDao();
+
+    public abstract WalletTransactionDao walletTransactionDao();
 }
 
 

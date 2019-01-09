@@ -9,18 +9,18 @@
         android:id="@+id/tv1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My Profile"
-        android:textSize="20dp"
+        android:layout_centerHorizontal="true"
         android:layout_margin="15dp"
+        android:text="My Profile"
         android:textColor="#732525"
-        android:layout_centerHorizontal="true" />
+        android:textSize="20sp" />
 
 
     <View
         android:id="@+id/divider11"
-        android:layout_below="@id/tv1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_below="@id/tv1"
         android:background="?android:attr/listDivider" />
 
 
@@ -28,64 +28,64 @@
         android:id="@+id/tv2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorBlack"
         android:layout_below="@id/divider11"
-        android:text="Name: "
         android:padding="15dp"
-        android:textSize="16dp" />
+        android:text="Name: "
+        android:textColor="@color/colorBlack"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/nameTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="120dp"
         android:layout_alignTop="@+id/tv2"
+        android:layout_marginLeft="120dp"
         android:padding="15dp"
-        android:textSize="16dp"
+        android:text="Sandeep"
         android:textColor="@color/colorBlack"
-        android:text="Sandeep" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tv3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorBlack"
         android:layout_below="@id/tv2"
-        android:text="Phone: "
         android:padding="15dp"
-        android:textSize="16dp" />
+        android:text="Phone: "
+        android:textColor="@color/colorBlack"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/phoneTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="120dp"
         android:layout_alignTop="@+id/tv3"
+        android:layout_marginLeft="120dp"
         android:padding="15dp"
-        android:textSize="16dp"
+        android:text="8825857851"
         android:textColor="@color/colorBlack"
-        android:text="8825857851" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tv4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorBlack"
         android:layout_below="@id/tv3"
-        android:text="Address: "
         android:padding="15dp"
-        android:textSize="16dp" />
+        android:text="Address: "
+        android:textColor="@color/colorBlack"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/addressTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="120dp"
         android:layout_alignTop="@+id/tv4"
+        android:layout_marginLeft="120dp"
         android:padding="15dp"
-        android:textSize="16dp"
+        android:text="Balapur X Roads"
         android:textColor="@color/colorBlack"
-        android:text="Balapur X Roads" />
+        android:textSize="16sp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -93,8 +93,8 @@
         android:layout_below="@+id/addressTV"
         android:layout_marginTop="15dp"
         android:padding="15dp"
-        android:textSize="14dp"
+        android:text="To make any changes, pls contact us"
         android:textColor="@color/colorBlack"
-        android:text="To make any changes,\nPls contact customer care at 7730889469" />
+        android:textSize="14sp" />
 
 </RelativeLayout>

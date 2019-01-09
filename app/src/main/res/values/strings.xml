@@ -19,8 +19,6 @@
         <item>6:00 PM to 8:00 PM</item>
     </string-array>
 
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="paytm_mid_test">sYBvfx01514982804268</string>
     <string name="paytm_mid">HmklBT49086449012213</string>

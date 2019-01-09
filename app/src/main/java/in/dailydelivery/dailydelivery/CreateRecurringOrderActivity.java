@@ -2,14 +2,15 @@ package in.dailydelivery.dailydelivery;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -120,6 +121,7 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
             new PlaceOrder(obj).execute(getString(R.string.server_addr_release) + "add_rc_order.php");
         }
     }
+
     private class PlaceOrder extends AsyncTask<String, Void, String> {
         JSONObject orderDetails;
 
@@ -134,7 +136,7 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
             try {
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
+                return "Unable to reach server...";
             }
         }
 
@@ -144,7 +146,7 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
             if (result.equals("timeout")) {
                 Toast.makeText(CreateRecurringOrderActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             }
-            Log.d("DD", "Result from webserver for RC Order: " + result);
+            //Log.d("DD", "Result from webserver for RC Order: " + result);
             try {
                 JSONObject resultArrayJson = new JSONObject(result);
                 //Check for Result COde
@@ -235,10 +237,31 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            Toast.makeText(CreateRecurringOrderActivity.this, "Order Placed", Toast.LENGTH_SHORT).show();
-            Intent userHomeActivityIntent = new Intent(CreateRecurringOrderActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(userHomeActivityIntent);
-            finish();
+            //Toast.makeText(CreateRecurringOrderActivity.this, "Order Placed", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(CreateRecurringOrderActivity.this);
+            builder.setTitle("Yay!! Order is scheduled")
+                    .setMessage("Ensure sufficient wallet balance for daily order confirmations.\n(See Help for more Info).\nYou can Pause " +
+                            "repeating orders by placing vacations.");
+
+            builder.setPositiveButton("Recharge Now", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent walletActivityIntent = new Intent(CreateRecurringOrderActivity.this, WalletActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(walletActivityIntent);
+                    finish();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                    dialog.dismiss();
+                    Intent userHomeActivityIntent = new Intent(CreateRecurringOrderActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(userHomeActivityIntent);
+                    finish();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
     }
 }

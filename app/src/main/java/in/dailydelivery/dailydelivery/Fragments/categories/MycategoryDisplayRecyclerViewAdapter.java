@@ -12,11 +12,6 @@ import in.dailydelivery.dailydelivery.Fragments.categories.Categories.category;
 import in.dailydelivery.dailydelivery.Fragments.categories.CategoryDisplayFragment.CategoryDisplayFragmentInteractionListener;
 import in.dailydelivery.dailydelivery.R;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link category} and makes a call to the
- * specified {CategoryDisplayFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class MycategoryDisplayRecyclerViewAdapter extends RecyclerView.Adapter<MycategoryDisplayRecyclerViewAdapter.ViewHolder> {
 
     private final List<category> mValues;
@@ -66,8 +61,8 @@ public class MycategoryDisplayRecyclerViewAdapter extends RecyclerView.Adapter<M
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mIdView = view.findViewById(R.id.item_number);
+            mContentView = view.findViewById(R.id.content);
         }
 
         @Override

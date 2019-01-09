@@ -11,10 +11,10 @@
 
         <android.support.v7.widget.CardView
             android:id="@+id/cv0"
-            android:layout_alignParentTop="true"
-            android:layout_margin="6dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_margin="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -25,23 +25,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:textSize="16sp"
+                    android:text="What is the customer care number?"
                     android:textColor="@color/colorBrown"
-                    android:text="What is the customer care number?" />
+                    android:textSize="16sp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:padding="10dp"
-                    android:background="?android:attr/listDivider" />
+                    android:background="?android:attr/listDivider"
+                    android:padding="10dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:textSize="15sp"
+                    android:text="You can call/whatsapp us on 8825857851"
                     android:textColor="@color/colorBlack"
-                    android:text="You can call/whatsapp us on 8825857851" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -49,10 +49,10 @@
 
         <android.support.v7.widget.CardView
             android:id="@+id/cv1"
-            android:layout_below="@+id/cv0"
-            android:layout_margin="6dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cv0"
+            android:layout_margin="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -63,23 +63,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:textSize="16sp"
+                    android:text="What are the delivery timings?"
                     android:textColor="@color/colorBrown"
-                    android:text="What are the delivery timings?" />
+                    android:textSize="16sp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:padding="10dp"
-                    android:background="?android:attr/listDivider" />
+                    android:background="?android:attr/listDivider"
+                    android:padding="10dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:textSize="15sp"
+                    android:text="Milk:    5:30 AM to 7:30 AM\nWater: 6:00 PM to 8:30 PM"
                     android:textColor="@color/colorBlack"
-                    android:text="Milk:    5:30 AM to 7:30 AM\nWater: 6:00 PM to 8:30 PM" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -87,10 +87,10 @@
 
         <android.support.v7.widget.CardView
             android:id="@+id/cv5"
-            android:layout_below="@+id/cv1"
-            android:layout_margin="6dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cv1"
+            android:layout_margin="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -101,23 +101,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:textSize="16sp"
+                    android:text="Can i place order for today itself?"
                     android:textColor="@color/colorBrown"
-                    android:text="Can i place order for today itself?" />
+                    android:textSize="16sp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:padding="10dp"
-                    android:background="?android:attr/listDivider" />
+                    android:background="?android:attr/listDivider"
+                    android:padding="10dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:textSize="15sp"
+                    android:text="You can place order for \nMilk -    Till 10 PM previous day\nWater - Till 4 PM same day "
                     android:textColor="@color/colorBlack"
-                    android:text="You can place order for \nMilk -    Till 10 PM previous day\nWater - Till 4 PM same day " />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -125,10 +125,10 @@
 
         <android.support.v7.widget.CardView
             android:id="@+id/cv2"
-            android:layout_margin="6dp"
-            android:layout_below="@+id/cv5"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cv5"
+            android:layout_margin="6dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -139,24 +139,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:textSize="16sp"
+                    android:text="When will Balance be deducted from my wallet?"
                     android:textColor="@color/colorBrown"
-                    android:text="When will Balance be deducted from my wallet?" />
+                    android:textSize="16sp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:padding="10dp"
-                    android:background="?android:attr/listDivider" />
+                    android:background="?android:attr/listDivider"
+                    android:padding="10dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:textSize="15sp"
-                    android:textColor="@color/colorBlack"
                     android:text="Balance will be deducted only after order delivery. However, sufficient credit balance is required
-for orders to be confirmed and delivered." />
+for orders to be confirmed and delivered."
+                    android:textColor="@color/colorBlack"
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -164,10 +164,10 @@ for orders to be confirmed and delivered." />
 
         <android.support.v7.widget.CardView
             android:id="@+id/cv3"
-            android:layout_margin="6dp"
-            android:layout_below="@+id/cv2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cv2"
+            android:layout_margin="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -178,23 +178,23 @@ for orders to be confirmed and delivered." />
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:textSize="16sp"
+                    android:text="When will my orders be confirmed? They are shown as scheduled."
                     android:textColor="@color/colorBrown"
-                    android:text="When will my orders be confirmed? They are shown as scheduled." />
+                    android:textSize="16sp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:padding="10dp"
-                    android:background="?android:attr/listDivider" />
+                    android:background="?android:attr/listDivider"
+                    android:padding="10dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:textSize="15sp"
+                    android:text="Provided you have sufficient credit balance, Your morning delivery orders are confirmed at 10 PM previous day, and evening delivery orders are confirmed at 4 PM same day."
                     android:textColor="@color/colorBlack"
-                    android:text="Provided you have sufficient credit balance, Your morning delivery orders are confirmed at 10 PM previous day, and evening delivery orders are confirmed at 4 PM same day." />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -202,10 +202,11 @@ for orders to be confirmed and delivered." />
 
         <android.support.v7.widget.CardView
             android:id="@+id/cv4"
-            android:layout_below="@+id/cv3"
-            android:layout_margin="6dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cv3"
+            android:layout_marginBottom="15dp"
+            android:layout_margin="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -216,23 +217,23 @@ for orders to be confirmed and delivered." />
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:textSize="16sp"
+                    android:text="What are vacations?"
                     android:textColor="@color/colorBrown"
-                    android:text="What are vacations?" />
+                    android:textSize="16sp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:padding="10dp"
-                    android:background="?android:attr/listDivider" />
+                    android:background="?android:attr/listDivider"
+                    android:padding="10dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:textSize="15sp"
+                    android:text="Whenever you wish to pause repeating orders, you can just set a vacation. However, you can place one time orders during the period, and they will still be delivered"
                     android:textColor="@color/colorBlack"
-                    android:text="Whenever you wish to pause repeating orders, you can just set a vacation. However, you can place one time orders during the period, and they will still be delivered" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 

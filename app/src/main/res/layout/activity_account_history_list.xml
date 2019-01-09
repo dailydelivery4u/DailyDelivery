@@ -7,28 +7,31 @@
         android:id="@+id/dateTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginLeft="5dp"
         android:text="14 DEC"
         android:textColor="#732525"
-        android:textSize="16dp"
-        android:padding="10dp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/amountTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:textSize="16dp"
         android:padding="10dp"
+        android:layout_marginRight="15dp"
+        android:text="6000(Cr)"
         android:textColor="#dc7f0d"
-        android:text="6000(Cr)" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/desTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorBlack"
+        android:layout_below="@id/dateTV"
+        android:layout_marginLeft="15dp"
+        android:textSize="15sp"
         android:text="Cash Collection"
-        android:paddingLeft="10dp"
-        android:layout_below="@id/dateTV" />
+        android:textColor="@color/colorBlack" />
 
 </RelativeLayout>

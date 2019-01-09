@@ -55,6 +55,7 @@ public class AccountHistoryRecyclerViewAdapter extends RecyclerView.Adapter<Acco
         public final TextView dateTV;
         public final TextView desTV;
         public final TextView amountTV;
+        public WalletTransaction mItem;
 
         public ViewHolder(View mView, TextView dateTV, TextView desTV, TextView amountTV) {
             super(mView);
@@ -63,7 +64,5 @@ public class AccountHistoryRecyclerViewAdapter extends RecyclerView.Adapter<Acco
             this.dateTV = dateTV;
             this.desTV = desTV;
         }
-
-        public WalletTransaction mItem;
     }
 }

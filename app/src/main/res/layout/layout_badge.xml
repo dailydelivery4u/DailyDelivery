@@ -8,8 +8,8 @@
         android:id="@+id/cartImage"
         android:layout_width="35dp"
         android:layout_height="fill_parent"
-        android:src="@drawable/ic_cart"
         android:clickable="true"
+        android:src="@drawable/ic_cart"
         android:tint="#fff" />
 
     <!-- Badge Count -->
@@ -18,8 +18,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:text="0"
-        android:gravity="center"
         android:background="@drawable/circle"
+        android:gravity="center"
+        android:text="0"
         android:textColor="#FFF" />
 </RelativeLayout>

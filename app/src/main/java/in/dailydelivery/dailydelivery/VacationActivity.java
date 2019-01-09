@@ -1,16 +1,18 @@
 package in.dailydelivery.dailydelivery;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import org.joda.time.DateTime;
@@ -35,21 +37,28 @@ import java.util.List;
 import in.dailydelivery.dailydelivery.DB.AppDatabase;
 import in.dailydelivery.dailydelivery.DB.Vacation;
 
-public class VacationActivity extends AppCompatActivity {
-    ListView vacationsListView;
+public class VacationActivity extends AppCompatActivity implements VacationsRVAdapter.VacationAdapterInterface {
     DatePickerDialog.OnDateSetListener startDateListner, endDateLisnter;
     DateTime startDate, endDate;
     DateTimeFormatter dtf, dtf_display;
     SharedPreferences sharedPref;
     AppDatabase db;
     List<Vacation> setVacations;
+    RecyclerView vacationsRV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vacation);
 
-        vacationsListView = findViewById(R.id.vacationsListView);
+        //vacationsListView = findViewById(R.id.vacationsListView);
+        vacationsRV = findViewById(R.id.vacationsRV);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        vacationsRV.setLayoutManager(layoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(vacationsRV.getContext(),
+                layoutManager.getOrientation());
+        vacationsRV.addItemDecoration(dividerItemDecoration);
+
 
         startDate = new DateTime();
         endDate = new DateTime();
@@ -57,11 +66,8 @@ public class VacationActivity extends AppCompatActivity {
         dtf_display = DateTimeFormat.mediumDate();
         sharedPref = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
         db = AppDatabase.getAppDatabase(this);
-
-        if (sharedPref.getBoolean(getString(R.string.sp_tag_is_vacation_present), false)) {
             setVacations = new ArrayList<>();
             new GetVacationDetails().execute();
-        }
 
         getSupportActionBar().setTitle("My Vacations");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -124,6 +130,33 @@ public class VacationActivity extends AppCompatActivity {
         startDateDialog.show();
     }
 
+    @Override
+    public void onVacDel(final int vacId) {
+        //Delete selected vacation in server
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Set the dialog title
+        builder.setTitle("Confirm Vacation Delete");
+        builder.setMessage("Are you sure you want to delete the Vacation?");
+
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String query = "orderId=" + vacId;
+                new DeleteOrder(query, vacId).execute(getString(R.string.server_addr_release) + "del_vac.php");
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog mDialog = builder.create();
+        mDialog.show();
+    }
+
     private class UpdateVacationInServer extends AsyncTask<String, Void, String> {
         JSONObject vacationDetails;
 
@@ -148,7 +181,7 @@ public class VacationActivity extends AppCompatActivity {
             if (result.equals("timeout")) {
                 Toast.makeText(VacationActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             }
-            Log.d("DD", "Result from webserver vacation activity: " + result);
+            //Log.d("DD", "Result from webserver vacation activity: " + result);
             try {
                 JSONObject resultArrayJson = new JSONObject(result);
                 //Check for Result Code
@@ -158,7 +191,7 @@ public class VacationActivity extends AppCompatActivity {
                     //int orderStatus = resultJson.getInt("status");
                     Toast.makeText(VacationActivity.this, "Vacation Set.\nRepeating Orders during the set period will be paused", Toast.LENGTH_LONG).show();
                     vacationDetails.put("id", resultJson.getInt("id"));
-                    new UpdateOrderInDb(vacationDetails).execute();
+                    new UpdateVacInDb(vacationDetails).execute();
                 } else if (resultJson.getInt("responseCode") == 275) {
                     Toast.makeText(VacationActivity.this, "Some Error occured! Pls try again", Toast.LENGTH_LONG).show();
                 } else {
@@ -217,10 +250,10 @@ public class VacationActivity extends AppCompatActivity {
 
     }
 
-    private class UpdateOrderInDb extends AsyncTask<Void, Void, Void> {
+    private class UpdateVacInDb extends AsyncTask<Void, Void, Void> {
         private JSONObject vacationJson;
 
-        public UpdateOrderInDb(JSONObject vacationJson) {
+        public UpdateVacInDb(JSONObject vacationJson) {
             this.vacationJson = vacationJson;
         }
 
@@ -236,18 +269,11 @@ public class VacationActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            //Toast.makeText(VacationActivity.this, "Vacation Updated in LOcal DB Placed", Toast.LENGTH_SHORT).show();
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean(getString(R.string.sp_tag_is_vacation_present), true);
-            editor.commit();
             VacationActivity.this.recreate();
         }
     }
 
     private class GetVacationDetails extends AsyncTask<Void, Void, Void> {
-
-        public GetVacationDetails() {
-        }
 
         @Override
         protected Void doInBackground(Void... integers) {
@@ -257,18 +283,108 @@ public class VacationActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            String[] items = new String[setVacations.size()];
+            VacationsRVAdapter adapter = new VacationsRVAdapter(setVacations, VacationActivity.this);
+            vacationsRV.setAdapter(adapter);
+        }
+    }
 
-            for (int i = 0; i < items.length; i++) {
-                DateTime d1 = dtf.parseDateTime(setVacations.get(i).getStartDate());
-                DateTime d2 = dtf.parseDateTime(setVacations.get(i).getEndDate());
+    private class DeleteOrder extends AsyncTask<String, Void, String> {
+        String query;
+        int orderId;
 
-                items[i] = d1.toString(dtf_display) + " to " + d2.toString(dtf_display);
+        public DeleteOrder(String query, int orderId) {
+            this.query = query;
+            this.orderId = orderId;
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+
+            // params comes from the execute() call: params[0] is the url.
+            try {
+                return downloadUrl(urls[0]);
+            } catch (IOException e) {
+                return "Check internet connection!";
             }
+        }
 
-            ArrayAdapter<String> itemsAdapter =
-                    new ArrayAdapter<String>(VacationActivity.this, android.R.layout.simple_list_item_1, items);
-            vacationsListView.setAdapter(itemsAdapter);
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            String msg;
+            if (result.equals("ok")) {
+                msg = "Vacation Deleted";
+            } else {
+                msg = "Error in deleting Vacation";
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(VacationActivity.this);
+            // Set the dialog title
+            builder.setTitle(msg);
+
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    VacationActivity.this.recreate();
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog mDialog = builder.create();
+            mDialog.show();
+        }
+
+
+        private String downloadUrl(String myurl) throws IOException {
+            InputStream is = null;
+            // Only display the first 500 characters of the retrieved
+            // web page content.
+            int len = 1500;
+
+            try {
+                URL url = new URL(myurl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(10000);//* milliseconds *//*);
+                conn.setConnectTimeout(15000); //* milliseconds *//*);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                conn.connect();
+                ;
+                OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+                out.write(query.getBytes());
+                out.flush();
+                out.close();
+                is = conn.getInputStream();
+
+                String result = readIt(is, len);
+
+                //Log.d("DD", "Result from webserver: " + result);
+                try {
+                    JSONObject resultJson = new JSONObject(result);
+                    //Log.d("DD","Result:" + resultJson.getInt("result") + orderId);
+                    if (resultJson.getInt("result") == 273) {
+                        db.vacationDao().deleteVac(orderId);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (SocketTimeoutException e) {
+                return "timeout";
+            } finally {
+                if (is != null) {
+                    is.close();
+                }
+            }
+            return "ok";
+        }
+
+        // Reads an InputStream and converts it to a String.
+        public String readIt(InputStream stream, int len) throws IOException {
+            Reader reader = new InputStreamReader(stream, "UTF-8");
+            char[] buffer = new char[len];
+            reader.read(buffer);
+            return new String(buffer);
         }
     }
 }

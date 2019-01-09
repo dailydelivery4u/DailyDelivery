@@ -7,72 +7,72 @@
         android:id="@+id/nameTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="10dp"
         android:text="Heritage Golden Cow Milk (2 Nos)"
-        android:textSize="16dp"
         android:textColor="#732525"
-        android:padding="10dp" />
+        android:textSize="16dp" />
 
     <TextView
         android:id="@+id/priceTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/nameTV"
         android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/nameTV"
         android:gravity="right"
-        android:textColor="#732525"
         android:padding="10dp"
-        android:text="Rs. 100" />
+        android:text="Rs. 100"
+        android:textColor="#732525" />
 
     <TextView
         android:id="@+id/desTV"
-        android:layout_below="@+id/nameTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorBlack"
+        android:layout_below="@+id/nameTV"
+        android:paddingLeft="10dp"
         android:text="500 ml Milk Packet"
-        android:paddingLeft="10dp" />
+        android:textColor="@color/colorBlack" />
 
     <TextView
+        android:id="@+id/deliverySlotTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/deliverySlotTV"
-        android:text="Delivery : 5:30 AM to 7:30 AM"
-        android:layout_alignTop="@+id/desTV"
         android:layout_below="@+id/priceTV"
-        android:textColor="@color/colorBlack"
-        android:paddingRight="10dp"
+        android:layout_alignTop="@+id/desTV"
         android:layout_alignParentRight="true"
-        android:gravity="right" />
+        android:gravity="right"
+        android:paddingRight="10dp"
+        android:text="Delivery : 5:30 AM to 7:30 AM"
+        android:textColor="@color/colorBlack" />
 
     <TextView
         android:id="@+id/statusTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Status: Scheduled"
-        android:textColor="#732525"
         android:layout_below="@+id/desTV"
+        android:layout_marginTop="8dp"
         android:padding="10dp"
-        android:layout_marginTop="8dp" />
+        android:text="Status: Scheduled"
+        android:textColor="#732525" />
 
     <ImageView
         android:id="@+id/delBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/delete_btn"
         android:layout_below="@+id/deliverySlotTV"
         android:layout_alignParentRight="true"
         android:padding="10dp"
+        android:src="@drawable/delete_btn"
         android:tint="#6e1b1b" />
 
     <TextView
         android:id="@+id/rcTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Repeating Order"
         android:layout_below="@+id/desTV"
-        android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/statusTV"
+        android:layout_alignParentRight="true"
         android:padding="10dp"
+        android:text="Repeating Order"
         android:textColor="#2330b9"
         android:visibility="gone" />
 

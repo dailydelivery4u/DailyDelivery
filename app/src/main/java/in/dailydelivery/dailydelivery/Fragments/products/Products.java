@@ -4,17 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Helper class for providing sample content for user interfaces created by
- * Android template wizards.
- * <p>
- * TODO: Replace all uses of this class before publishing your app.
- */
+
 public class Products implements Serializable {
 
-    /**
-     * An array of sample (dummy) items.
-     */
     public static final List<Product> ITEMS = new ArrayList<Product>();
 
 
@@ -22,9 +14,6 @@ public class Products implements Serializable {
         ITEMS.add(item);
     }
 
-    /**
-     * A dummy item representing a piece of content.
-     */
     public static class Product implements Serializable {
         private int id;
         private int cat_id;
@@ -86,16 +75,16 @@ public class Products implements Serializable {
             return mrp;
         }
 
+        public void setMrp(int mrp) {
+            this.mrp = mrp;
+        }
+
         public int getDeliverySlot() {
             return deliverySlot;
         }
 
         public void setDeliverySlot(int deliverySlot) {
             this.deliverySlot = deliverySlot;
-        }
-
-        public void setMrp(int mrp) {
-            this.mrp = mrp;
         }
 
         public int getDdPrice() {
