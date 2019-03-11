@@ -21,6 +21,6 @@ public interface RcOrderDetailsDao {
     @Query("UPDATE rc_orderdetails SET status = :status WHERE order_id = :orderId")
     void updateStatus(int status, int orderId);
 
-    @Query("DELETE FROM rc_orderdetails WHERE order_id = :orderId")
+    @Query("UPDATE rc_orderdetails SET status = 2 WHERE order_id = :orderId")
     void deleteByOrderId(int orderId);
 }

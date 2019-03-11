@@ -1,18 +1,14 @@
 package in.dailydelivery.dailydelivery;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -31,13 +27,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
@@ -100,6 +93,7 @@ public class WalletActivity extends AppCompatActivity {
             params.add(new AbstractMap.SimpleEntry("user_id", userId));
             try {
                 new GetBalance(getQuery(params)).execute(getString(R.string.server_addr_release) + "wallet/getBalance.php");
+                //new GetBalance(getQuery(params)).execute(getString(R.string.server_addr_release) + "categories_req.php");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -110,11 +104,31 @@ public class WalletActivity extends AppCompatActivity {
     }
 
     public void onPayBtnClicked(View view) {
+        startTransaction();
+        /*
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS}, 101);
+        } else {
+            startTransaction();
+        }*/
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 101: {
+                startTransaction();
+            }
+        }
+    }
+
+    public void startTransaction() {
         progress.show();
         amountToRecharge = amountET.getText().toString() + ".00";
         orderId = generateOrderId(9);
         //getHashFromServer
-//----------------------------------Connect to Server
+        //----------------------------------Connect to Server
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -123,6 +137,7 @@ public class WalletActivity extends AppCompatActivity {
             List<AbstractMap.SimpleEntry> params = new ArrayList<AbstractMap.SimpleEntry>();
             params.add(new AbstractMap.SimpleEntry("MID", getString(R.string.paytm_mid)));
             params.add(new AbstractMap.SimpleEntry("ORDER_ID", orderId));
+            params.add(new AbstractMap.SimpleEntry("MOBILE_NO", sharedPref.getString(getString(R.string.sp_tag_user_phone), "2703")));
             params.add(new AbstractMap.SimpleEntry("CUST_ID", userId));
             params.add(new AbstractMap.SimpleEntry("INDUSTRY_TYPE_ID", "Retail"));
             params.add(new AbstractMap.SimpleEntry("CHANNEL_ID", "WAP"));
@@ -133,6 +148,7 @@ public class WalletActivity extends AppCompatActivity {
                 new GetHashFromServer(getQuery(params)).execute(getString(R.string.server_addr_release) + "wallet/generateChecksum.php");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
+                progress.dismiss();
             }
         } else {
             progress.dismiss();
@@ -172,10 +188,6 @@ public class WalletActivity extends AppCompatActivity {
     }
 
     private void connectToPaytm() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS}, 101);
-        }
-
         PaytmPGService Service = PaytmPGService.getProductionService();
 
         HashMap<String, String> paramMap = new HashMap<String, String>();
@@ -183,7 +195,7 @@ public class WalletActivity extends AppCompatActivity {
 // Key in your staging and production MID available in your dashboard
         paramMap.put("ORDER_ID", orderId);
         paramMap.put("CUST_ID", String.valueOf(userId));
-        //paramMap.put( "MOBILE_NO" , "7777777777");
+        paramMap.put("MOBILE_NO", sharedPref.getString(getString(R.string.sp_tag_user_phone), "2703"));
         //paramMap.put( "EMAIL" , "username@emailprovider.com");
         paramMap.put("CHANNEL_ID", "WAP");
         paramMap.put("TXN_AMOUNT", amountToRecharge);
@@ -214,6 +226,7 @@ public class WalletActivity extends AppCompatActivity {
                         //Handle exception here
                     }
                 }
+                progress.show();
                 //Log.d("dd", "Payment Transaction response " + json.toString());
                 verifyChecksumFromServer(json);
             }
@@ -277,12 +290,21 @@ public class WalletActivity extends AppCompatActivity {
     }
 
     public void onRequestCashColClicked(View view) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("id", sharedPref.getInt(getString(R.string.sp_tag_user_id), 273));
-            new ReqCashCol(obj).execute(getString(R.string.server_addr_release) + "wallet/req_cc.php");
-        } catch (JSONException e) {
-            e.printStackTrace();
+
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            progress.show();
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("id", sharedPref.getInt(getString(R.string.sp_tag_user_id), 273));
+                new ReqCashCol(obj).execute(getString(R.string.server_addr_release) + "wallet/req_cc.php");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(this, "No Network Connection detected!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -292,6 +314,7 @@ public class WalletActivity extends AppCompatActivity {
     }
 
     private void evaluateResult(String status) {
+        progress.dismiss();
         String message;
         if (status.equals("AISH")) {
             //Toast.makeText(this, "Recharge Success", Toast.LENGTH_LONG).show();
@@ -301,7 +324,8 @@ public class WalletActivity extends AppCompatActivity {
             message = "Recharge Failed!! Pls contact customer care";
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(message);
+        builder.setCancelable(false);
+        builder.setTitle(message);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -312,6 +336,7 @@ public class WalletActivity extends AppCompatActivity {
             }
         });
         AlertDialog mDialog = builder.create();
+        mDialog.setCanceledOnTouchOutside(false);
         mDialog.show();
 
     }
@@ -344,15 +369,13 @@ public class WalletActivity extends AppCompatActivity {
             DateTime today = new DateTime();
             for (OneTimeOrderDetails oneTimeOrderDetails : oto) {
                 DateTime orderDate = dtf.parseDateTime(oneTimeOrderDetails.getDate());
-                if (orderDate.isBefore(today.plusDays(8))) {
+                if (orderDate.isBefore(today.plusDays(8)) && orderDate.isAfterNow()) {
                     otoWeeklyProjection += oneTimeOrderDetails.getPrice() * oneTimeOrderDetails.getQty();
                 }
-                if (orderDate.isBefore(today.plusDays(31))) {
+                if (orderDate.isBefore(today.plusDays(31)) && orderDate.isAfterNow()) {
                     otoMonthlyProjection += oneTimeOrderDetails.getPrice() * oneTimeOrderDetails.getQty();
                 }
             }
-
-
             return null;
         }
     }
@@ -371,13 +394,14 @@ public class WalletActivity extends AppCompatActivity {
             try {
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
+                return "timeout";
             }
         }
 
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
+            progress.dismiss();
             if (result.equals("timeout")) {
                 Toast.makeText(WalletActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             }
@@ -389,6 +413,7 @@ public class WalletActivity extends AppCompatActivity {
                 JSONObject resultJson = resultArrayJson.getJSONObject("result");
                 if (resultJson.getInt("responseCode") == 273) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(WalletActivity.this);
+                    builder.setCancelable(false);
                     builder.setMessage("Your request has been recorded.\nOur executives will get in touch with you soon.");
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
@@ -397,6 +422,7 @@ public class WalletActivity extends AppCompatActivity {
                         }
                     });
                     AlertDialog mDialog = builder.create();
+                    mDialog.setCanceledOnTouchOutside(false);
                     mDialog.show();
                 } else if (resultJson.getInt("responseCode") == 275) {
                     Toast.makeText(WalletActivity.this, "Some Error occured!\nPls Contact Customer Care", Toast.LENGTH_LONG).show();
@@ -458,10 +484,16 @@ public class WalletActivity extends AppCompatActivity {
 
         // Reads an InputStream and converts it to a String.
         public String readIt(InputStream stream, int len) throws IOException {
-            Reader reader = new InputStreamReader(stream, "UTF-8");
+            int count;
+            InputStreamReader reader;
+
+            reader = new InputStreamReader(stream, "UTF-8");
+            String str = new String();
             char[] buffer = new char[len];
-            reader.read(buffer);
-            return new String(buffer);
+            while ((count = reader.read(buffer, 0, len)) > 0) {
+                str += new String(buffer, 0, count);
+            }
+            return str;
         }
 
     }
@@ -479,7 +511,7 @@ public class WalletActivity extends AppCompatActivity {
             try {
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
+                return "timeout";
             }
         }
 
@@ -488,6 +520,7 @@ public class WalletActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             if (result.equals("timeout")) {
                 Toast.makeText(WalletActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
+                progress.dismiss();
             }
             //Log.d("DD", "Hash from webserver: " + result);
             try {
@@ -520,13 +553,18 @@ public class WalletActivity extends AppCompatActivity {
                 conn.setDoOutput(true);
                 // Starts the query
                 conn.connect();
-                OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+                /*OutputStream out = new BufferedOutputStream(conn.getOutputStream());
                 //out.write(Integer.parseInt(URLEncoder.encode(userDetails.toString(), "UTF-8")));
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(out, "UTF-8"));
                 writer.write(dataToServer);
                 writer.flush();
                 writer.close();
+                out.flush();
+                out.close();*/
+                OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+                //out.write(Integer.parseInt(URLEncoder.encode(userDetails.toString(), "UTF-8")));
+                out.write(dataToServer.getBytes());
                 out.flush();
                 out.close();
                 is = conn.getInputStream();
@@ -542,10 +580,16 @@ public class WalletActivity extends AppCompatActivity {
 
         // Reads an InputStream and converts it to a String.
         public String readIt(InputStream stream, int len) throws IOException {
-            Reader reader = new InputStreamReader(stream, "UTF-8");
+            int count;
+            InputStreamReader reader;
+
+            reader = new InputStreamReader(stream, "UTF-8");
+            String str = new String();
             char[] buffer = new char[len];
-            reader.read(buffer);
-            return new String(buffer);
+            while ((count = reader.read(buffer, 0, len)) > 0) {
+                str += new String(buffer, 0, count);
+            }
+            return str;
         }
     }
 
@@ -562,7 +606,7 @@ public class WalletActivity extends AppCompatActivity {
             try {
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
+                return "timeout";
             }
         }
 
@@ -570,6 +614,7 @@ public class WalletActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("timeout")) {
+                progress.dismiss();
                 Toast.makeText(WalletActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             } else {
                 evaluateResult(result);
@@ -596,13 +641,18 @@ public class WalletActivity extends AppCompatActivity {
                 conn.setDoOutput(true);
                 // Starts the query
                 conn.connect();
-                OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+                /*OutputStream out = new BufferedOutputStream(conn.getOutputStream());
                 //out.write(Integer.parseInt(URLEncoder.encode(userDetails.toString(), "UTF-8")));
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(out, "UTF-8"));
                 writer.write(checksumRcvd);
                 writer.flush();
                 writer.close();
+                out.flush();
+                out.close();*/
+                OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+                //out.write(Integer.parseInt(URLEncoder.encode(userDetails.toString(), "UTF-8")));
+                out.write(checksumRcvd.getBytes());
                 out.flush();
                 out.close();
 
@@ -643,10 +693,16 @@ public class WalletActivity extends AppCompatActivity {
 
         // Reads an InputStream and converts it to a String.
         public String readIt(InputStream stream, int len) throws IOException {
-            Reader reader = new InputStreamReader(stream, "UTF-8");
+            int count;
+            InputStreamReader reader;
+
+            reader = new InputStreamReader(stream, "UTF-8");
+            String str = new String();
             char[] buffer = new char[len];
-            reader.read(buffer);
-            return new String(buffer);
+            while ((count = reader.read(buffer, 0, len)) > 0) {
+                str += new String(buffer, 0, count);
+            }
+            return str;
         }
     }
 
@@ -663,6 +719,7 @@ public class WalletActivity extends AppCompatActivity {
             try {
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
+                //Log.d("DD","Caught - " + e.getMessage());
                 return "Unable to retrieve web page. URL may be invalid.";
             }
         }
@@ -670,6 +727,7 @@ public class WalletActivity extends AppCompatActivity {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
+            //Log.d("DD","Result - " + result);
             if (result.equals("timeout")) {
                 Toast.makeText(WalletActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             }
@@ -703,13 +761,18 @@ public class WalletActivity extends AppCompatActivity {
                 conn.setDoOutput(true);
                 // Starts the query
                 conn.connect();
-                OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+                /*OutputStream out = new BufferedOutputStream(conn.getOutputStream());
                 //out.write(Integer.parseInt(URLEncoder.encode(userDetails.toString(), "UTF-8")));
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(out, "UTF-8"));
                 writer.write(dataToServer);
                 writer.flush();
                 writer.close();
+                out.flush();
+                out.close();*/
+                OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+                //out.write(Integer.parseInt(URLEncoder.encode(userDetails.toString(), "UTF-8")));
+                out.write(dataToServer.getBytes());
                 out.flush();
                 out.close();
                 is = conn.getInputStream();
@@ -726,10 +789,16 @@ public class WalletActivity extends AppCompatActivity {
 
         // Reads an InputStream and converts it to a String.
         public String readIt(InputStream stream, int len) throws IOException {
-            Reader reader = new InputStreamReader(stream, "UTF-8");
+            int count;
+            InputStreamReader reader;
+
+            reader = new InputStreamReader(stream, "UTF-8");
+            String str = new String();
             char[] buffer = new char[len];
-            reader.read(buffer);
-            return new String(buffer);
+            while ((count = reader.read(buffer, 0, len)) > 0) {
+                str += new String(buffer, 0, count);
+            }
+            return str;
         }
     }
 }

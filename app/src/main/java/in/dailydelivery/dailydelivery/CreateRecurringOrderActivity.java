@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
@@ -23,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -53,9 +53,16 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
         sharedPref = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
 
         CategoryDisplayFragment frag = new CategoryDisplayFragment();
-        getSupportActionBar().setTitle("Categories");
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, frag).commit();
         db = AppDatabase.getAppDatabase(this);
+        shouldDisplayHomeUp();
+
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                shouldDisplayHomeUp();
+            }
+        });
     }
 
     @Override
@@ -67,7 +74,6 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
         bundle.putInt("order_type", 2);// 1 for 1 time order ; 2 for recurring order
         productDisplayFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, productDisplayFragment).addToBackStack(null).commit();
-        getSupportActionBar().setTitle("Products");
     }
 
     @Override
@@ -82,6 +88,28 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
     @Override
     public void goToCart() {
         //DO nothing
+    }
+
+    @Override
+    public void setActionBarTitle(String title) {
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(title);
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+        else {
+            finish();
+        }
+        return true;
+    }
+
+    public void shouldDisplayHomeUp() {
+        //Enable Up button only  if there are entries in the back stack
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -217,10 +245,16 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
 
         // Reads an InputStream and converts it to a String.
         public String readIt(InputStream stream, int len) throws IOException {
-            Reader reader = new InputStreamReader(stream, "UTF-8");
+            int count;
+            InputStreamReader reader;
+
+            reader = new InputStreamReader(stream, "UTF-8");
+            String str = new String();
             char[] buffer = new char[len];
-            reader.read(buffer);
-            return new String(buffer);
+            while ((count = reader.read(buffer, 0, len)) > 0) {
+                str += new String(buffer, 0, count);
+            }
+            return str;
         }
     }
 
@@ -239,11 +273,12 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
         protected void onPostExecute(Void aVoid) {
             //Toast.makeText(CreateRecurringOrderActivity.this, "Order Placed", Toast.LENGTH_SHORT).show();
             AlertDialog.Builder builder = new AlertDialog.Builder(CreateRecurringOrderActivity.this);
+            builder.setCancelable(false);
             builder.setTitle("Yay!! Order is scheduled")
                     .setMessage("Ensure sufficient wallet balance for daily order confirmations.\n(See Help for more Info).\nYou can Pause " +
                             "repeating orders by placing vacations.");
 
-            builder.setPositiveButton("Recharge Now", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("Recharge Now", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent walletActivityIntent = new Intent(CreateRecurringOrderActivity.this, WalletActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -251,7 +286,7 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
                     finish();
                 }
             });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("Later", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     // User cancelled the dialog
                     dialog.dismiss();
@@ -261,6 +296,7 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
                 }
             });
             AlertDialog dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         }
     }

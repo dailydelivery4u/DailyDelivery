@@ -12,7 +12,7 @@
         android:padding="10dp"
         android:text="Choose your order date"
         android:textColor="#732525"
-        android:textSize="16dp" />
+        android:textSize="16sp" />
 
     <View
         android:id="@+id/divider10"
@@ -35,9 +35,9 @@
         android:layout_below="@+id/calendarView"
         android:layout_marginBottom="10dp"
         android:padding="10dp"
-        android:text="Delivery Time: 5:30 AM to 7:30 AM"
+        android:text="Delivery Time: 6:00 AM to 8:30 AM"
         android:textColor="#732525"
-        android:textSize="16dp" />
+        android:textSize="16sp" />
 
     <!--Spinner
         android:id="@+id/delivery_time_spinner"

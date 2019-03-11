@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -15,6 +17,7 @@ import in.dailydelivery.dailydelivery.DB.WalletTransaction;
 public class AccountHistoryActivity extends AppCompatActivity {
     AppDatabase db;
     RecyclerView accountHistoryRV;
+    TextView noHistoryTV;
     List<WalletTransaction> walletTransactions;
 
     @Override
@@ -22,6 +25,7 @@ public class AccountHistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_history);
         accountHistoryRV = findViewById(R.id.accountHistoryRV);
+        noHistoryTV = findViewById(R.id.noHistoryTV);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         accountHistoryRV.setLayoutManager(layoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(accountHistoryRV.getContext(),
@@ -53,6 +57,8 @@ public class AccountHistoryActivity extends AppCompatActivity {
             if (walletTransactions.size() != 0) {
                 AccountHistoryRecyclerViewAdapter adapter = new AccountHistoryRecyclerViewAdapter(walletTransactions);
                 accountHistoryRV.setAdapter(adapter);
+            } else {
+                noHistoryTV.setVisibility(View.VISIBLE);
             }
         }
     }

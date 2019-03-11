@@ -68,6 +68,10 @@ public class VacationsRVAdapter extends RecyclerView.Adapter<VacationsRVAdapter.
         return items.size();
     }
 
+    public interface VacationAdapterInterface {
+        void onVacDel(int vacId);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView dateTV;
@@ -80,9 +84,5 @@ public class VacationsRVAdapter extends RecyclerView.Adapter<VacationsRVAdapter.
             this.dateTV = dateTV;
             this.delBtn = delBtn;
         }
-    }
-
-    public interface VacationAdapterInterface {
-        void onVacDel(int vacId);
     }
 }

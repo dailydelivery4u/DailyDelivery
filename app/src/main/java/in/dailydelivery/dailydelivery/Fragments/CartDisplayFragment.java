@@ -75,6 +75,7 @@ public class CartDisplayFragment extends Fragment implements onItemRemovedListne
                 }
             }
         });
+        mListener.setActionBarTitle("Cart");
         return view;
     }
 
@@ -120,6 +121,8 @@ public class CartDisplayFragment extends Fragment implements onItemRemovedListne
 
     public interface OnCartDisplayFragmentInteractionListener {
         void onCartDisplayFragmentInteraction(int proceed);
+
+        void setActionBarTitle(String title);
     }
 
     private class GetCartData extends AsyncTask<Void, Void, Void> {

@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -66,8 +65,8 @@ public class VacationActivity extends AppCompatActivity implements VacationsRVAd
         dtf_display = DateTimeFormat.mediumDate();
         sharedPref = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
         db = AppDatabase.getAppDatabase(this);
-            setVacations = new ArrayList<>();
-            new GetVacationDetails().execute();
+        setVacations = new ArrayList<>();
+        new GetVacationDetails().execute();
 
         getSupportActionBar().setTitle("My Vacations");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -123,7 +122,13 @@ public class VacationActivity extends AppCompatActivity implements VacationsRVAd
     }
 
     public void onAddVacationBtnClicked(View view) {
-        DateTime d = new DateTime().plusDays(1);
+        DateTime d = new DateTime();
+        int hourOfDay = d.hourOfDay().get();
+        if (hourOfDay >= 22 && hourOfDay < 24) {
+            d = d.plusDays(2);
+        } else {
+            d = new DateTime().plusDays(1);
+        }
         DatePickerDialog startDateDialog = new DatePickerDialog(this, startDateListner, d.getYear(), d.getMonthOfYear() - 1, d.getDayOfMonth());
         startDateDialog.getDatePicker().setMinDate(d.getMillis());
         startDateDialog.setMessage("Select Vacation Start Date");
@@ -134,6 +139,7 @@ public class VacationActivity extends AppCompatActivity implements VacationsRVAd
     public void onVacDel(final int vacId) {
         //Delete selected vacation in server
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
         // Set the dialog title
         builder.setTitle("Confirm Vacation Delete");
         builder.setMessage("Are you sure you want to delete the Vacation?");
@@ -154,6 +160,7 @@ public class VacationActivity extends AppCompatActivity implements VacationsRVAd
             }
         });
         AlertDialog mDialog = builder.create();
+        mDialog.setCanceledOnTouchOutside(false);
         mDialog.show();
     }
 
@@ -242,10 +249,16 @@ public class VacationActivity extends AppCompatActivity implements VacationsRVAd
 
         // Reads an InputStream and converts it to a String.
         public String readIt(InputStream stream, int len) throws IOException {
-            Reader reader = new InputStreamReader(stream, "UTF-8");
+            int count;
+            InputStreamReader reader;
+
+            reader = new InputStreamReader(stream, "UTF-8");
+            String str = new String();
             char[] buffer = new char[len];
-            reader.read(buffer);
-            return new String(buffer);
+            while ((count = reader.read(buffer, 0, len)) > 0) {
+                str += new String(buffer, 0, count);
+            }
+            return str;
         }
 
     }
@@ -381,10 +394,16 @@ public class VacationActivity extends AppCompatActivity implements VacationsRVAd
 
         // Reads an InputStream and converts it to a String.
         public String readIt(InputStream stream, int len) throws IOException {
-            Reader reader = new InputStreamReader(stream, "UTF-8");
+            int count;
+            InputStreamReader reader;
+
+            reader = new InputStreamReader(stream, "UTF-8");
+            String str = new String();
             char[] buffer = new char[len];
-            reader.read(buffer);
-            return new String(buffer);
+            while ((count = reader.read(buffer, 0, len)) > 0) {
+                str += new String(buffer, 0, count);
+            }
+            return str;
         }
     }
 }

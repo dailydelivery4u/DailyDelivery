@@ -10,7 +10,7 @@
         android:padding="15dp"
         android:text="Product: Heritage Golden Cow"
         android:textColor="@color/colorBlack"
-        android:textSize="17dp" />
+        android:textSize="17sp" />
 
     <TextView
         android:id="@+id/priceTV"
@@ -209,15 +209,16 @@
         android:layout_marginTop="5dp"
         android:background="?android:attr/listDivider" />
 
-    <!--Button
+    <Button
         android:id="@+id/delBtn"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/divider6"
         android:text="Delete"
+        android:textColor="@color/colorWhite"
         android:layout_marginBottom="20dp"
         android:background="@drawable/button_background_red"
-        android:layout_marginTop="20dp"/ -->
+        android:layout_marginTop="20dp" />
 
 </RelativeLayout>

@@ -7,33 +7,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cv1"
+    <TextView
+        android:id="@+id/ordersforthedayTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/datePicker"
+        android:background="#515dda"
+        android:padding="10dp"
+        android:text="Orders for the Day"
+        android:textAlignment="center"
+        android:textColor="@color/colorWhite"
+        android:textSize="16sp" />
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/createOrderButton"
-        android:layout_below="@+id/datePicker">
+        android:layout_below="@+id/ordersforthedayTV">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/ordersforthedayTV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#3b80b4"
-                android:padding="10dp"
-                android:text="Orders for the Day"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="16dp" />
-
             <View
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@+id/ordersforthedayTV"
                 android:background="?android:attr/listDivider"
                 android:outlineAmbientShadowColor="@color/colorPrimaryDark" />
 
@@ -66,11 +65,10 @@
                 android:layout_marginBottom="20dp"
                 android:gravity="center"
                 android:text="No Orders for the day"
-                android:textSize="15dp" />
+                android:textSize="15sp" />
 
         </RelativeLayout>
-
-    </android.support.v7.widget.CardView>
+    </android.support.v4.widget.NestedScrollView>
 
     <Button
         android:id="@+id/createOrderButton"
@@ -82,7 +80,7 @@
         android:onClick="createOrderBtnOnClick"
         android:text="New Order"
         android:textColor="@color/colorWhite"
-        android:textSize="15dp" />
+        android:textSize="15sp" />
 
 
 </RelativeLayout>

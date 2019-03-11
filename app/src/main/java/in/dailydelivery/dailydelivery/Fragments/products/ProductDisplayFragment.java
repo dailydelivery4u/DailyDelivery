@@ -9,10 +9,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -35,12 +34,15 @@ import in.dailydelivery.dailydelivery.DB.ProductTuple;
 import in.dailydelivery.dailydelivery.Fragments.products.Products.Product;
 import in.dailydelivery.dailydelivery.R;
 
+//import android.util.Log;
+
 
 public class ProductDisplayFragment extends Fragment {
 
     JSONArray productList;
     RecyclerView recyclerView;
     Context context;
+    Button goToCartBtn;
     int delivery_slot, deliverySlotInCart;
     AppDatabase db;
     List<ProductTuple> productsIdsInCart;
@@ -65,12 +67,24 @@ public class ProductDisplayFragment extends Fragment {
         // Set the adapter
         context = view.getContext();
         recyclerView = view.findViewById(R.id.list);
+        goToCartBtn = view.findViewById(R.id.goToCartBtn);
 
         cat_id = getArguments().getInt("cat_id");
         delivery_slot = getArguments().getInt("delivery_slot");
-        Log.d("DD", "Delivery SLot: " + delivery_slot);
+        //Log.d("DD", "Delivery SLot: " + delivery_slot);
         orderType = getArguments().getInt("order_type");
 
+        if (orderType == 2) {
+            goToCartBtn.setVisibility(View.GONE);
+        } else {
+            goToCartBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.goToCart();
+                }
+            });
+        }
+        mListener.setActionBarTitle("Products");
         //Toast.makeText(getActivity(),"order type: " + orderType + cat_id,Toast.LENGTH_LONG).show();
         return view;
     }
@@ -130,7 +144,10 @@ public class ProductDisplayFragment extends Fragment {
 
     public interface ProductDisplayFragmentInteractionListener {
         void productDisplayFragmentInteraction(Product item, int qty);
+
         void goToCart();
+
+        void setActionBarTitle(String title);
     }
 
     private class PostDataToServer extends AsyncTask<String, Void, String> {
@@ -156,7 +173,7 @@ public class ProductDisplayFragment extends Fragment {
             if (result.equals("timeout")) {
                 Toast.makeText(getActivity(), "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             } else {
-                Log.d("DD", "Result from webserver in Create Order Activity: " + result);
+                //Log.d("DD", "Result from webserver in Create Order Activity: " + result);
                 try {
                     productList = new JSONArray(result);
                     new populateProducts().execute();
@@ -215,10 +232,16 @@ public class ProductDisplayFragment extends Fragment {
 
         // Reads an InputStream and converts it to a String.
         public String readIt(InputStream stream, int len) throws IOException {
-            Reader reader = new InputStreamReader(stream, "UTF-8");
+            int count;
+            InputStreamReader reader;
+
+            reader = new InputStreamReader(stream, "UTF-8");
+            String str = new String();
             char[] buffer = new char[len];
-            reader.read(buffer);
-            return new String(buffer);
+            while ((count = reader.read(buffer, 0, len)) > 0) {
+                str += new String(buffer, 0, count);
+            }
+            return str;
         }
     }
 
@@ -253,7 +276,8 @@ public class ProductDisplayFragment extends Fragment {
                         deliverySlotInCart = productsIdsInCart.get(0).getDelivery_slot();
                     else deliverySlotInCart = 0;
 */
-                    Product product = new Product(product_id, cat_id, obj.getString("name"), obj.getString("description"), obj.getInt("price"), obj.getInt("discount_price"), obj.getString("thumbnail_url"), presentInCart, qty, delivery_slot);
+                    String thumbnailUrl = obj.getString("thumbnail_url").replace("\\", "");
+                    Product product = new Product(product_id, cat_id, obj.getString("name"), obj.getString("description"), obj.getInt("price"), obj.getInt("discount_price"), thumbnailUrl, presentInCart, qty, delivery_slot);
                     Products.addItem(product);
                 } catch (JSONException e) {
                     e.printStackTrace();

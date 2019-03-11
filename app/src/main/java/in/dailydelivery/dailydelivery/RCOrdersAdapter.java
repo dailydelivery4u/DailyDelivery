@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -36,16 +37,16 @@ public class RCOrdersAdapter extends RecyclerView.Adapter<RCOrdersAdapter.ViewHo
         TextView fri = view.findViewById(R.id.fri);
         TextView sat = view.findViewById(R.id.sat);
         TextView sun = view.findViewById(R.id.sun);
-        //     Button delBtn = view.findViewById(R.id.delBtn);
+        Button delBtn = view.findViewById(R.id.delBtn);
 
 
-        return new RCOrdersAdapter.ViewHolder(view, nameTV, priceTV, startDateTV, mon, tue, wed, thu, fri, sat, sun);
+        return new RCOrdersAdapter.ViewHolder(view, nameTV, priceTV, startDateTV, mon, tue, wed, thu, fri, sat, sun, delBtn);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RCOrdersAdapter.ViewHolder holder, int position) {
         holder.mItem = items.get(position);
-        holder.nameTV.setText("Product Name: " + holder.mItem.getName() + "(Order Id #" + holder.mItem.getOrderId() + ")");
+        holder.nameTV.setText(holder.mItem.getName() + "(Order Id #" + holder.mItem.getOrderId() + ")");
         holder.priceTV.setText("Price: Rs." + holder.mItem.getPrice());
         holder.startDateTV.setText("Start Date: " + holder.mItem.getStartDate());
         holder.mon.setText(String.valueOf(holder.mItem.getMon()));
@@ -55,7 +56,7 @@ public class RCOrdersAdapter extends RecyclerView.Adapter<RCOrdersAdapter.ViewHo
         holder.fri.setText(String.valueOf(holder.mItem.getFri()));
         holder.sat.setText(String.valueOf(holder.mItem.getSat()));
         holder.sun.setText(String.valueOf(holder.mItem.getSun()));
-/*
+
         holder.delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,7 +64,7 @@ public class RCOrdersAdapter extends RecyclerView.Adapter<RCOrdersAdapter.ViewHo
                 deleteRco.deleteRco(holder.mItem.getOrderId());
             }
         });
-        */
+
     }
 
     @Override
@@ -81,10 +82,10 @@ public class RCOrdersAdapter extends RecyclerView.Adapter<RCOrdersAdapter.ViewHo
         public TextView startDateTV;
         public TextView mon, tue, wed, thu, fri, sat, sun;
 
-        //public Button delBtn;
+        public Button delBtn;
         public RcOrderDetails mItem;
 
-        public ViewHolder(@NonNull View itemView, TextView nameTV, TextView priceTV, TextView startDateTV, TextView mon, TextView tue, TextView wed, TextView thu, TextView fri, TextView sat, TextView sun) {
+        public ViewHolder(@NonNull View itemView, TextView nameTV, TextView priceTV, TextView startDateTV, TextView mon, TextView tue, TextView wed, TextView thu, TextView fri, TextView sat, TextView sun, Button delBtn) {
             super(itemView);
             this.nameTV = nameTV;
             this.priceTV = priceTV;
@@ -96,7 +97,7 @@ public class RCOrdersAdapter extends RecyclerView.Adapter<RCOrdersAdapter.ViewHo
             this.fri = fri;
             this.sat = sat;
             this.sun = sun;
-            // this.delBtn = delBtn;
+            this.delBtn = delBtn;
         }
     }
 

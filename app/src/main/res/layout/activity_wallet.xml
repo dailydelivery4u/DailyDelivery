@@ -49,9 +49,9 @@
         android:layout_below="@+id/tv1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:inputType="number"
         android:backgroundTint="@color/colorPrimary"
         android:gravity="center"
+        android:inputType="number"
         android:text="" />
 
     <TextView
@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/amountET"
         android:padding="10dp"
-        android:text="Monthly Order Cost: Rs. 500"
+        android:text="Monthly Order Value: Rs. 500"
         android:textColor="#732525" />
 
     <TextView
@@ -69,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/monthlyCostTV"
         android:padding="10dp"
-        android:text="Weekly Order Cost: Rs. 150"
+        android:text="Weekly Order Value: Rs. 150"
         android:textColor="#732525" />
 
     <Button
@@ -87,6 +87,7 @@
         android:textColor="@color/colorWhite" />
 
     <TextView
+        android:id="@+id/cashColTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/payOnlineBtn"

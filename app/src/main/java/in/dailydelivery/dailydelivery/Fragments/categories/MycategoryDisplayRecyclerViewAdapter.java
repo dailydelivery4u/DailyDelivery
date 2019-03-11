@@ -1,10 +1,15 @@
 package in.dailydelivery.dailydelivery.Fragments.categories;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
@@ -16,10 +21,12 @@ public class MycategoryDisplayRecyclerViewAdapter extends RecyclerView.Adapter<M
 
     private final List<category> mValues;
     private final CategoryDisplayFragmentInteractionListener mListener;
+    private Context context;
 
-    public MycategoryDisplayRecyclerViewAdapter(List<category> items, CategoryDisplayFragmentInteractionListener listener) {
+    public MycategoryDisplayRecyclerViewAdapter(List<category> items, CategoryDisplayFragmentInteractionListener listener, Context context_) {
         mValues = items;
         mListener = listener;
+        context = context_;
     }
 
     @Override
@@ -32,7 +39,11 @@ public class MycategoryDisplayRecyclerViewAdapter extends RecyclerView.Adapter<M
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
+        //holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
+        Glide.with(this.context)
+                .load(mValues.get(position).getPic())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.catImageView);
         holder.mContentView.setText(mValues.get(position).getCatName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -54,14 +65,14 @@ public class MycategoryDisplayRecyclerViewAdapter extends RecyclerView.Adapter<M
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
+        public final ImageView catImageView;
         public final TextView mContentView;
         public category mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = view.findViewById(R.id.item_number);
+            catImageView = view.findViewById(R.id.catImageView);
             mContentView = view.findViewById(R.id.content);
         }
 

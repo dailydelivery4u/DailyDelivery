@@ -17,6 +17,8 @@ import java.util.List;
 import in.dailydelivery.dailydelivery.DB.Cart;
 import in.dailydelivery.dailydelivery.R;
 
+//import android.util.Log;
+
 public class OrderDetailsFragment extends Fragment {
 
     public static List<Cart> cartList;
@@ -80,6 +82,7 @@ public class OrderDetailsFragment extends Fragment {
                 mListener.onOrderDetailsFragmentInteraction(dateSelected, delivery_slot);
             }
         });
+        mListener.setActionBarTitle("Order Details");
         return view;
     }
 
@@ -112,9 +115,9 @@ public class OrderDetailsFragment extends Fragment {
         spinner.setSelection(delivery_slot - 1);
         spinner.setEnabled(false);*/
         if (delivery_slot == 1) {
-            deliverySlotTV.setText("Delivery Time: 5:30 AM to 7:30 AM");
+            deliverySlotTV.setText(getText(R.string.delivery_slot_1));
         } else if (delivery_slot == 2) {
-            deliverySlotTV.setText("Delivery Time: 6 PM to 8:30 PM");
+            deliverySlotTV.setText(getText(R.string.delivery_slot_2));
         }
     }
 
@@ -142,7 +145,7 @@ public class OrderDetailsFragment extends Fragment {
             }
         } else if (delivery_slot == 2) {
             //water order
-            if (deliveryState == 1 || deliveryState == 2) {
+            if (deliveryState == 1) {
                 calendarView.setMinDate(today.getMillis());
                 calendarView.setDate(today.getMillis());
                 //dateSelected = String.valueOf((dayOfMonth<10?("0"+dayOfMonth):dayOfMonth) +"-"+(month<10?("0"+month):month)+"-"+year);
@@ -151,7 +154,7 @@ public class OrderDetailsFragment extends Fragment {
                 int year = Integer.parseInt(today.year().getAsString());
                 dateSelected = String.valueOf((date < 10 ? ("0" + date) : date) + "-" + (month < 10 ? ("0" + month) : month) + "-" + year);
 
-            } else if (deliveryState == 3) {
+            } else if (deliveryState == 3 || deliveryState == 2) {
                 //Order cannot be placed for tomo. should be placed only for day after tomo
                 calendarView.setMinDate(tomo.getMillis());
                 calendarView.setDate(tomo.getMillis());
@@ -161,17 +164,18 @@ public class OrderDetailsFragment extends Fragment {
                 int year = Integer.parseInt(tomo.year().getAsString());
                 dateSelected = String.valueOf((date < 10 ? ("0" + date) : date) + "-" + (month < 10 ? ("0" + month) : month) + "-" + year);
             }
+            //Log.d("DD", "Date selected: " + dateSelected);
         }
     }
 
     private void determineDeliveryState() {
         DateTime now = new DateTime();
         int hourOfDay = now.hourOfDay().get();
-        if (hourOfDay > 0 && hourOfDay < 16) {
+        if (hourOfDay >= 0 && hourOfDay < 16) {
             deliveryState = 1;
-        } else if (hourOfDay >= 16 && hourOfDay <= 22) {
+        } else if (hourOfDay >= 16 && hourOfDay < 22) {
             deliveryState = 2;
-        } else if (hourOfDay > 22 && hourOfDay < 24) {
+        } else if (hourOfDay >= 22 && hourOfDay < 24) {
             deliveryState = 3;
         }
     }
@@ -203,5 +207,8 @@ public class OrderDetailsFragment extends Fragment {
 
     public interface OnOrderDetailsFragmentInteractionListener {
         void onOrderDetailsFragmentInteraction(String date, int deliverySlot);
+
+        void setActionBarTitle(String title);
+
     }
 }

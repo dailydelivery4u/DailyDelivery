@@ -37,6 +37,7 @@ public class RCOrderDetailsFragment extends Fragment {
     TextView deliverySlotTV, dsChangeTV;
     TextView startDateTV, sdChangeTV;
     Button placeRCOrderBtn;
+    int minOrderDays;
 
     //    int deliverySlot = 0;
     //   int selectedSlot;
@@ -59,13 +60,22 @@ public class RCOrderDetailsFragment extends Fragment {
             Bundle b = getArguments();
             product = (Products.Product) b.getSerializable("product");
         }
+        DateTime now = new DateTime();
+        int hourOfDay = now.hourOfDay().get();
+        if (hourOfDay >= 22 && hourOfDay < 24) {
+            minOrderDays = 2;
+        } else {
+            minOrderDays = 1;
+        }
+
         dates = new String[5];
         DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
-        DateTime date = new DateTime().plusDays(1);
+        DateTime date = new DateTime().plusDays(minOrderDays);
         for (int i = 0; i < 5; i++) {
             dates[i] = date.toString(dtf);
             date = date.plusDays(1);
         }
+
     }
 
     @Override
@@ -118,7 +128,7 @@ public class RCOrderDetailsFragment extends Fragment {
         mrpTV.setText("Mrp: Rs." + String.valueOf(product.getMrp()));
         mrpTV.setPaintFlags(mrpTV.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         ddPriceTV.setText("DD Price: Rs." + String.valueOf(product.getDdPrice()));
-        startDateTV.setText(new DateTime().plusDays(1).toString(dtf));
+        startDateTV.setText(new DateTime().plusDays(minOrderDays).toString(dtf));
         Glide.with(getActivity())
                 .load(product.getThumbnailUrl())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -128,14 +138,14 @@ public class RCOrderDetailsFragment extends Fragment {
         placeRCOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.rcOrderDetailsFragmentInteraction(new RcOrderDetails(product.getId(), product.getCat_id(), product.getProductName(), product.getProductDes(), product.getDdPrice(), 1, product.getDeliverySlot(), new DateTime().plusDays(dateSelected).plusDays(1).toString(dtf), np[0].getValue(), np[1].getValue(), np[2].getValue(), np[3].getValue(), np[4].getValue(), np[5].getValue(), np[6].getValue()));
+                mListener.rcOrderDetailsFragmentInteraction(new RcOrderDetails(product.getId(), product.getCat_id(), product.getProductName(), product.getProductDes(), product.getDdPrice(), 1, product.getDeliverySlot(), new DateTime().plusDays(dateSelected).plusDays(minOrderDays).toString(dtf), np[0].getValue(), np[1].getValue(), np[2].getValue(), np[3].getValue(), np[4].getValue(), np[5].getValue(), np[6].getValue()));
             }
         });
         dsChangeTV.setEnabled(false);
         if (product.getDeliverySlot() == 1) {
-            deliverySlotTV.setText(R.string.delivery_slot_0);
-        } else {
             deliverySlotTV.setText(R.string.delivery_slot_1);
+        } else {
+            deliverySlotTV.setText(R.string.delivery_slot_2);
         }/*
         dsChangeTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,7 +200,7 @@ public class RCOrderDetailsFragment extends Fragment {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DateTime dt = new DateTime().plusDays(dateSelected).plusDays(1);
+                        DateTime dt = new DateTime().plusDays(dateSelected).plusDays(minOrderDays);
                         startDateTV.setText(dt.toString(dtf));
                         dialog.dismiss();
                     }
@@ -206,6 +216,7 @@ public class RCOrderDetailsFragment extends Fragment {
                 mDialog.show();
             }
         });
+        mListener.setActionBarTitle("Order Details");
         return view;
     }
 
@@ -217,5 +228,7 @@ public class RCOrderDetailsFragment extends Fragment {
 
     public interface RCOrderDetailsFragmentInteractionListener {
         void rcOrderDetailsFragmentInteraction(RcOrderDetails rcOrderDetails);
+
+        void setActionBarTitle(String title);
     }
 }

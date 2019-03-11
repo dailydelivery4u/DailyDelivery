@@ -32,7 +32,7 @@
             android:layout_marginLeft="20dp"
             android:text="Total : Rs. 500"
             android:textColor="#732525"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:textStyle="normal" />
 
         <Button

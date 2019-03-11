@@ -14,7 +14,7 @@
         android:text="Your Set Vacations"
         android:textAlignment="center"
         android:textColor="#732525"
-        android:textSize="17dp" />
+        android:textSize="17sp" />
 
     <View
         android:id="@+id/divider6"
@@ -24,24 +24,24 @@
         android:background="?android:attr/listDivider" />
 
     <android.support.v7.widget.RecyclerView
-        android:layout_below="@+id/divider6"
-        android:layout_above="@+id/newVacBtn"
-        tools:listitem="@layout/vacation_list"
         android:id="@+id/vacationsRV"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/newVacBtn"
+        android:layout_below="@+id/divider6"
+        tools:listitem="@layout/vacation_list" />
 
     <Button
         android:id="@+id/newVacBtn"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="15dp"
         android:background="@drawable/button_background"
         android:onClick="onAddVacationBtnClicked"
-        android:layout_centerHorizontal="true"
         android:text="Add Vacation"
         android:textColor="@color/colorWhite" />
 

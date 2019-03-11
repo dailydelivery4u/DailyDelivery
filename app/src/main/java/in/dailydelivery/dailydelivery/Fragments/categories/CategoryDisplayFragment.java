@@ -1,5 +1,6 @@
 package in.dailydelivery.dailydelivery.Fragments.categories;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -43,6 +43,7 @@ public class CategoryDisplayFragment extends Fragment {
     Context context;
     RecyclerView recyclerView;
     private CategoryDisplayFragmentInteractionListener mListener;
+    ProgressDialog progress;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -66,6 +67,7 @@ public class CategoryDisplayFragment extends Fragment {
             context = view.getContext();
             recyclerView = (RecyclerView) view;
         }
+        mListener.setActionBarTitle("Categories");
         return view;
     }
 
@@ -85,6 +87,9 @@ public class CategoryDisplayFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        progress = new ProgressDialog(getContext());
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setCanceledOnTouchOutside(false);
         //----------------------------------Connect to Server
         ConnectivityManager connMgr = (ConnectivityManager)
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -100,6 +105,7 @@ public class CategoryDisplayFragment extends Fragment {
             }
 
             new PostDataToServer(obj).execute(getString(R.string.server_addr_release) + "categories_req.php");
+            progress.show();
         } else {
             Toast.makeText(getActivity(), "No Network Connection detected!", Toast.LENGTH_LONG).show();
         }
@@ -118,7 +124,7 @@ public class CategoryDisplayFragment extends Fragment {
         for (int i = 0; i < categoryList.length(); i++) {
             try {
                 JSONObject obj = categoryList.getJSONObject(i);
-                Categories.category cat = new category(obj.getInt("id"), obj.getInt("delivery_slot"), obj.getString("name"));
+                Categories.category cat = new category(obj.getInt("id"), obj.getInt("delivery_slot"), obj.getString("name"), obj.getString("pic"));
                 Categories.addItem(cat);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -129,7 +135,7 @@ public class CategoryDisplayFragment extends Fragment {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
-        recyclerView.setAdapter(new MycategoryDisplayRecyclerViewAdapter(Categories.ITEMS, mListener));
+        recyclerView.setAdapter(new MycategoryDisplayRecyclerViewAdapter(Categories.ITEMS, mListener, context));
 
     }
 
@@ -163,6 +169,8 @@ public class CategoryDisplayFragment extends Fragment {
      */
     public interface CategoryDisplayFragmentInteractionListener {
         void categoryFragmentInteraction(category item);
+
+        void setActionBarTitle(String title);
     }
 
     // Uses AsyncTask to create a task away from the main UI thread. This task takes a
@@ -190,6 +198,7 @@ public class CategoryDisplayFragment extends Fragment {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
+            progress.dismiss();
             if (result.equals("timeout")) {
                 Toast.makeText(getActivity(), "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             } else {
@@ -253,10 +262,16 @@ public class CategoryDisplayFragment extends Fragment {
 
         // Reads an InputStream and converts it to a String.
         public String readIt(InputStream stream, int len) throws IOException {
-            Reader reader = new InputStreamReader(stream, "UTF-8");
+            int count;
+            InputStreamReader reader;
+
+            reader = new InputStreamReader(stream, "UTF-8");
+            String str = new String();
             char[] buffer = new char[len];
-            reader.read(buffer);
-            return new String(buffer);
+            while ((count = reader.read(buffer, 0, len)) > 0) {
+                str += new String(buffer, 0, count);
+            }
+            return str;
         }
     }
 }

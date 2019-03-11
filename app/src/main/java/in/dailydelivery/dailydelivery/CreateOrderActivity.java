@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -66,11 +66,9 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
 
         fragmentFrame = findViewById(R.id.fragment_frame);
         if (fragmentNum == 3) {
-            getSupportActionBar().setTitle("Cart");
             CartDisplayFragment frag = new CartDisplayFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, frag).commit();
         } else {
-            getSupportActionBar().setTitle("Categories");
             CategoryDisplayFragment frag = new CategoryDisplayFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, frag).commit();
         }
@@ -100,12 +98,10 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
                         startActivity(userHomeActIntent);
                         break;
                     case 1:
-                        getSupportActionBar().setTitle("Categories");
                         CategoryDisplayFragment frag = new CategoryDisplayFragment();
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, frag).addToBackStack(null).commit();
                         break;
                     case 2:
-                        getSupportActionBar().setTitle("Cart");
                         CartDisplayFragment cartDisplayFragment = new CartDisplayFragment();
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, cartDisplayFragment).addToBackStack(null).commit();
                         break;
@@ -113,8 +109,30 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
                 return true;
             }
         });
+        shouldDisplayHomeUp();
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                shouldDisplayHomeUp();
+            }
+        });
     }
 
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+            getSupportFragmentManager().popBackStack();
+        else {
+            finish();
+        }
+        return true;
+    }
+
+    public void shouldDisplayHomeUp() {
+        //Enable Up button only  if there are entries in the back stack
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
     private void setCartNum(int num) {
         bottomNavigationView.setNotification(String.valueOf(num), 2);
@@ -131,7 +149,6 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
         bundle.putInt("order_type", 1);// 1 for 1 time order ; 2 for recurring order
         productDisplayFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, productDisplayFragment).addToBackStack(null).commit();
-        getSupportActionBar().setTitle("Products");
     }
 
     @Override
@@ -142,7 +159,6 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
 
     @Override
     public void goToCart() {
-        getSupportActionBar().setTitle("Cart");
         CartDisplayFragment cartDisplayFragment = new CartDisplayFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, cartDisplayFragment).addToBackStack(null).commit();
     }
@@ -150,10 +166,15 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
     @Override
     public void onCartDisplayFragmentInteraction(int proceed) {
         if (proceed == 1) {
-            getSupportActionBar().setTitle("Order Details");
             OrderDetailsFragment fragment = new OrderDetailsFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, fragment).addToBackStack(null).commit();
         }
+    }
+
+    @Override
+    public void setActionBarTitle(String title) {
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(title);
     }
 
     @Override
@@ -298,10 +319,16 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
 
         // Reads an InputStream and converts it to a String.
         public String readIt(InputStream stream, int len) throws IOException {
-            Reader reader = new InputStreamReader(stream, "UTF-8");
+            int count;
+            InputStreamReader reader;
+
+            reader = new InputStreamReader(stream, "UTF-8");
+            String str = new String();
             char[] buffer = new char[len];
-            reader.read(buffer);
-            return new String(buffer);
+            while ((count = reader.read(buffer, 0, len)) > 0) {
+                str += new String(buffer, 0, count);
+            }
+            return str;
         }
 
     }
@@ -332,12 +359,14 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
         @Override
         protected void onPostExecute(Void aVoid) {
             //Toast.makeText(CreateOrderActivity.this, "Order Placed", Toast.LENGTH_SHORT).show();
+
             AlertDialog.Builder builder = new AlertDialog.Builder(CreateOrderActivity.this);
+            builder.setCancelable(false);
             builder.setTitle("Yay!! Order is scheduled")
-                    .setMessage("Ensure sufficient wallet balance for order confirmation\n(See Help for more Info).\n" +
+                    .setMessage("Ensure sufficient wallet balance for order confirmation.\n(See Help for more Info)\n" +
                             "Current wallet Balance: Rs." + walletBal);
 
-            builder.setPositiveButton("Recharge Now", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("Recharge Now", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent walletActivityIntent = new Intent(CreateOrderActivity.this, WalletActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -345,16 +374,18 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
                     finish();
                 }
             });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("Later", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     // User cancelled the dialog
                     dialog.dismiss();
                     Intent userHomeActivityIntent = new Intent(CreateOrderActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    userHomeActivityIntent.putExtra("orderDate", date);
                     startActivity(userHomeActivityIntent);
                     finish();
                 }
             });
             AlertDialog dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         }
     }

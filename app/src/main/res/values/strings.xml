@@ -7,6 +7,7 @@
     <string name="sp_tag_user_name">user_name</string>
     <string name="sp_tag_user_phone">user_ph</string>
     <string name="sp_tag_user_add">user_add</string>
+
     <string name="categories_downloaded">cat_downloaded</string>
 
     <string-array name="order_type_array">
@@ -15,15 +16,18 @@
     </string-array>
 
     <string-array name="delivery_slots">
-        <item>5:30 AM to 7:30 AM</item>
+        <item>6:00 AM to 8:30 AM</item>
         <item>6:00 PM to 8:00 PM</item>
     </string-array>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="paytm_mid_test">sYBvfx01514982804268</string>
-    <string name="paytm_mid">HmklBT49086449012213</string>
-    <string name="delivery_slot_0">5:30 AM to 7:30 AM</string>
-    <string name="delivery_slot_1">6:00 PM to 8:00PM</string>
+    <string name="paytm_mid">IGZojj17649503480268</string>
+    <string name="delivery_slot_1">6:00 AM to 8:30 AM</string>
+    <string name="delivery_slot_2">6:00 PM to 8:00PM</string>
     <string name="sp_tag_is_vacation_present">isVacationPresent</string>
     <string name="gcm_token_saved_at_server_file_variable">gcmStoredAtServer</string>
+    <string name="product_add_firsttime">padd_ft</string>
+    <string name="channel_name">Sandeep273</string>
+    <string name="send_to">Share using</string>
 </resources>

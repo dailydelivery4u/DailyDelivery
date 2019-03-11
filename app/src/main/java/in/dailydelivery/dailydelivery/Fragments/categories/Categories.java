@@ -16,11 +16,13 @@ public class Categories {
         private int id;
         private int deliverySlot;
         private String catName;
+        private String pic;
 
-        public category(int id, int deliverySlot, String catName) {
+        public category(int id, int deliverySlot, String catName, String pic) {
             this.id = id;
             this.deliverySlot = deliverySlot;
             this.catName = catName;
+            this.pic = pic;
         }
 
         public int getId() {
@@ -45,6 +47,14 @@ public class Categories {
 
         public void setCatName(String catName) {
             this.catName = catName;
+        }
+
+        public String getPic() {
+            return pic;
+        }
+
+        public void setPic(String pic) {
+            this.pic = pic;
         }
     }
 }

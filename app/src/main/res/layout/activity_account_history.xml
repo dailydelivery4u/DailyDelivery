@@ -9,4 +9,16 @@
         android:id="@+id/accountHistoryRV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/noHistoryTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="25dp"
+        android:text="No Account History!"
+        android:textAlignment="center"
+        android:textColor="@color/colorBrown"
+        android:textSize="17sp"
+        android:textStyle="normal"
+        android:visibility="gone" />
 </RelativeLayout>

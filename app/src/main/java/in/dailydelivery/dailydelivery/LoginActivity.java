@@ -35,6 +35,8 @@ import in.dailydelivery.dailydelivery.DB.RcOrderDetails;
 import in.dailydelivery.dailydelivery.DB.Vacation;
 import in.dailydelivery.dailydelivery.DB.WalletTransaction;
 
+//import android.util.Log;
+
 public class LoginActivity extends AppCompatActivity {
     EditText phInput, pinInput;
     RelativeLayout rl1, rl2;
@@ -46,6 +48,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*Intent RegisterActivityIntent = new Intent(this, RegisterActivity.class);
+        startActivity(RegisterActivityIntent);*/
+
         sharedPref = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
         if (sharedPref.getBoolean("logged_in", false)) {
             startActivity(new Intent(this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
@@ -103,6 +109,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onGetOtpClicked(View view) {
+
         if (validPhoneNumber(phInput.getText().toString())) {
             progress.setMessage("Sending OTP...");
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -131,6 +138,10 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Please enter valid phone number to proceed.", Toast.LENGTH_LONG).show();
         }
+
+/*        rl1.setVisibility(View.GONE);
+        rl2.setVisibility(View.VISIBLE);
+        pinInput.requestFocus();*/
     }
 
     private class PostDataToServer extends AsyncTask<String, Void, String> {
@@ -162,6 +173,7 @@ public class LoginActivity extends AppCompatActivity {
             } else if (result.equals("NOLOGIN")) {
                 //show the user status with an alert dailogue
                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                builder.setCancelable(false);
                 builder.setTitle("OTP Mismatch");
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -170,6 +182,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
                 AlertDialog dialog = builder.create();
+                dialog.setCanceledOnTouchOutside(false);
                 dialog.show();
             } else if (result.equals("TIMEOUT")) {
                 Toast.makeText(LoginActivity.this, "Error in connection with Server.. Please try again later.", Toast.LENGTH_LONG).show();
@@ -271,6 +284,7 @@ public class LoginActivity extends AppCompatActivity {
                             for (int i = 0; i < rcoStatusJson.length(); i++) {
                                 JSONObject j = (JSONObject) rcoStatusJson.get(i);
                                 String key = j.getString("date") + j.getInt("rco_id");
+                                //Log.d("DD", "Key: " + key);
                                 editor.putInt(key, j.getInt("status"));
                                 editor.commit();
                             }
@@ -332,7 +346,7 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
-                return "Unable to reach server...";
+                return "Unable to reach server..." + e.getMessage();
             }
         }
 
@@ -347,6 +361,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (resultJson.getInt("responseCode") == 273) {
                     rl1.setVisibility(View.GONE);
                     rl2.setVisibility(View.VISIBLE);
+                    pinInput.requestFocus();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

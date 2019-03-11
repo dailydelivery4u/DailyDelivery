@@ -88,9 +88,56 @@
         android:textSize="16sp" />
 
     <TextView
+        android:id="@+id/tv5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/addressTV"
+        android:layout_below="@id/tv4"
+        android:padding="15dp"
+        android:text="Referral Code: "
+        android:textColor="#BE2E2E"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:weightSum="1"
+        android:orientation="horizontal"
+        android:layout_below="@+id/tv5">
+
+        <TextView
+            android:id="@+id/rcTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:text="XCV567"
+            android:layout_weight="0.8"
+            android:textColor="@color/colorBrown"
+            android:textSize="16sp" />
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/rcShareBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_share"
+            android:outlineAmbientShadowColor="@color/colorBrown"
+            android:outlineSpotShadowColor="@color/colorBrown"
+            android:padding="10dp"
+            android:onClick="shareBtnOnClick"
+            android:layout_weight="0.2"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/colorWhite" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll"
         android:layout_marginTop="15dp"
         android:padding="15dp"
         android:text="To make any changes, pls contact us"

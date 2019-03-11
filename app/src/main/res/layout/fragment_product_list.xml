@@ -10,6 +10,29 @@
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomLL"
+        android:layout_alignParentTop="true"
         tools:listitem="@layout/fragment_product" />
+
+    <RelativeLayout
+        android:id="@+id/bottomLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#faf2f2">
+
+        <Button
+            android:id="@+id/goToCartBtn"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5dp"
+            android:background="@drawable/button_background_red"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Go to Cart"
+            android:textColor="@color/colorWhite" />
+    </RelativeLayout>
+
 
 </RelativeLayout>

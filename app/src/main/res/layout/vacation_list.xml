@@ -7,19 +7,19 @@
         android:id="@+id/vacationDatesTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:textColor="@color/colorBlack"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:text="Date to Date" />
+        android:padding="15dp"
+        android:text="Date to Date"
+        android:textColor="@color/colorBlack" />
 
     <ImageView
         android:id="@+id/delBtn"
-        android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/delete_btn"
-        android:tint="#6e1b1b"
         android:layout_alignParentRight="true"
-        android:padding="15dp" />
+        android:layout_centerVertical="true"
+        android:padding="15dp"
+        android:src="@drawable/delete_btn"
+        android:tint="#6e1b1b" />
 </RelativeLayout>

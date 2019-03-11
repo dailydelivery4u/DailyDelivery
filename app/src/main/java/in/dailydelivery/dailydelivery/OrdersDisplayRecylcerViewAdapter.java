@@ -45,9 +45,9 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
         holder.priceTV.setText("Rs. " + ddPrice);
         //Log.d("DD", "Delivery Slot: " + items.get(position).getDeliverySlot());
         if (items.get(position).getDeliverySlot() == 1) {
-            holder.slotTV.setText("Delivery: 5:30AM to 7:30AM");
+            holder.slotTV.setText(holder.mView.getContext().getString(R.string.delivery_slot_1));
         } else if (items.get(position).getDeliverySlot() == 2) {
-            holder.slotTV.setText("Delivery: 6 PM to 8 PM");
+            holder.slotTV.setText(holder.mView.getContext().getString(R.string.delivery_slot_2));
         }
         String status;
         switch (holder.mItem.getStatus()) {
@@ -72,7 +72,7 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
                 holder.delBtn.setVisibility(View.GONE);
                 break;
             case 5:
-                status = "Un delivered";
+                status = "Undelivered";
                 holder.statusTV.setTextColor(Color.parseColor("#e41b2b"));
                 holder.delBtn.setVisibility(View.GONE);
                 break;

@@ -1,10 +1,13 @@
 package in.dailydelivery.dailydelivery;
 
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -12,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,7 +44,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -67,7 +70,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
     List<Vacation> vacations;
     DateTime dateSelected;
     DateTimeFormatter dtf;
-    boolean ordersPresent;
+    boolean ordersPresent, checkedForUserUpdates;
     boolean oneTimeUpdate, displayingRcOrderFirstTime;
     SharedPreferences sharedPreferences;
     int userId, orderType;
@@ -79,7 +82,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
 
         db = AppDatabase.getAppDatabase(this);
         // find the picker
-        HorizontalPicker picker = (HorizontalPicker) findViewById(R.id.datePicker);
+        HorizontalPicker picker = findViewById(R.id.datePicker);
 
         // initialize it and attach a listener
         picker
@@ -87,7 +90,13 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                 .init();
         //picker.setBackgroundColor(Color.LTGRAY);
         isLoadingFirstTime = true;
+        checkedForUserUpdates = false;
         DateTime today = new DateTime();
+        dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
+
+        if (getIntent().hasExtra("orderDate")) {
+            today = dtf.parseDateTime(getIntent().getStringExtra("orderDate"));
+        }
         picker.setDate(today);
         noOrdersTV = findViewById(R.id.noOrdersTV);
         ordersforthedayRV = findViewById(R.id.ordersforthedayRV);
@@ -105,12 +114,29 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                 l2.getOrientation());
         rcOrdersforthedayRV.addItemDecoration(dividerItemDecoration2);
 
-        dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
         oneTimeUpdate = true;
         displayingRcOrderFirstTime = true;
 
         sharedPreferences = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
         userId = sharedPreferences.getInt(getString(R.string.sp_tag_user_id), 12705);
+
+        if (getIntent().getStringExtra("title") != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
+            builder.setTitle(getIntent().getStringExtra("title"))
+                    .setMessage(getIntent().getStringExtra("message"));
+
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        }
+        createNotificationChannel();
     }
 
     private void checkForUserUpdates() {
@@ -179,7 +205,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                     protected Void doInBackground(Void... voids) {
                         db.clearAllTables();
                         SharedPreferences.Editor e = sharedPreferences.edit();
-                        e.putBoolean("logged_in", false);
+                        e.clear();
                         e.commit();
                         return null;
                     }
@@ -201,6 +227,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Set the dialog title
         builder.setTitle("Choose Order Type");
+        builder.setCancelable(false);
         orderType = 0;
         builder.setSingleChoiceItems(R.array.order_type_array, orderType, new DialogInterface.OnClickListener() {
             @Override
@@ -232,6 +259,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
             }
         });
         AlertDialog mDialog = builder.create();
+        mDialog.setCanceledOnTouchOutside(false);
         mDialog.show();
     }
 
@@ -241,6 +269,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
         //Toast.makeText(this,"Oto Id: " + otoId,Toast.LENGTH_LONG).show();
         if (checkForOrderDeletion()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
             // Set the dialog title
             builder.setTitle("Confirm Order Delete");
             builder.setMessage("Are you sure you want to delete the order?");
@@ -261,6 +290,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                 }
             });
             AlertDialog mDialog = builder.create();
+            mDialog.setCanceledOnTouchOutside(false);
             mDialog.show();
         }
     }
@@ -307,21 +337,8 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
             for (RcOrderDetails rcO : rcOrders) {
 
                 RcOrderDetails rcOrderDetails = new RcOrderDetails(rcO.getProductId(), rcO.getCatId(), rcO.getName(), rcO.getDes(), rcO.getPrice(), rcO.getStatus(), rcO.getDeliverySlot(), rcO.getStartDate(), rcO.getMon(), rcO.getTue(), rcO.getWed(), rcO.getThu(), rcO.getFri(), rcO.getSat(), rcO.getSun());
-                /*
-                String key1 = "del_rco_"+rcO.getOrderId();
-                if(sharedPreferences.getBoolean(key1,false)){
-                    String key = rcOrderDetails.getStartDate() + rcOrderDetails.getOrderId();
-                    int s = sharedPreferences.getInt(key, 273);
-                    if (s != 273) {
-                        if (s == 1) rcOrderDetails.setStatus(4);
-                        else if (s == 2) rcOrderDetails.setStatus(7);
-                        else if (s == 3) rcOrderDetails.setStatus(5);
-                        else if (s == 4) rcOrderDetails.setStatus(6);
-                        rcOrdersForTheDay.add(rcOrderDetails);
-                    }
-                    continue;
-                }
-                */
+                rcOrderDetails.setOrderId(rcO.getOrderId());
+
                 int dayOfWeek = dateSelected.getDayOfWeek();
                 int qty = 1;
                 switch (dayOfWeek) {
@@ -352,13 +369,16 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                 }
                 startDate = dtf.parseDateTime(rcOrderDetails.getStartDate());
                 if (dateSelected.isAfter(startDate.minusDays(1))) {
-                    String key = rcOrderDetails.getStartDate() + rcOrderDetails.getOrderId();
+                    String key = dateSelected.toString(dtf) + rcOrderDetails.getOrderId();
+                    //Log.d("DD","Key: "+key);
                     int s = sharedPreferences.getInt(key, 273);
                     if (s != 273) {
                         if (s == 1) rcOrderDetails.setStatus(4);
                         else if (s == 2) rcOrderDetails.setStatus(7);
                         else if (s == 3) rcOrderDetails.setStatus(5);
                         else if (s == 4) rcOrderDetails.setStatus(6);
+                    } else if (rcOrderDetails.getStatus() == 2) {
+                        continue;
                     } else {
                         for (Vacation v : vacations) {
                             vStartDate = dtf.parseDateTime(v.getStartDate());
@@ -366,7 +386,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                             //Log.d("DD", "Start Date: " + v.getStartDate());
                             //Log.d("DD", "End Date: " + v.getEndDate());
                             if (dateSelected.isAfter(vStartDate.minusDays(1)) && dateSelected.isBefore(vEndDate.plusDays(1))) {
-                                rcOrderDetails.setStatus(2);
+                                rcOrderDetails.setStatus(8);
                             }
                         }
                     }
@@ -404,25 +424,44 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                         @Override
                         public void onComplete(@NonNull Task<InstanceIdResult> task) {
                             if (!task.isSuccessful()) {
-                                //Log.w("MyFirebaseMsgService", "getInstanceId failed", task.getException());
+                                Log.w("MyFirebaseMsgService", "getInstanceId failed", task.getException());
                                 return;
                             }
                             // Get new Instance ID token
                             String token = task.getResult().getToken();
-                            //Log.d("MyFirebaseMsgService", "Token " + token);
+                            Log.d("MyFirebaseMsgService", "Token " + token);
                             String query = "userId=" + userId + "&serverKey=" + token;
                             new UpdateGCMToken(query).execute(getString(R.string.server_addr_release) + "insert_gcm_server_key.php");
                         }
                     });
         }
-        checkForUserUpdates();
+        if (!checkedForUserUpdates) {
+            checkForUserUpdates();
+            checkedForUserUpdates = true;
+        }
     }
 
     private void refreshActivity() {
         //this.recreate();
-        Intent self = new Intent(this, UserHomeActivity.class);
+        /*Intent self = new Intent(this, UserHomeActivity.class);
         startActivity(self);
-        finish();
+        finish();*/
+        oneTimeUpdate = true;
+        new GetOrders(dateSelected.toString(dtf)).execute();
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("Sandeep123", name, importance);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     private class GetOrders extends AsyncTask<Void, Void, Void> {
@@ -543,14 +582,20 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
 
         // Reads an InputStream and converts it to a String.
         public String readIt(InputStream stream, int len) throws IOException {
-            Reader reader = new InputStreamReader(stream, "UTF-8");
+            int count;
+            InputStreamReader reader;
+
+            reader = new InputStreamReader(stream, "UTF-8");
+            String str = new String();
             char[] buffer = new char[len];
-            reader.read(buffer);
-            return new String(buffer);
+            while ((count = reader.read(buffer, 0, len)) > 0) {
+                str += new String(buffer, 0, count);
+            }
+            return str;
         }
     }
 
-    private class CheckForUserUpdatesFromServer extends AsyncTask<String, Void, String> {
+    private class CheckForUserUpdatesFromServer extends AsyncTask<String, Integer, String> {
         String query;
 
         public CheckForUserUpdatesFromServer(String query) {
@@ -573,10 +618,11 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
         protected void onPostExecute(String result) {
             //Toast.makeText(UserHomeActivity.this, result, Toast.LENGTH_SHORT).show();
             if (result.equals("Updating...")) {
-                Toast.makeText(UserHomeActivity.this, result, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(UserHomeActivity.this, result, Toast.LENGTH_SHORT).show();
                 refreshActivity();
             }
         }
+
 
         // Given a URL, establishes an HttpUrlConnection and retrieves
         // the web page content as a InputStream, which it returns as
@@ -777,10 +823,16 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
 
         // Reads an InputStream and converts it to a String.
         public String readIt(InputStream stream, int len) throws IOException {
-            Reader reader = new InputStreamReader(stream, "UTF-8");
+            int count;
+            InputStreamReader reader;
+
+            reader = new InputStreamReader(stream, "UTF-8");
+            String str = new String();
             char[] buffer = new char[len];
-            reader.read(buffer);
-            return new String(buffer);
+            while ((count = reader.read(buffer, 0, len)) > 0) {
+                str += new String(buffer, 0, count);
+            }
+            return str;
         }
     }
 }

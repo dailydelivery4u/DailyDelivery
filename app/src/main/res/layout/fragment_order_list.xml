@@ -10,7 +10,7 @@
         android:padding="10dp"
         android:text="Heritage Golden Cow Milk (2 Nos)"
         android:textColor="#732525"
-        android:textSize="16dp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/priceTV"
@@ -41,7 +41,7 @@
         android:layout_alignParentRight="true"
         android:gravity="right"
         android:paddingRight="10dp"
-        android:text="Delivery : 5:30 AM to 7:30 AM"
+        android:text="Delivery : 6:00 AM to 8:30 AM"
         android:textColor="@color/colorBlack" />
 
     <TextView

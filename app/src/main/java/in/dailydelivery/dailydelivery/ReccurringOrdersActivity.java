@@ -1,13 +1,31 @@
 package in.dailydelivery.dailydelivery;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import in.dailydelivery.dailydelivery.DB.AppDatabase;
@@ -18,6 +36,7 @@ public class ReccurringOrdersActivity extends AppCompatActivity implements RCOrd
     List<RcOrderDetails> rcOrders;
     RCOrdersAdapter rcOrdersAdapter;
     RecyclerView recyclerView;
+    TextView noRCOTV;
     SharedPreferences sharedPreferences;
 
     @Override
@@ -26,6 +45,7 @@ public class ReccurringOrdersActivity extends AppCompatActivity implements RCOrd
         setContentView(R.layout.activity_reccurring_orders);
         db = AppDatabase.getAppDatabase(this);
         recyclerView = findViewById(R.id.RcOrdersList);
+        noRCOTV = findViewById(R.id.noRCOTV);
         LinearLayoutManager l1 = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(l1);
         DividerItemDecoration dividerItemDecoration1 = new DividerItemDecoration(recyclerView.getContext(),
@@ -39,25 +59,29 @@ public class ReccurringOrdersActivity extends AppCompatActivity implements RCOrd
 
     }
 
+
     @Override
     public boolean onSupportNavigateUp() {
-        finish();
+        Intent userHomeActivityIntent = new Intent(this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(userHomeActivityIntent);
         return true;
     }
 
     @Override
     public void onBackPressed() {
+        Intent userHomeActivityIntent = new Intent(this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(userHomeActivityIntent);
         finish();
     }
 
     @Override
     public void deleteRco(final int rcoId) {
 
-/*
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Set the dialog title
         builder.setTitle("Confirm Order Delete");
-        builder.setMessage("Are you sure you want to delete the order?");
+        builder.setMessage("Are you sure you want to delete the order?\n\nNOTE: ANY CONFIRMED ORDERS FOR TOMORROW WILL STILL BE DELIVERED");
 
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
@@ -76,7 +100,7 @@ public class ReccurringOrdersActivity extends AppCompatActivity implements RCOrd
         });
         AlertDialog mDialog = builder.create();
         mDialog.show();
-        */
+
     }
 
     private class GetRcOrders extends AsyncTask<Void, Void, Void> {
@@ -84,8 +108,17 @@ public class ReccurringOrdersActivity extends AppCompatActivity implements RCOrd
         @Override
         protected void onPostExecute(Void aVoid) {
             //Log.d("DD", "RC ORders size" + rcOrders.size());
-            rcOrdersAdapter = new RCOrdersAdapter(rcOrders, ReccurringOrdersActivity.this);
-            recyclerView.setAdapter(rcOrdersAdapter);
+            if (rcOrders.size() == 0) {
+                noRCOTV.setVisibility(View.VISIBLE);
+            } else {
+                List<RcOrderDetails> r = new ArrayList<>();
+                for (RcOrderDetails rcOrderDetails : rcOrders) {
+                    if (rcOrderDetails.getStatus() != 2) r.add(rcOrderDetails);
+                }
+                rcOrders = r;
+                rcOrdersAdapter = new RCOrdersAdapter(rcOrders, ReccurringOrdersActivity.this);
+                recyclerView.setAdapter(rcOrdersAdapter);
+            }
         }
 
         @Override
@@ -94,7 +127,7 @@ public class ReccurringOrdersActivity extends AppCompatActivity implements RCOrd
             return null;
         }
     }
-/*
+
     private class DeleteOrder extends AsyncTask<String, Void, String> {
         String query;
         int orderId;
@@ -118,7 +151,7 @@ public class ReccurringOrdersActivity extends AppCompatActivity implements RCOrd
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(ReccurringOrdersActivity.this,"Order Deleted",Toast.LENGTH_LONG).show();
+            Toast.makeText(ReccurringOrdersActivity.this, "Order Deleted", Toast.LENGTH_LONG).show();
             ReccurringOrdersActivity.this.recreate();
             //refreshActivity();
         }
@@ -150,16 +183,17 @@ public class ReccurringOrdersActivity extends AppCompatActivity implements RCOrd
 
                 String result = readIt(is, len);
 
-                Log.d("DD", "Result from webserver: " + result);
+                //Log.d("DD", "Result from webserver: " + result);
                 try {
                     JSONObject resultJson = new JSONObject(result);
                     //Log.d("DD","Result:" + resultJson.getInt("result") + orderId);
                     if (resultJson.getInt("result") == 273) {
-                        //db.rcOrderDetailsDao().deleteByOrderId(orderId);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        db.rcOrderDetailsDao().deleteByOrderId(orderId);
+                        /*SharedPreferences.Editor editor = sharedPreferences.edit();
                         String key = "del_rco_"+orderId;
                         editor.putBoolean(key,true);
-                        editor.commit();
+                        editor.commit();*/
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -177,10 +211,16 @@ public class ReccurringOrdersActivity extends AppCompatActivity implements RCOrd
 
         // Reads an InputStream and converts it to a String.
         public String readIt(InputStream stream, int len) throws IOException {
-            Reader reader = new InputStreamReader(stream, "UTF-8");
+            int count;
+            InputStreamReader reader;
+
+            reader = new InputStreamReader(stream, "UTF-8");
+            String str = new String();
             char[] buffer = new char[len];
-            reader.read(buffer);
-            return new String(buffer);
+            while ((count = reader.read(buffer, 0, len)) > 0) {
+                str += new String(buffer, 0, count);
+            }
+            return str;
         }
-    }*/
+    }
 }

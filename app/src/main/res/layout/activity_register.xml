@@ -3,57 +3,98 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg_4"
     tools:context=".RegisterActivity">
 
     <TextView
         android:id="@+id/tv1"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:text="Give us your basic info..."
+        android:text="REGISTRATION"
         android:textAlignment="center"
-        android:textColor="#5c1313"
-        android:textSize="20dp" />
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/colorAccent"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/nameInput"
+        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv1"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:width="250dp"
         android:ems="10"
+        android:textStyle="bold"
+        android:textColor="@color/colorAccent"
+        android:textColorHint="@color/colorAccent"
+        android:backgroundTint="@color/colorAccent"
         android:hint="Name"
-        android:inputType="textPersonName" />
+        android:inputType="textCapCharacters" />
+
+    <org.angmarch.views.NiceSpinner
+        android:id="@+id/city_spinner"
+        android:layout_width="250dp"
+        android:padding="5dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nameInput"
+        android:layout_centerHorizontal="true"
+        app:popupTextAlignment="start"
+        android:layout_margin="16dp" />
+
+    <org.angmarch.views.NiceSpinner
+        android:id="@+id/area_spinner"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/city_spinner"
+        android:layout_centerHorizontal="true"
+        app:popupTextAlignment="start"
+        android:layout_margin="16dp" />
 
     <EditText
         android:id="@+id/addInput"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/nameInput"
+        android:layout_below="@+id/area_spinner"
         android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"
         android:ems="10"
-        android:hint="Delivery Address"
-        android:inputType="textMultiLine"
-        android:lines="3"
+        android:hint="HOUSE ADDRESS"
+        android:inputType="textCapCharacters|textMultiLine"
+        android:lines="2"
+        android:textStyle="bold"
+        android:textColor="@color/colorAccent"
+        android:textColorHint="@color/colorAccent"
+        android:backgroundTint="@color/colorAccent"
         android:maxLines="5" />
 
-    <TextView
-        android:id="@+id/textView3"
+
+    <EditText
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/addInput"
+        android:id="@+id/referralCodeET"
+        android:hint="REFERRAL CODE (Optional)"
         android:layout_marginTop="15dp"
-        android:text="* We are currently delivering only at\nTriveni Nagar, Balapur X Roads, Hyd" />
+        android:textColor="@color/colorAccent"
+        android:textColorHint="@color/colorAccent"
+        android:backgroundTint="@color/colorAccent"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/addInput" />
 
     <Button
         android:id="@+id/registerBtn"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
+        android:layout_below="@+id/referralCodeET"
         android:layout_marginTop="20dp"
         android:background="@drawable/button_background"
         android:onClick="registerBtnOnClick"
+        android:layout_centerHorizontal="true"
         android:text="Register"
         android:textColor="@color/colorWhite" />
+
 </RelativeLayout>

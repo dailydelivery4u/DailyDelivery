@@ -14,15 +14,27 @@
         tools:listitem="@layout/rc_orders_list" />
 
     <TextView
+        android:id="@+id/noRCOTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="25dp"
+        android:text="No Reapeating Orders yet! :("
+        android:textAlignment="center"
+        android:textColor="@color/colorBrown"
+        android:textSize="17sp"
+        android:visibility="gone" />
+
+    <TextView
         android:id="@+id/tv1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#f9dddd"
+        android:background="#DB4040"
         android:gravity="center"
         android:padding="10dp"
-        android:text="You can pause Repeating orders by setting Vacations.\nTo Modify/Delete Repeating orders, pls contact us."
-        android:textColor="@color/colorBrown"
+        android:textSize="16sp"
+        android:text="You can pause Repeating orders by setting Vacations."
+        android:textColor="@color/colorWhite"
         android:textStyle="normal" />
 
 </RelativeLayout>

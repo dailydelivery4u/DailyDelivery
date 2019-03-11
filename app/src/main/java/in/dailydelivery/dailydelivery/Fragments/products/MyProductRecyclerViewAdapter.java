@@ -2,6 +2,7 @@ package in.dailydelivery.dailydelivery.Fragments.products;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -80,6 +81,7 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
             if (holder.mItem.isIn_cart()) {
                 holder.addBtn.setText("ADDED");
                 holder.numberPicker.setValue(holder.mItem.getQty());
+                holder.addBtn.setBackgroundColor(Color.parseColor("#88EC99"));
                 holder.addBtn.setEnabled(false);
                 holder.qtyLinLay.setVisibility(View.VISIBLE);
             }
@@ -95,6 +97,7 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
                     holder.qtyLinLay.setVisibility(View.GONE);
                     holder.addBtn.setEnabled(true);
                     holder.addBtn.setText("ADD");
+                    holder.addBtn.setBackgroundColor(Color.parseColor("#2c9f1f"));
                 }
                 mListener.productDisplayFragmentInteraction(holder.mItem, value);
                 holder.mItem.setQty(value);
@@ -112,6 +115,7 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
                     if (deliverySlotInCart == 0 || deliverySlotInCart == holder.mItem.getDeliverySlot()) {
                         mListener.productDisplayFragmentInteraction(holder.mItem, 1);
                         holder.addBtn.setText("ADDED");
+                        holder.addBtn.setBackgroundColor(Color.parseColor("#88EC99"));
                         holder.numberPicker.setValue(1);
                         holder.addBtn.setEnabled(false);
                         holder.qtyLinLay.setVisibility(View.VISIBLE);

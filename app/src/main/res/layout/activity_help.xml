@@ -39,9 +39,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:text="You can call/whatsapp us on 8825857851"
+                    android:text="You can call/whatsapp us on 8825857851 or 9159485341"
                     android:textColor="@color/colorBlack"
                     android:textSize="15sp" />
+
+                <Button
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="-10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/button_background_green"
+                    android:onClick="callUsBtnClicked"
+                    android:text="Call Us"
+                    android:textColor="@color/colorWhite" />
 
             </LinearLayout>
 
@@ -77,7 +89,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:text="Milk:    5:30 AM to 7:30 AM\nWater: 6:00 PM to 8:30 PM"
+                    android:text="Milk:    6:00 AM to 7:00 AM\nWater: 7:00 AM to 8:30 AM"
                     android:textColor="@color/colorBlack"
                     android:textSize="15sp" />
 
@@ -115,7 +127,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:text="You can place order for \nMilk -    Till 10 PM previous day\nWater - Till 4 PM same day "
+                    android:text="You can place/delete orders till 10 PM previous day."
                     android:textColor="@color/colorBlack"
                     android:textSize="15sp" />
 
@@ -192,7 +204,7 @@ for orders to be confirmed and delivered."
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:text="Provided you have sufficient credit balance, Your morning delivery orders are confirmed at 10 PM previous day, and evening delivery orders are confirmed at 4 PM same day."
+                    android:text="Provided you have sufficient credit balance, Your orders are confirmed at 10 PM previous day."
                     android:textColor="@color/colorBlack"
                     android:textSize="15sp" />
 
@@ -205,8 +217,8 @@ for orders to be confirmed and delivered."
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/cv3"
-            android:layout_marginBottom="15dp"
-            android:layout_margin="6dp">
+            android:layout_margin="6dp"
+            android:layout_marginBottom="15dp">
 
             <LinearLayout
                 android:layout_width="match_parent"

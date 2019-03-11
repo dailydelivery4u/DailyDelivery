@@ -3,14 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorGray"
+    android:background="@drawable/milk_splash"
     tools:context=".LoginActivity">
 
     <RelativeLayout
         android:id="@+id/topRL"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:background="@color/colorPrimary">
+        android:layout_height="180dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -19,13 +18,12 @@
             android:fontFamily="serif"
             android:inputType="number"
             android:text="DAILY DELIVERY"
-            android:textAlignment="center"
             android:textColor="@color/colorWhite"
-            android:textSize="35dp"
+            android:textAlignment="center"
+            android:textSize="35sp"
             android:textStyle="normal" />
 
     </RelativeLayout>
-
 
     <RelativeLayout
         android:id="@+id/phInputRL"
@@ -33,8 +31,7 @@
         android:layout_height="200dp"
         android:layout_below="@+id/topRL"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="-40dp"
-        android:background="@color/colorWhite">
+        android:layout_marginTop="-40dp">
 
         <EditText
             android:id="@+id/phInput"
@@ -43,6 +40,11 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:hint="Mobile Number"
+            android:maxLength="10"
+            android:textCursorDrawable="@null"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite"
+            android:backgroundTint="@color/colorWhite"
             android:inputType="number"
             android:padding="10dp" />
 
@@ -66,7 +68,7 @@
         android:layout_below="@+id/topRL"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="-40dp"
-        android:background="@color/colorWhite"
+
         android:visibility="gone">
 
         <TextView
@@ -75,23 +77,20 @@
             android:layout_height="wrap_content"
             android:padding="15dp"
             android:text="ENTER OTP"
+            android:textColor="@color/colorWhite"
             android:textAlignment="center"
-            android:textSize="16dp" />
+            android:textSize="17sp" />
 
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="250dp"
-            android:layout_height="1dp"
-            android:layout_below="@+id/otpInputTV"
-            android:layout_centerHorizontal="true"
-            android:background="?android:attr/listDivider" />
 
         <EditText
             android:id="@+id/otpInputET"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/divider2"
+            android:layout_below="@+id/otpInputTV"
             android:layout_centerHorizontal="true"
+            android:textColor="@color/colorWhite"
+            android:backgroundTint="@color/colorWhite"
+            android:textCursorDrawable="@null"
             android:layout_marginTop="20dp"
             android:inputType="number" />
 
@@ -100,8 +99,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/otpInputET"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/button_background"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_background_green"
             android:onClick="onLoginBtnClicked"
             android:text="Login"
             android:textColor="@color/colorWhite" />

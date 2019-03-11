@@ -73,9 +73,9 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
         holder.desTV.setText(holder.mItem.getDes());
         holder.priceTV.setText("Rs. " + ddPrice);
         if (holder.mItem.getDeliverySlot() == 1) {
-            holder.slotTV.setText("Delivery: 5:30AM to 7:30AM");
+            holder.slotTV.setText(holder.mView.getContext().getString(R.string.delivery_slot_1));
         } else if (holder.mItem.getDeliverySlot() == 2) {
-            holder.slotTV.setText("Delivery: 6 PM to 8 PM");
+            holder.slotTV.setText(holder.mView.getContext().getString(R.string.delivery_slot_2));
         }
         String status;
         switch (holder.mItem.getStatus()) {
@@ -83,12 +83,12 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
                 status = "Scheduled";
                 holder.statusTV.setTextColor(Color.parseColor("#732525"));
                 break;
-            case 2:
+            case 8:
                 status = "Paused (Vacation)";
                 holder.statusTV.setTextColor(Color.parseColor("#e41b2b"));
                 break;
             case 3:
-                status = "On Hold (Insufficient Credit Balance)";
+                status = "On Hold";
                 holder.statusTV.setTextColor(Color.parseColor("#e41b2b"));
                 break;
             case 4:
@@ -100,11 +100,11 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
                 holder.statusTV.setTextColor(Color.parseColor("#33862e"));
                 break;
             case 6:
-                status = "Unelivered";
+                status = "Undelivered";
                 holder.statusTV.setTextColor(Color.parseColor("#e41b2b"));
                 break;
             case 7:
-                status = "Cancelled (Insufficient Balance)";
+                status = "Cancelled";
                 holder.statusTV.setTextColor(Color.parseColor("#e41b2b"));
                 break;
             default:
