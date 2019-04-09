@@ -9,21 +9,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
-import in.dailydelivery.dailydelivery.Fragments.categories.Categories.category;
 import in.dailydelivery.dailydelivery.Fragments.categories.CategoryDisplayFragment.CategoryDisplayFragmentInteractionListener;
 import in.dailydelivery.dailydelivery.R;
 
 public class MycategoryDisplayRecyclerViewAdapter extends RecyclerView.Adapter<MycategoryDisplayRecyclerViewAdapter.ViewHolder> {
 
-    private final List<category> mValues;
+    private final List<Category> mValues;
     private final CategoryDisplayFragmentInteractionListener mListener;
     private Context context;
 
-    public MycategoryDisplayRecyclerViewAdapter(List<category> items, CategoryDisplayFragmentInteractionListener listener, Context context_) {
+    public MycategoryDisplayRecyclerViewAdapter(List<Category> items, CategoryDisplayFragmentInteractionListener listener, Context context_) {
         mValues = items;
         mListener = listener;
         context = context_;
@@ -42,7 +40,7 @@ public class MycategoryDisplayRecyclerViewAdapter extends RecyclerView.Adapter<M
         //holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
         Glide.with(this.context)
                 .load(mValues.get(position).getPic())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                //.diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.catImageView);
         holder.mContentView.setText(mValues.get(position).getCatName());
 
@@ -67,7 +65,7 @@ public class MycategoryDisplayRecyclerViewAdapter extends RecyclerView.Adapter<M
         public final View mView;
         public final ImageView catImageView;
         public final TextView mContentView;
-        public category mItem;
+        public Category mItem;
 
         public ViewHolder(View view) {
             super(view);

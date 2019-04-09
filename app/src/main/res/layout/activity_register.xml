@@ -1,100 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/bg_4"
-    tools:context=".RegisterActivity">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv1"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:text="REGISTRATION"
-        android:textAlignment="center"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/colorAccent"
-        android:layout_marginTop="20dp"
-        android:textStyle="bold"
-        android:textSize="20sp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".RegisterActivity">
 
-    <EditText
-        android:id="@+id/nameInput"
-        android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv1"
-        android:layout_marginTop="30dp"
-        android:width="250dp"
-        android:ems="10"
-        android:textStyle="bold"
-        android:textColor="@color/colorAccent"
-        android:textColorHint="@color/colorAccent"
-        android:backgroundTint="@color/colorAccent"
-        android:hint="Name"
-        android:inputType="textCapCharacters" />
+        <TextView
+            android:id="@+id/cityHeaderTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="Your City:"
+            android:textColor="@color/darkBlue"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-    <org.angmarch.views.NiceSpinner
-        android:id="@+id/city_spinner"
-        android:layout_width="250dp"
-        android:padding="5dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/nameInput"
-        android:layout_centerHorizontal="true"
-        app:popupTextAlignment="start"
-        android:layout_margin="16dp" />
+        <TextView
+            android:id="@+id/cityHydTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cityHeaderTV"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/freq_selector_selected_bg"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="10dp"
+            android:text="Hyderabad"
+            android:textColor="@color/colorWhite" />
 
-    <org.angmarch.views.NiceSpinner
-        android:id="@+id/area_spinner"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/city_spinner"
-        android:layout_centerHorizontal="true"
-        app:popupTextAlignment="start"
-        android:layout_margin="16dp" />
+        <android.support.v7.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/societyACTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cityHydTV"
+            android:layout_margin="10dp"
+            android:drawableLeft="@drawable/ic_search"
+            android:hint="Search for your Society"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/colorBlack"
+            android:textColorHint="@color/colorGray"
+            android:textSize="15sp" />
 
-    <EditText
-        android:id="@+id/addInput"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/area_spinner"
-        android:layout_marginTop="15dp"
-        android:layout_centerHorizontal="true"
-        android:ems="10"
-        android:hint="HOUSE ADDRESS"
-        android:inputType="textCapCharacters|textMultiLine"
-        android:lines="2"
-        android:textStyle="bold"
-        android:textColor="@color/colorAccent"
-        android:textColorHint="@color/colorAccent"
-        android:backgroundTint="@color/colorAccent"
-        android:maxLines="5" />
+        <android.support.v7.widget.CardView
+            android:id="@+id/blockDetailsCV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/societyACTV"
+            android:layout_margin="10dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="Address Details"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#FF5722" />
+
+                <LinearLayout
+                    android:id="@+id/blockNumLL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="Block Number: " />
+
+                    <Spinner
+                        android:id="@+id/blockSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="Flat Number: "
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/flatInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="Floor Number: "
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/floorInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
 
-    <EditText
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/referralCodeET"
-        android:hint="REFERRAL CODE (Optional)"
-        android:layout_marginTop="15dp"
-        android:textColor="@color/colorAccent"
-        android:textColorHint="@color/colorAccent"
-        android:backgroundTint="@color/colorAccent"
-        android:textStyle="bold"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/addInput" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#FF5722" />
 
-    <Button
-        android:id="@+id/registerBtn"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/referralCodeET"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/button_background"
-        android:onClick="registerBtnOnClick"
-        android:layout_centerHorizontal="true"
-        android:text="Register"
-        android:textColor="@color/colorWhite" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="Personal Details"
+                    android:textStyle="bold" />
 
-</RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#FF5722" />
+
+                <EditText
+                    android:id="@+id/nameInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:ems="10"
+                    android:hint="Name"
+                    android:inputType="textCapCharacters"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/referralCodeET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/blockDetailsRL"
+                    android:layout_margin="10dp"
+                    android:hint="Referal Code (Optional)"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <Button
+            android:id="@+id/registerBtn"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/blockDetailsCV"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_background"
+            android:onClick="registerBtnOnClick"
+            android:text="Register"
+            android:textColor="@color/colorWhite" />
+
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

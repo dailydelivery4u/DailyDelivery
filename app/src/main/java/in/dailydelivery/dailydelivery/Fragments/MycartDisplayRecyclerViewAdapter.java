@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.travijuu.numberpicker.library.Enums.ActionEnum;
 import com.travijuu.numberpicker.library.Interface.ValueChangedListener;
 import com.travijuu.numberpicker.library.NumberPicker;
@@ -68,7 +67,7 @@ public class MycartDisplayRecyclerViewAdapter extends RecyclerView.Adapter<Mycar
         //Load image using glide
         Glide.with(this.context)
                 .load(mValues.get(position).getProductTnUrl())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                //.diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.imageView);
 
         holder.numberPicker.setValueChangedListener(new ValueChangedListener() {

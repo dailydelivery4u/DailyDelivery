@@ -19,6 +19,7 @@ public class Products implements Serializable {
         private int cat_id;
         private String productName;
         private String productDes;
+        private String productQty;
         private int mrp;
         private int ddPrice;
         private String thumbnailUrl;
@@ -26,11 +27,12 @@ public class Products implements Serializable {
         private int qty;
         private int deliverySlot;
 
-        public Product(int id, int cat_id, String productName, String productDes, int mrp, int ddPrice, String thumbnailUrl, boolean in_cart, int qty, int deliverySlot) {
+        public Product(int id, int cat_id, String productName, String productDes, String productQty, int mrp, int ddPrice, String thumbnailUrl, boolean in_cart, int qty, int deliverySlot) {
             this.id = id;
             this.cat_id = cat_id;
             this.productName = productName;
             this.productDes = productDes;
+            this.productQty = productQty;
             this.mrp = mrp;
             this.ddPrice = ddPrice;
             this.thumbnailUrl = thumbnailUrl;
@@ -117,6 +119,14 @@ public class Products implements Serializable {
 
         public void setQty(int qty) {
             this.qty = qty;
+        }
+
+        public String getProductQty() {
+            return productQty;
+        }
+
+        public void setProductQty(String productQty) {
+            this.productQty = productQty;
         }
 
         @Override

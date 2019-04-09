@@ -109,14 +109,14 @@ public class VacationActivity extends AppCompatActivity implements VacationsRVAd
 
     @Override
     public boolean onSupportNavigateUp() {
-        Intent userHomeActivityIntent = new Intent(VacationActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Intent userHomeActivityIntent = new Intent(VacationActivity.this, CreateOrderActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(userHomeActivityIntent);
         return true;
     }
 
     @Override
     public void onBackPressed() {
-        Intent userHomeActivityIntent = new Intent(VacationActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Intent userHomeActivityIntent = new Intent(VacationActivity.this, CreateOrderActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(userHomeActivityIntent);
         finish();
     }

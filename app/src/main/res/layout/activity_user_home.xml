@@ -12,17 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/datePicker"
-        android:background="#515dda"
+        android:background="@color/colorPrimary"
         android:padding="10dp"
+        android:textStyle="bold"
         android:text="Orders for the Day"
         android:textAlignment="center"
         android:textColor="@color/colorWhite"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/createOrderButton"
         android:layout_below="@+id/ordersforthedayTV">
 
         <RelativeLayout
@@ -69,18 +69,6 @@
 
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
-
-    <Button
-        android:id="@+id/createOrderButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="10dp"
-        android:background="@drawable/button_background"
-        android:onClick="createOrderBtnOnClick"
-        android:text="New Order"
-        android:textColor="@color/colorWhite"
-        android:textSize="15sp" />
 
 
 </RelativeLayout>

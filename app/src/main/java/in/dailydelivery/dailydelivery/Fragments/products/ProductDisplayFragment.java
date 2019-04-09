@@ -1,5 +1,6 @@
 package in.dailydelivery.dailydelivery.Fragments.products;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -7,12 +8,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -27,6 +28,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import in.dailydelivery.dailydelivery.DB.AppDatabase;
@@ -42,13 +44,14 @@ public class ProductDisplayFragment extends Fragment {
     JSONArray productList;
     RecyclerView recyclerView;
     Context context;
-    Button goToCartBtn;
+    String query;
+    SearchView searchView;
+
     int delivery_slot, deliverySlotInCart;
     AppDatabase db;
     List<ProductTuple> productsIdsInCart;
     private ProductDisplayFragmentInteractionListener mListener;
     private int cat_id;
-    private int orderType;//1 for one time order; 2 for repeating order
 
     public ProductDisplayFragment() {
     }
@@ -67,31 +70,29 @@ public class ProductDisplayFragment extends Fragment {
         // Set the adapter
         context = view.getContext();
         recyclerView = view.findViewById(R.id.list);
-        goToCartBtn = view.findViewById(R.id.goToCartBtn);
+        searchView = view.findViewById(R.id.searchView);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 
-        cat_id = getArguments().getInt("cat_id");
-        delivery_slot = getArguments().getInt("delivery_slot");
-        //Log.d("DD", "Delivery SLot: " + delivery_slot);
-        orderType = getArguments().getInt("order_type");
+        if (getArguments().getString("cat_name") != null) {
 
-        if (orderType == 2) {
-            goToCartBtn.setVisibility(View.GONE);
-        } else {
-            goToCartBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.goToCart();
-                }
-            });
+            cat_id = getArguments().getInt("cat_id");
+            delivery_slot = getArguments().getInt("delivery_slot");
+            String catName = getArguments().getString("cat_name");
+            mListener.setActionBarTitle(catName);
+        } else if (getArguments().getString("search_query") != null) {
+            query = getArguments().getString("search_query");
+            searchView.setQuery(query, false);
+            mListener.setActionBarTitle("Search");
         }
-        mListener.setActionBarTitle("Products");
-        //Toast.makeText(getActivity(),"order type: " + orderType + cat_id,Toast.LENGTH_LONG).show();
+        mListener.showBottomLL();
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        productsIdsInCart = new ArrayList<>();
 //----------------------------------Connect to Server
         ConnectivityManager connMgr = (ConnectivityManager)
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -101,12 +102,17 @@ public class ProductDisplayFragment extends Fragment {
             JSONObject obj = new JSONObject();
             //get list of categories
             try {
-                obj.put("cat_id", cat_id);
+                if (query != null) {
+                    obj.put("query", query);
+                    new PostDataToServer(obj).execute(getString(R.string.server_addr_release) + "products_search.php");
+                } else {
+                    obj.put("cat_id", cat_id);
+                    new PostDataToServer(obj).execute(getString(R.string.server_addr_release) + "products_req.php");
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            new PostDataToServer(obj).execute(getString(R.string.server_addr_release) + "products_req.php");
         } else {
             Toast.makeText(getActivity(), "No Network Connection detected!", Toast.LENGTH_LONG).show();
         }
@@ -133,21 +139,25 @@ public class ProductDisplayFragment extends Fragment {
     }
 
     public void displayProducts() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        //LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        GridLayoutManager layoutManager = new GridLayoutManager(context, 2);
         recyclerView.setLayoutManager(layoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 layoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
-        recyclerView.setAdapter(new MyProductRecyclerViewAdapter(Products.ITEMS, getActivity(), mListener, orderType, deliverySlotInCart));
+        //recyclerView.addItemDecoration(dividerItemDecoration);
+        //recyclerView.addItemDecoration(new SpacesItemDecoration(10));
+        recyclerView.setAdapter(new MyProductRecyclerViewAdapter(Products.ITEMS, getActivity(), mListener, deliverySlotInCart));
     }
 
 
     public interface ProductDisplayFragmentInteractionListener {
         void productDisplayFragmentInteraction(Product item, int qty);
 
-        void goToCart();
+        void repeatBtnClicked(Product item);
 
         void setActionBarTitle(String title);
+
+        void showBottomLL();
     }
 
     private class PostDataToServer extends AsyncTask<String, Void, String> {
@@ -170,17 +180,15 @@ public class ProductDisplayFragment extends Fragment {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
+            //Log.d("dd","Products List: " + result);
             if (result.equals("timeout")) {
                 Toast.makeText(getActivity(), "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             } else {
                 //Log.d("DD", "Result from webserver in Create Order Activity: " + result);
-                try {
-                    productList = new JSONArray(result);
-                    new populateProducts().execute();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } finally {
-                }
+
+                   /* productList = new JSONArray(result);
+                    new populateProducts().execute();*/
+                displayProducts();
             }
         }
 
@@ -217,11 +225,45 @@ public class ProductDisplayFragment extends Fragment {
 
                 // Convert the InputStream into a string
                 //Log.d("NetworkDebugTag", "The text is: " + contentAsString);
-                return readIt(is, len);
+                String result = readIt(is, len);
 
+                productList = new JSONArray(result);
+                Products.ITEMS.clear();
+                boolean presentInCart;
+                int qty;
+                if (cat_id != 0) productsIdsInCart = db.userDao().getpIdofCatId(cat_id);
+                for (int i = 0; i < productList.length(); i++) {
+                    presentInCart = false;
+                    qty = 0;
+                    try {
+                        JSONObject obj = productList.getJSONObject(i);
+                        int product_id = obj.getInt("id");
+                        int catId = obj.getInt("cat");
+                        if (cat_id == 0) {
+                            productsIdsInCart.clear();
+                            productsIdsInCart = db.userDao().getpIdofCatId(catId);
+                        }
+                        for (int j = 0; j < productsIdsInCart.size(); j++) {
+                            if (product_id == productsIdsInCart.get(j).getProductId()) {
+                                presentInCart = true;
+                                qty = productsIdsInCart.get(j).getProductqty();
+                            }
+                        }
+                        String thumbnailUrl = obj.getString("thumbnail_url").replace("\\", "");
+                        Product product = new Product(product_id, obj.getInt("cat"), obj.getString("name"), obj.getString("description"), obj.getString("qty"), obj.getInt("price"), obj.getInt("discount_price"), thumbnailUrl, presentInCart, qty, delivery_slot);
+                        Products.addItem(product);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return "timeout";
+                    }
+                }
+                return "OK";
                 // Makes sure that the InputStream is closed after the app is
                 // finished using it.
             } catch (SocketTimeoutException e) {
+                return "timeout";
+            } catch (JSONException e) {
+                e.printStackTrace();
                 return "timeout";
             } finally {
                 if (is != null) {
@@ -245,7 +287,7 @@ public class ProductDisplayFragment extends Fragment {
         }
     }
 
-    private class populateProducts extends AsyncTask<Void, Void, Void> {
+    /*private class populateProducts extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -272,12 +314,12 @@ public class ProductDisplayFragment extends Fragment {
                             qty = productsIdsInCart.get(j).getProductqty();
                         }
                     }
-                    /*if (productsIdsInCart.size() > 0)
+                    *//*if (productsIdsInCart.size() > 0)
                         deliverySlotInCart = productsIdsInCart.get(0).getDelivery_slot();
                     else deliverySlotInCart = 0;
-*/
+*//*
                     String thumbnailUrl = obj.getString("thumbnail_url").replace("\\", "");
-                    Product product = new Product(product_id, cat_id, obj.getString("name"), obj.getString("description"), obj.getInt("price"), obj.getInt("discount_price"), thumbnailUrl, presentInCart, qty, delivery_slot);
+                    Product product = new Product(product_id, cat_id, obj.getString("name"), obj.getString("description"), obj.getString("qty"), obj.getInt("price"), obj.getInt("discount_price"), thumbnailUrl, presentInCart, qty, delivery_slot);
                     Products.addItem(product);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -285,6 +327,6 @@ public class ProductDisplayFragment extends Fragment {
             }
             displayProducts();
         }
-    }
+    }*/
 }
 

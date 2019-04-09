@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/wallet"
-        android:title="Wallet" />
-    <item
-        android:id="@+id/vacation"
-        android:title="Vacations" />
-
-    <item
-        android:id="@+id/rcOrders"
-        android:title="Repeating Orders" />
+        android:id="@+id/myOrders"
+        android:title="My Orders" />
 
     <item
         android:id="@+id/profile"
@@ -24,9 +16,5 @@
     <item
         android:id="@+id/logout"
         android:title="Logout" />
-    <item
-        android:id="@+id/cartItem"
-        android:title="Cart"
-        app:actionLayout="@layout/layout_badge"
-        app:showAsAction="always" />
+
 </menu>

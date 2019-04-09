@@ -1,22 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#515dda</color>
-    <color name="colorPrimaryDark">#515dda</color>
-    <color name="colorAccent">#474e96</color>
+    <!--color name="colorPrimary">#515dda</color-->
+
+    <color name="colorPrimary">#7e57c2</color>
+    <color name="colorPrimaryDark">#7e57c2</color>
+    <color name="colorAccent">#A145CF</color>
+
+    <color name="darkBlue">#515dda</color>
+    <color name="lightBlue">#BDACDB</color>
+    <!--
+        <color name="colorPrimary">#FF993D</color>
+        <color name="colorPrimaryDark">#FF8438</color>
+        <color name="colorAccent">#FF993D</color>
+    -->
 
     <!--
-    <color name="colorPrimary">#a30e24</color>
-    <color name="colorPrimaryDark">#a30e24</color>
-    <color name="colorAccent">#b94760</color> -->
 
-    <color name="colorWhite">#fff</color>
-    <color name="colorBlack">#000</color>
+        <color name="colorPrimary">#689F39</color>
+        <color name="colorPrimaryDark">#248A09</color>
+        <color name="colorAccent">#16BE48</color>-->
+
+    <!--
+        <color name="colorPrimary">#a30e24</color>
+        <color name="colorPrimaryDark">#a30e24</color>
+        <color name="colorAccent">#b94760</color> -->
+
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorBlack">#000000</color>
     <color name="colorOrange">#fa7414</color>
     <color name="colorGray">#efe4dd</color>
     <color name="colorBrown">#732525</color>
     <color name="colorDullGreen">#88EC99</color>
 
+    <color name="glide_slider_indicator_color">#690505</color>
 
     <color name="color">#e41b2b</color>
+    <color name="colorPink">#EE818E</color>
+    <color name="colorDarkPink">#E91681</color>
+    <color name="colorDefaultBg">#FAFAFA</color>
+    <color name="colorCheckoutBg">#EA5F62</color>
+
+
+    <color name="tv_hyperlink">#2f3dd4</color>
+
+
 </resources>

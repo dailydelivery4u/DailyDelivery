@@ -50,8 +50,18 @@ public class RcOrderDetails {
     private int sat;
     @ColumnInfo(name = "sun")
     private int sun;
+    @ColumnInfo(name = "frequency")
+    private int frequency;
+    @ColumnInfo(name = "day1_qty")
+    private int day1Qty;
+    @ColumnInfo(name = "day2_qty")
+    private int day2Qty;
+    @ColumnInfo(name = "date_of_month")
+    private int dateOfMonth;
+//TODO: ADd qtyDesc in RC ORders Display
 
-    public RcOrderDetails(int productId, int catId, String name, String des, int price, int status, int deliverySlot, String startDate, int mon, int tue, int wed, int thu, int fri, int sat, int sun) {
+
+    public RcOrderDetails(int productId, int catId, String name, String des, int price, int status, int deliverySlot, String startDate, int mon, int tue, int wed, int thu, int fri, int sat, int sun, int frequency, int day1Qty, int day2Qty, int dateOfMonth) {
         this.productId = productId;
         this.catId = catId;
         this.name = name;
@@ -67,6 +77,10 @@ public class RcOrderDetails {
         this.fri = fri;
         this.sat = sat;
         this.sun = sun;
+        this.frequency = frequency;
+        this.day1Qty = day1Qty;
+        this.day2Qty = day2Qty;
+        this.dateOfMonth = dateOfMonth;
     }
 
     public int getOrderId() {
@@ -119,6 +133,14 @@ public class RcOrderDetails {
 
     public int getPrice() {
         return price;
+    }
+
+    public int getDateOfMonth() {
+        return dateOfMonth;
+    }
+
+    public void setDateOfMonth(int dateOfMonth) {
+        this.dateOfMonth = dateOfMonth;
     }
 
     public void setPrice(int price) {
@@ -203,5 +225,29 @@ public class RcOrderDetails {
 
     public void setSun(int sun) {
         this.sun = sun;
+    }
+
+    public int getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(int frequency) {
+        this.frequency = frequency;
+    }
+
+    public int getDay1Qty() {
+        return day1Qty;
+    }
+
+    public void setDay1Qty(int day1Qty) {
+        this.day1Qty = day1Qty;
+    }
+
+    public int getDay2Qty() {
+        return day2Qty;
+    }
+
+    public void setDay2Qty(int day2Qty) {
+        this.day2Qty = day2Qty;
     }
 }

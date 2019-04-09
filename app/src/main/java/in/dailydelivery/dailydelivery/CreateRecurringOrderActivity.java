@@ -31,7 +31,7 @@ import java.net.URL;
 import in.dailydelivery.dailydelivery.DB.AppDatabase;
 import in.dailydelivery.dailydelivery.DB.RcOrderDetails;
 import in.dailydelivery.dailydelivery.Fragments.RCOrderDetailsFragment;
-import in.dailydelivery.dailydelivery.Fragments.categories.Categories;
+import in.dailydelivery.dailydelivery.Fragments.categories.Category;
 import in.dailydelivery.dailydelivery.Fragments.categories.CategoryDisplayFragment;
 import in.dailydelivery.dailydelivery.Fragments.products.ProductDisplayFragment;
 import in.dailydelivery.dailydelivery.Fragments.products.Products;
@@ -66,7 +66,7 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
     }
 
     @Override
-    public void categoryFragmentInteraction(Categories.category item) {
+    public void categoryFragmentInteraction(Category item) {
         ProductDisplayFragment productDisplayFragment = new ProductDisplayFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("cat_id", item.getId());
@@ -86,14 +86,24 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
     }
 
     @Override
-    public void goToCart() {
-        //DO nothing
+    public void repeatBtnClicked(Products.Product item) {
+
     }
 
     @Override
     public void setActionBarTitle(String title) {
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(title);
+    }
+
+    @Override
+    public void showBottom() {
+
+    }
+
+    @Override
+    public void showBottomLL() {
+
     }
 
 
@@ -281,7 +291,7 @@ public class CreateRecurringOrderActivity extends AppCompatActivity implements C
             builder.setNegativeButton("Recharge Now", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent walletActivityIntent = new Intent(CreateRecurringOrderActivity.this, WalletActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    Intent walletActivityIntent = new Intent(CreateRecurringOrderActivity.this, WalletFragment.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(walletActivityIntent);
                     finish();
                 }

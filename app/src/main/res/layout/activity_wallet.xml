@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WalletActivity">
+    tools:context=".WalletFragment">
 
     <RelativeLayout
         android:id="@+id/rl1"
@@ -17,7 +17,8 @@
             android:layout_above="@+id/balanceDisplayTV"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
-            android:text="Your Balance"
+            android:text="DD Balance"
+            android:textSize="18sp"
             android:textColor="#fff" />
 
         <TextView
@@ -26,9 +27,10 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="Rs. - - -"
+            android:textStyle="bold"
+            android:text="Rs. - - "
             android:textColor="#fff"
-            android:textSize="18sp" />
+            android:textSize="25sp" />
 
     </RelativeLayout>
 
@@ -68,9 +70,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/monthlyCostTV"
-        android:padding="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
         android:text="Weekly Order Value: Rs. 150"
-        android:textColor="#732525" />
+        android:textColor="#732525"
+        android:layout_marginStart="10dp" />
 
     <Button
         android:id="@+id/payOnlineBtn"
@@ -78,12 +82,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/weeklyCostTV"
         android:layout_centerHorizontal="true"
+        android:minHeight="43dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="15dp"
         android:layout_marginRight="20dp"
-        android:background="@drawable/button_background"
-        android:onClick="onPayBtnClicked"
-        android:text="Pay Online"
+        android:background="@drawable/button_background_color_primary"
+        android:text="Recharge Online"
         android:textColor="@color/colorWhite" />
 
     <TextView
@@ -93,21 +97,35 @@
         android:layout_below="@+id/payOnlineBtn"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:onClick="onRequestCashColClicked"
-        android:text="Request Cash Collection"
+        android:text="Cash Recharge"
         android:textColor="#5372be"
         android:textSize="16sp" />
 
-    <Button
-        android:layout_width="wrap_content"
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/myTransactionsTV"
+        android:background="@color/colorPrimary" />
+
+    <TextView
+        android:id="@+id/myTransactionsTV"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="View My Transactions"
+        android:textColor="@color/colorCheckoutBg"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/button_background"
-        android:onClick="onViewWalTxClicked"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:text="View Wallet Transactions History"
-        android:textColor="@color/colorWhite" />
+        android:textAlignment="textEnd"
+        android:layout_marginRight="5dp"
+        android:textSize="16sp"
+        android:padding="10dp"
+        android:gravity="end"
+        android:layout_marginEnd="5dp" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary" />
 </RelativeLayout>

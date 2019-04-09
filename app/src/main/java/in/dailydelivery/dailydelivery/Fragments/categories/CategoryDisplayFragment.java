@@ -1,9 +1,8 @@
 package in.dailydelivery.dailydelivery.Fragments.categories;
 
-import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -13,10 +12,16 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.slider.library.SliderLayout;
+import com.glide.slider.library.SliderTypes.DefaultSliderView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,20 +35,22 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.ArrayList;
 
-import in.dailydelivery.dailydelivery.Fragments.categories.Categories.category;
 import in.dailydelivery.dailydelivery.R;
-import in.dailydelivery.dailydelivery.UserHomeActivity;
 
 
 public class CategoryDisplayFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
-    JSONArray categoryList;
+    ArrayList<CatDataModel> catDataModel;
     Context context;
-    RecyclerView recyclerView;
+    RecyclerView catTyperecyclerView;
+    private SliderLayout mDemoSlider;
     private CategoryDisplayFragmentInteractionListener mListener;
-    ProgressDialog progress;
+    //ProgressDialog progress;
+    SearchView searchView;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -62,12 +69,51 @@ public class CategoryDisplayFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_categorydisplay_list, container, false);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
             context = view.getContext();
-            recyclerView = (RecyclerView) view;
+        catTyperecyclerView = view.findViewById(R.id.list);
+        mDemoSlider = view.findViewById(R.id.slider);
+        mListener.setActionBarTitle("Daily Delivery");
+        mListener.showBottom();
+        searchView = view.findViewById(R.id.searchView);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+        catDataModel = new ArrayList<>();
+        ArrayList<String> listUrl = new ArrayList<>();
+        listUrl.add(getString(R.string.server_addr_release) + "pics/Milk_banner.jpg");
+        listUrl.add(getString(R.string.server_addr_release) + "pics/Referral_banner.jpg");
+        listUrl.add(getString(R.string.server_addr_release) + "pics/summer_banner.jpg");
+
+
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.centerCrop();
+        //requestOptions.centerInside();
+        //requestOptions.fitCenter();
+
+
+        for (int i = 0; i < listUrl.size(); i++) {
+            DefaultSliderView sliderView = new DefaultSliderView(context);
+            //TextSliderView sliderView = new TextSliderView(context);
+            // if you want show image only / without description text use DefaultSliderView instead
+
+            // initialize SliderLayout
+            sliderView
+                    .image(listUrl.get(i))
+                    .setRequestOption(requestOptions)
+                    .setProgressBarVisible(true);
+
+
+            mDemoSlider.addSlider(sliderView);
         }
-        mListener.setActionBarTitle("Categories");
+
+        // set Slider Transition Animation
+        // mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Default);
+        mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
+
+        mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+        //mDemoSlider.setCustomAnimation(new DescriptionAnimation());
+        mDemoSlider.setDuration(4000);
+
         return view;
     }
 
@@ -87,9 +133,10 @@ public class CategoryDisplayFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        progress = new ProgressDialog(getContext());
+
+        /*progress = new ProgressDialog(getContext());
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progress.setCanceledOnTouchOutside(false);
+        progress.setCanceledOnTouchOutside(false);*/
         //----------------------------------Connect to Server
         ConnectivityManager connMgr = (ConnectivityManager)
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -99,13 +146,13 @@ public class CategoryDisplayFragment extends Fragment {
             JSONObject obj = new JSONObject();
             //get list of categories
             try {
-                obj.put("cat_token", 1);
+                obj.put("cat_token", 2);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
             new PostDataToServer(obj).execute(getString(R.string.server_addr_release) + "categories_req.php");
-            progress.show();
+            //progress.show();
         } else {
             Toast.makeText(getActivity(), "No Network Connection detected!", Toast.LENGTH_LONG).show();
         }
@@ -120,22 +167,16 @@ public class CategoryDisplayFragment extends Fragment {
     }
 
     public void displayCategories() {
-        Categories.ITEMS.clear();
-        for (int i = 0; i < categoryList.length(); i++) {
-            try {
-                JSONObject obj = categoryList.getJSONObject(i);
-                Categories.category cat = new category(obj.getInt("id"), obj.getInt("delivery_slot"), obj.getString("name"), obj.getString("pic"));
-                Categories.addItem(cat);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(layoutManager);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                layoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
-        recyclerView.setAdapter(new MycategoryDisplayRecyclerViewAdapter(Categories.ITEMS, mListener, context));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        //GridLayoutManager layoutManager = new GridLayoutManager(context,3);
+        catTyperecyclerView.setLayoutManager(layoutManager);
+        //DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+        //layoutManager.getOrientation());
+        //recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),
+        //      DividerItemDecoration.VERTICAL));
+        catTyperecyclerView.addItemDecoration(new DividerItemDecoration(catTyperecyclerView.getContext(), DividerItemDecoration.HORIZONTAL));
+        //recyclerView.addItemDecoration(new ItemDecorationAlbumColumns(5,3));
+        catTyperecyclerView.setAdapter(new CategoryTypesRecyclerViewAdapter(catDataModel, context, mListener));
 
     }
 
@@ -143,14 +184,14 @@ public class CategoryDisplayFragment extends Fragment {
         //show the user status with an alert dailogue
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Snap!!!")
-                .setMessage("We are facing some Technical Issues. Please try again after sometime.");
+                .setMessage("Internet not Connected!");
         builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User cancelled the dialog
                 dialog.dismiss();
-                Intent loginActivityIntent = new Intent(getActivity(), UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                /*Intent loginActivityIntent = new Intent(getActivity(), UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(loginActivityIntent);
-                getActivity().finish();
+                getActivity().finish();*/
             }
         });
         AlertDialog dialog = builder.create();
@@ -168,9 +209,11 @@ public class CategoryDisplayFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface CategoryDisplayFragmentInteractionListener {
-        void categoryFragmentInteraction(category item);
+        void categoryFragmentInteraction(Category item);
 
         void setActionBarTitle(String title);
+
+        void showBottom();
     }
 
     // Uses AsyncTask to create a task away from the main UI thread. This task takes a
@@ -198,13 +241,36 @@ public class CategoryDisplayFragment extends Fragment {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            progress.dismiss();
+            //progress.dismiss();
             if (result.equals("timeout")) {
-                Toast.makeText(getActivity(), "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity(), "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
+                displayTechincialError();
             } else {
-                //Log.d("DD", "Result from webserver in Category fetching: " + result);
+                Log.d("DD", "Result from webserver in Category fetching: " + result);
                 try {
-                    categoryList = new JSONArray(result);
+                    catDataModel.clear();
+                    JSONObject resultArrayJson = new JSONObject(result);
+                    JSONObject resultJson = resultArrayJson.getJSONObject("result");
+                    int rowCnt = resultJson.getInt("row_cnt");
+                    JSONArray catTypes = resultArrayJson.getJSONArray("cat_types");
+                    for (int i = 0; i < rowCnt; i++) {
+                        JSONArray categoryList = resultArrayJson.getJSONArray("result_details" + i);
+                        ArrayList<Category> categories = new ArrayList<>();
+                        for (int j = 0; j < categoryList.length(); j++) {
+                            try {
+                                JSONObject obj = categoryList.getJSONObject(j);
+                /*Categories.category cat = new category(obj.getInt("id"), obj.getInt("delivery_slot"), obj.getString("name"), obj.getString("pic"));
+                Categories.addItem(cat);*/
+                                Category cat = new Category(obj.getInt("id"), obj.getInt("delivery_slot"), obj.getString("name"), obj.getString("pic"), obj.getInt("cat_type_id"));
+                                categories.add(cat);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        CatDataModel c = new CatDataModel(catTypes.getString(i), categories);
+                        catDataModel.add(c);
+                    }
+
                     displayCategories();
                 } catch (JSONException e) {
                     e.printStackTrace();

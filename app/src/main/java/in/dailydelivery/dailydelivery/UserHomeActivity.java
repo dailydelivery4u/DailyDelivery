@@ -16,12 +16,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +45,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import in.dailydelivery.dailydelivery.DB.AppDatabase;
 import in.dailydelivery.dailydelivery.DB.OneTimeOrderDetails;
@@ -137,6 +134,8 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
             dialog.show();
         }
         createNotificationChannel();
+        getSupportActionBar().setTitle("My Orders");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void checkForUserUpdates() {
@@ -144,78 +143,6 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
         new CheckForUserUpdatesFromServer(query).execute(getString(R.string.server_addr_release) + "check_for_user_updates.php");
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.mainmenu, menu);
-        RelativeLayout badgeLayout = (RelativeLayout) menu.findItem(R.id.cartItem).getActionView();
-        cartQtyTV = badgeLayout.findViewById(R.id.actionbar_notifcation_textview);
-        cartImage = badgeLayout.findViewById(R.id.cartImage);
-        cartImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(UserHomeActivity.this, CreateOrderActivity.class);
-                intent.putExtra("fragment", 3);
-                startActivity(intent);
-            }
-        });
-        new UpdateCartQty().execute();
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.wallet:
-                Intent intent = new Intent(UserHomeActivity.this, WalletActivity.class);
-                startActivity(intent);
-                break;
-
-            case R.id.vacation:
-                Intent intent1 = new Intent(UserHomeActivity.this, VacationActivity.class);
-                startActivity(intent1);
-                break;
-
-            case R.id.rcOrders:
-                Intent intent4 = new Intent(UserHomeActivity.this, ReccurringOrdersActivity.class);
-                startActivity(intent4);
-                break;
-
-            case R.id.profile:
-                Intent intent2 = new Intent(UserHomeActivity.this, ProfileActivity.class);
-                startActivity(intent2);
-                break;
-
-            case R.id.help:
-                Intent intent3 = new Intent(UserHomeActivity.this, HelpActivity.class);
-                startActivity(intent3);
-                break;
-
-            case R.id.logout:
-                new AsyncTask<Void, Void, Void>() {
-
-                    @Override
-                    protected void onPostExecute(Void aVoid) {
-                        Intent loginIntent = new Intent(UserHomeActivity.this, LoginActivity.class);
-                        startActivity(loginIntent);
-                        finish();
-                    }
-
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        db.clearAllTables();
-                        SharedPreferences.Editor e = sharedPreferences.edit();
-                        e.clear();
-                        e.commit();
-                        return null;
-                    }
-                }.execute();
-                break;
-
-
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onDateSelected(DateTime dateSelected) {
@@ -223,7 +150,21 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
         new GetOrders(dateSelected.toString(dtf)).execute();
     }
 
-    public void createOrderBtnOnClick(View view) {
+    @Override
+    public boolean onSupportNavigateUp() {
+        Intent userHomeActivityIntent = new Intent(this, CreateOrderActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(userHomeActivityIntent);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent userHomeActivityIntent = new Intent(this, CreateOrderActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(userHomeActivityIntent);
+        finish();
+    }
+
+   /* public void createOrderBtnOnClick(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Set the dialog title
         builder.setTitle("Choose Order Type");
@@ -262,7 +203,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.show();
     }
-
+*/
 
     @Override
     public void deleteOto(final int otoId) {
@@ -335,40 +276,64 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
             List<RcOrderDetails> rcOrdersForTheDay = new ArrayList<>();
             DateTime startDate, vStartDate, vEndDate;
             for (RcOrderDetails rcO : rcOrders) {
-
-                RcOrderDetails rcOrderDetails = new RcOrderDetails(rcO.getProductId(), rcO.getCatId(), rcO.getName(), rcO.getDes(), rcO.getPrice(), rcO.getStatus(), rcO.getDeliverySlot(), rcO.getStartDate(), rcO.getMon(), rcO.getTue(), rcO.getWed(), rcO.getThu(), rcO.getFri(), rcO.getSat(), rcO.getSun());
+                RcOrderDetails rcOrderDetails = new RcOrderDetails(rcO.getProductId(), rcO.getCatId(), rcO.getName(), rcO.getDes(), rcO.getPrice(), rcO.getStatus(), rcO.getDeliverySlot(), rcO.getStartDate(), rcO.getMon(), rcO.getTue(), rcO.getWed(), rcO.getThu(), rcO.getFri(), rcO.getSat(), rcO.getSun(), rcO.getFrequency(), rcO.getDay1Qty(), rcO.getDay2Qty(), rcO.getDateOfMonth());
                 rcOrderDetails.setOrderId(rcO.getOrderId());
+                startDate = dtf.parseDateTime(rcOrderDetails.getStartDate());
+                if (dateSelected.isAfter(startDate.minusDays(1))) {
+                    int qty = 0;
+                    Log.d("dd", "Rc Orders frequency: " + rcOrderDetails.getFrequency() + rcOrderDetails.getDay1Qty() + rcOrderDetails.getDay2Qty() + rcOrderDetails.getDateOfMonth());
+                    switch (rcOrderDetails.getFrequency()) {
+                        case 1:
+                            //Daily Order
+                            int dayOfWeek = dateSelected.getDayOfWeek();
+                            switch (dayOfWeek) {
+                                case 1:
+                                    qty = rcOrderDetails.getMon();
+                                    break;
+                                case 2:
+                                    qty = rcOrderDetails.getTue();
+                                    break;
+                                case 3:
+                                    qty = rcOrderDetails.getWed();
+                                    break;
+                                case 4:
+                                    qty = rcOrderDetails.getThu();
+                                    break;
+                                case 5:
+                                    qty = rcOrderDetails.getFri();
+                                    break;
+                                case 6:
+                                    qty = rcOrderDetails.getSat();
+                                    break;
+                                case 7:
+                                    qty = rcOrderDetails.getSun();
+                                    break;
+                            }
+                            break;
 
-                int dayOfWeek = dateSelected.getDayOfWeek();
-                int qty = 1;
-                switch (dayOfWeek) {
-                    case 1:
-                        qty = rcOrderDetails.getMon();
-                        break;
-                    case 2:
-                        qty = rcOrderDetails.getTue();
-                        break;
-                    case 3:
-                        qty = rcOrderDetails.getWed();
-                        break;
-                    case 4:
-                        qty = rcOrderDetails.getThu();
-                        break;
-                    case 5:
-                        qty = rcOrderDetails.getFri();
-                        break;
-                    case 6:
-                        qty = rcOrderDetails.getSat();
-                        break;
-                    case 7:
-                        qty = rcOrderDetails.getSun();
-                        break;
-                }
+                        case 2:
+                            //Alternate Days order
+                            long diffInMillis = dateSelected.getMillis() - startDate.getMillis();
+                            long diff = TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+
+                            if (diff % 2 == 0) {
+                                qty = rcOrderDetails.getDay1Qty();
+                            } else {
+                                qty = rcOrderDetails.getDay2Qty();
+                            }
+                            break;
+                        case 3:
+                            //Monthly Order
+                            Log.d("DD", "Date selected: " + dateSelected.getDayOfMonth());
+                            if (dateSelected.getDayOfMonth() == rcOrderDetails.getDateOfMonth()) {
+                                qty = rcOrderDetails.getDay1Qty();
+                            }
+                            break;
+                    }
+
                 if (qty == 0) {
                     continue;
                 }
-                startDate = dtf.parseDateTime(rcOrderDetails.getStartDate());
-                if (dateSelected.isAfter(startDate.minusDays(1))) {
                     String key = dateSelected.toString(dtf) + rcOrderDetails.getOrderId();
                     //Log.d("DD","Key: "+key);
                     int s = sharedPreferences.getInt(key, 273);
@@ -399,7 +364,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                 ordersPresent = true;
                 if (displayingRcOrderFirstTime) {
                     //Log.d("dd", "Setting Adapter");
-                    rcOrdersDisplayRecyclerviewAdapter = new RcOrdersDisplayRecyclerviewAdapter(rcOrdersForTheDay, dateSelected.getDayOfWeek());
+                    rcOrdersDisplayRecyclerviewAdapter = new RcOrdersDisplayRecyclerviewAdapter(rcOrdersForTheDay, dateSelected.getDayOfWeek(), dateSelected);
                     rcOrdersforthedayRV.setAdapter(rcOrdersDisplayRecyclerviewAdapter);
                     displayingRcOrderFirstTime = false;
                 } else {
@@ -490,7 +455,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
         }
     }
 
-    private class UpdateCartQty extends AsyncTask<Void, Void, Void> {
+    /*private class UpdateCartQty extends AsyncTask<Void, Void, Void> {
         int qty;
 
         @Override
@@ -504,7 +469,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
             cartQtyTV.setText(String.valueOf(qty));
         }
     }
-
+*/
     private class UpdateGCMToken extends AsyncTask<String, Void, String> {
         String query;
 
@@ -676,7 +641,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                             case 2:
                                 RcOrderDetails r = new RcOrderDetails(j.getInt("p_id"), j.getInt("cat_id"), j.getString("name"), j.getString("description"), j.getInt("discount_price"),
                                         j.getInt("status"), j.getInt("delivery_slot"), j.getString("order_date"), j.getInt("mon"), j.getInt("tue"), j.getInt("wed"), j.getInt("thu"),
-                                        j.getInt("fri"), j.getInt("sat"), j.getInt("sun"));
+                                        j.getInt("fri"), j.getInt("sat"), j.getInt("sun"), j.getInt("frequency"), j.getInt("day1_qty"), j.getInt("day2_qty"), j.getInt("date_of_month"));
                                 r.setOrderId(j.getInt("id"));
                                 db.rcOrderDetailsDao().insertRcOrderDetails(r);
                                 break;
@@ -684,6 +649,7 @@ public class UserHomeActivity extends AppCompatActivity implements DatePickerLis
                                 db.oneTimeOrderDetailsDao().updateOrder(j.getInt("qty"), j.getInt("id"));
                                 break;
                             case 4:
+                                //TODO: Update day1_qty etc
                                 db.rcOrderDetailsDao().updateOrder(j.getInt("mon"), j.getInt("tue"), j.getInt("wed"), j.getInt("thu"), j.getInt("fri"), j.getInt("sat"), j.getInt("sun"), j.getInt("id"));
                                 break;
                             case 5:

@@ -9,7 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import in.dailydelivery.dailydelivery.DB.RcOrderDetails;
 
@@ -17,10 +22,14 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
 
     List<RcOrderDetails> items;
     private int dayOfWeek;
+    private DateTime dateSelected;
+    private DateTimeFormatter dtf;
 
-    public RcOrdersDisplayRecyclerviewAdapter(List<RcOrderDetails> items, int dayOfWeek) {
+    public RcOrdersDisplayRecyclerviewAdapter(List<RcOrderDetails> items, int dayOfWeek, DateTime dateSelected) {
         this.items = items;
         this.dayOfWeek = dayOfWeek;
+        this.dateSelected = dateSelected;
+        dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
     }
 
     @NonNull
@@ -45,6 +54,56 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
         holder.rcTV.setVisibility(View.VISIBLE);
         //get quantity for the day of week
         int qty = 1;
+
+        switch (holder.mItem.getFrequency()) {
+            case 1:
+                //Daily Order
+                switch (dayOfWeek) {
+                    case 1:
+                        qty = holder.mItem.getMon();
+                        break;
+                    case 2:
+                        qty = holder.mItem.getTue();
+                        break;
+                    case 3:
+                        qty = holder.mItem.getWed();
+                        break;
+                    case 4:
+                        qty = holder.mItem.getThu();
+                        break;
+                    case 5:
+                        qty = holder.mItem.getFri();
+                        break;
+                    case 6:
+                        qty = holder.mItem.getSat();
+                        break;
+                    case 7:
+                        qty = holder.mItem.getSun();
+                        break;
+                }
+                break;
+
+            case 2:
+                //Alternate Days order
+                DateTime startDate;
+                startDate = dtf.parseDateTime(holder.mItem.getStartDate());
+                long diffInMillis = dateSelected.getMillis() - startDate.getMillis();
+                long diff = TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+
+                if (diff % 2 == 0) {
+                    qty = holder.mItem.getDay1Qty();
+                } else {
+                    qty = holder.mItem.getDay2Qty();
+                }
+                break;
+            case 3:
+                //Monthly Order
+                if (dateSelected.getDayOfMonth() == holder.mItem.getDateOfMonth()) {
+                    qty = holder.mItem.getDay1Qty();
+                }
+                break;
+        }
+
         switch (dayOfWeek) {
             case 1:
                 qty = holder.mItem.getMon();

@@ -1,40 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ReccurringOrdersActivity">
+    android:layout_width="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/RcOrdersList"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/tv1"
-        android:layout_alignParentTop="true"
-        tools:listitem="@layout/rc_orders_list" />
+        android:layout_height="match_parent"
+        android:background="@color/colorGray"
+        tools:context=".ReccurringOrdersActivity">
 
-    <TextView
-        android:id="@+id/noRCOTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="25dp"
-        android:text="No Reapeating Orders yet! :("
-        android:textAlignment="center"
-        android:textColor="@color/colorBrown"
-        android:textSize="17sp"
-        android:visibility="gone" />
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cv1"
+            android:layout_margin="5dp"
+            android:layout_alignParentTop="true">
 
-    <TextView
-        android:id="@+id/tv1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#DB4040"
-        android:gravity="center"
-        android:padding="10dp"
-        android:textSize="16sp"
-        android:text="You can pause Repeating orders by setting Vacations."
-        android:textColor="@color/colorWhite"
-        android:textStyle="normal" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-</RelativeLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv1"
+                    android:textColor="@color/colorBrown"
+                    android:padding="10dp"
+                    android:text="You can Pause all Repeating Orders by setting Vacations" />
+
+                <TextView
+                    android:id="@+id/myVacationsTV"
+                    android:layout_below="@+id/tv1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View My Vacations"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@color/tv_hyperlink"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="0dp"
+            android:layout_below="@+id/cv1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="My Repeating Orders"
+                android:textColor="@color/colorCheckoutBg"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:padding="10dp" />
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/RcOrdersList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cv2"
+            tools:listitem="@layout/rc_orders_list" />
+
+        <TextView
+            android:id="@+id/noRCOTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="25dp"
+            android:text="No Reapeating Orders yet! :("
+            android:textAlignment="center"
+            android:textColor="@color/colorBrown"
+            android:textSize="17sp"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

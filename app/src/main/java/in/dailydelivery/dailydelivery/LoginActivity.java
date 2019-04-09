@@ -48,11 +48,12 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Intent createOrderActivityIntent = new Intent(this, RegisterActivity.class);
+        startActivity(createOrderActivityIntent);
         /*Intent RegisterActivityIntent = new Intent(this, RegisterActivity.class);
         startActivity(RegisterActivityIntent);*/
 
-        sharedPref = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
+        /*sharedPref = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
         if (sharedPref.getBoolean("logged_in", false)) {
             startActivity(new Intent(this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
             finish();
@@ -65,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
             rl1 = findViewById(R.id.phInputRL);
             rl2 = findViewById(R.id.otpInputRL);
         }
-        db = AppDatabase.getAppDatabase(this);
+        db = AppDatabase.getAppDatabase(this);*/
     }
 
     public void onLoginBtnClicked(View view) {
@@ -259,7 +260,7 @@ public class LoginActivity extends AppCompatActivity {
                                 JSONObject j = (JSONObject) rcoJson.get(i);
                                 RcOrderDetails r = new RcOrderDetails(j.getInt("p_id"), j.getInt("cat_id"), j.getString("name"), j.getString("description"), j.getInt("discount_price"),
                                         j.getInt("status"), j.getInt("delivery_slot"), j.getString("order_date"), j.getInt("mon"), j.getInt("tue"), j.getInt("wed"), j.getInt("thu"),
-                                        j.getInt("fri"), j.getInt("sat"), j.getInt("sun"));
+                                        j.getInt("fri"), j.getInt("sat"), j.getInt("sun"), j.getInt("frequency"), j.getInt("day1_qty"), j.getInt("day2_qty"), j.getInt("date_of_month"));
                                 r.setOrderId(j.getInt("id"));
                                 db.rcOrderDetailsDao().insertRcOrderDetails(r);
                             }

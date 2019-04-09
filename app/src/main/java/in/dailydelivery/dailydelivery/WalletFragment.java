@@ -9,9 +9,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,11 +50,13 @@ import in.dailydelivery.dailydelivery.DB.OneTimeOrderDetails;
 import in.dailydelivery.dailydelivery.DB.RcOrderDetails;
 import in.dailydelivery.dailydelivery.DB.WalletTransaction;
 
-public class WalletActivity extends AppCompatActivity {
+import static android.content.Context.MODE_PRIVATE;
+
+public class WalletFragment extends Fragment {
 
     int userId;
     SharedPreferences sharedPref;
-    TextView balanceDisplayTV, monthlyTV, weeklyTV;
+    TextView balanceDisplayTV, monthlyTV, weeklyTV, myTransacationTV;
     EditText amountET;
     String amountToRecharge;
     AppDatabase db;
@@ -60,50 +65,61 @@ public class WalletActivity extends AppCompatActivity {
     private ProgressDialog progress;
     private String orderId;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wallet);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_wallet, container, false);
 
-        balanceDisplayTV = findViewById(R.id.balanceDisplayTV);
-        amountET = findViewById(R.id.amountET);
-        monthlyTV = findViewById(R.id.monthlyCostTV);
-        weeklyTV = findViewById(R.id.weeklyCostTV);
+        balanceDisplayTV = view.findViewById(R.id.balanceDisplayTV);
+        amountET = view.findViewById(R.id.amountET);
+        monthlyTV = view.findViewById(R.id.monthlyCostTV);
+        weeklyTV = view.findViewById(R.id.weeklyCostTV);
+        myTransacationTV = view.findViewById(R.id.myTransactionsTV);
 
-        progress = new ProgressDialog(this);
+        progress = new ProgressDialog(getActivity());
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progress.setCanceledOnTouchOutside(false);
 
-        db = AppDatabase.getAppDatabase(this);
+        Button payOnlineBtn = view.findViewById(R.id.payOnlineBtn);
+        payOnlineBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPayBtnClicked();
+            }
+        });
 
-        getSupportActionBar().setTitle("My Wallet");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setElevation(0);
+        TextView cashColReqTv = view.findViewById(R.id.cashColTV);
+        cashColReqTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onRequestCashColClicked();
+            }
+        });
 
+        sharedPref = getActivity().getSharedPreferences("dd", MODE_PRIVATE);
+
+        db = AppDatabase.getAppDatabase(getActivity());
+
+        updateBalance(getArguments().getInt("wallet_bal"));
         new GetAmountProjections().execute();
 
-        //----------------------------------Connect to Server
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            sharedPref = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
-            userId = sharedPref.getInt(getString(R.string.sp_tag_user_id), 273);
-            List<AbstractMap.SimpleEntry> params = new ArrayList<AbstractMap.SimpleEntry>();
-            params.add(new AbstractMap.SimpleEntry("user_id", userId));
-            try {
-                new GetBalance(getQuery(params)).execute(getString(R.string.server_addr_release) + "wallet/getBalance.php");
-                //new GetBalance(getQuery(params)).execute(getString(R.string.server_addr_release) + "categories_req.php");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+        myTransacationTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent2 = new Intent(getActivity(), AccountHistoryActivity.class);
+                startActivity(intent2);
             }
-        } else {
-            Toast.makeText(this, "Unable to update Balance!\nNo Network Connection detected!", Toast.LENGTH_LONG).show();
-        }
-        //--------------------------------
+        });
+
+        return view;
     }
 
-    public void onPayBtnClicked(View view) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    public void onPayBtnClicked() {
         startTransaction();
         /*
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
@@ -130,7 +146,7 @@ public class WalletActivity extends AppCompatActivity {
         //getHashFromServer
         //----------------------------------Connect to Server
         ConnectivityManager connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
+                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
 
@@ -152,22 +168,8 @@ public class WalletActivity extends AppCompatActivity {
             }
         } else {
             progress.dismiss();
-            Toast.makeText(this, "No Network Connection detected!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "No Network Connection detected!", Toast.LENGTH_LONG).show();
         }
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        Intent userHomeActivityIntent = new Intent(WalletActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(userHomeActivityIntent);
-        return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent userHomeActivityIntent = new Intent(WalletActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(userHomeActivityIntent);
-        finish();
     }
 
     public String generateOrderId(int count) {
@@ -209,7 +211,7 @@ public class WalletActivity extends AppCompatActivity {
         progress.dismiss();
         Service.initialize(Order, null);
 
-        Service.startPaymentTransaction(this, true, true, new PaytmPaymentTransactionCallback() {
+        Service.startPaymentTransaction(getActivity(), true, true, new PaytmPaymentTransactionCallback() {
             /*Call Backs*/
             public void someUIErrorOccurred(String inErrorMessage) {
             }
@@ -235,19 +237,19 @@ public class WalletActivity extends AppCompatActivity {
             }
 
             public void clientAuthenticationFailed(String inErrorMessage) {
-                Toast.makeText(getApplicationContext(), "Authentication failed: Server error" + inErrorMessage.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Authentication failed: Server error" + inErrorMessage.toString(), Toast.LENGTH_LONG).show();
             }
 
             public void onErrorLoadingWebPage(int iniErrorCode, String inErrorMessage, String inFailingUrl) {
-                Toast.makeText(getApplicationContext(), "Unable to load webpage " + inErrorMessage.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Unable to load webpage " + inErrorMessage.toString(), Toast.LENGTH_LONG).show();
             }
 
             public void onBackPressedCancelTransaction() {
-                Toast.makeText(getApplicationContext(), "Transaction cancelled", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Transaction cancelled", Toast.LENGTH_LONG).show();
             }
 
             public void onTransactionCancel(String inErrorMessage, Bundle inResponse) {
-                Toast.makeText(getApplicationContext(), "Transaction Cancelled" + inResponse.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Transaction Cancelled" + inResponse.toString(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -289,9 +291,9 @@ public class WalletActivity extends AppCompatActivity {
         return result.toString();
     }
 
-    public void onRequestCashColClicked(View view) {
+    public void onRequestCashColClicked() {
 
-        ConnectivityManager connMgr = (ConnectivityManager)
+        ConnectivityManager connMgr = (ConnectivityManager) getActivity().
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
@@ -304,14 +306,10 @@ public class WalletActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         } else {
-            Toast.makeText(this, "No Network Connection detected!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "No Network Connection detected!", Toast.LENGTH_LONG).show();
         }
     }
 
-    public void onViewWalTxClicked(View view) {
-        Intent intent2 = new Intent(this, AccountHistoryActivity.class);
-        startActivity(intent2);
-    }
 
     private void evaluateResult(String status) {
         progress.dismiss();
@@ -323,15 +321,14 @@ public class WalletActivity extends AppCompatActivity {
             //Toast.makeText(this, "Recharge Failed.\n Contact Customer Care for any queries", Toast.LENGTH_LONG).show();
             message = "Recharge Failed!! Pls contact customer care";
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setCancelable(false);
         builder.setTitle(message);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent userHomeActivityIntent = new Intent(WalletActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Intent userHomeActivityIntent = new Intent(getActivity(), UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(userHomeActivityIntent);
-                finish();
                 dialog.dismiss();
             }
         });
@@ -343,7 +340,7 @@ public class WalletActivity extends AppCompatActivity {
 
     private void updateBalance(int balance) {
         if (balance != 12345678) {
-            balanceDisplayTV.setText("Rs. " + String.valueOf(balance));
+            balanceDisplayTV.setText(getString(R.string.Rs) + String.valueOf(balance));
         }
     }
 
@@ -353,8 +350,8 @@ public class WalletActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             int monthlyProjection = rcWeeklyProjection * 4 + otoMonthlyProjection;
             int weeklyProjection = rcWeeklyProjection + otoWeeklyProjection;
-            monthlyTV.setText("Monthly Orders Value: Rs." + monthlyProjection);
-            weeklyTV.setText("Weekly Orders Value: Rs." + weeklyProjection);
+            monthlyTV.setText("Monthly Orders: Rs." + monthlyProjection);
+            weeklyTV.setText("Weekly Orders:  Rs." + weeklyProjection);
             amountET.setText(String.valueOf(monthlyProjection));
         }
 
@@ -403,7 +400,7 @@ public class WalletActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             progress.dismiss();
             if (result.equals("timeout")) {
-                Toast.makeText(WalletActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             }
             //Log.d("DD", "Result from webserver: " + result);
             try {
@@ -412,7 +409,7 @@ public class WalletActivity extends AppCompatActivity {
                 //If result is OK, update user Id in editor
                 JSONObject resultJson = resultArrayJson.getJSONObject("result");
                 if (resultJson.getInt("responseCode") == 273) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(WalletActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setCancelable(false);
                     builder.setMessage("Your request has been recorded.\nOur executives will get in touch with you soon.");
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -425,9 +422,9 @@ public class WalletActivity extends AppCompatActivity {
                     mDialog.setCanceledOnTouchOutside(false);
                     mDialog.show();
                 } else if (resultJson.getInt("responseCode") == 275) {
-                    Toast.makeText(WalletActivity.this, "Some Error occured!\nPls Contact Customer Care", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Some Error occured!\nPls Contact Customer Care", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(WalletActivity.this, "Error in connection with Server.. \nPlease try again later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Error in connection with Server.. \nPlease try again later.", Toast.LENGTH_LONG).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -519,7 +516,7 @@ public class WalletActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("timeout")) {
-                Toast.makeText(WalletActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
                 progress.dismiss();
             }
             //Log.d("DD", "Hash from webserver: " + result);
@@ -528,6 +525,7 @@ public class WalletActivity extends AppCompatActivity {
                 checksumHash = resultJson.getString("CHECKSUMHASH");
                 connectToPaytm();
             } catch (JSONException e) {
+                progress.dismiss();
                 e.printStackTrace();
             } finally {
             }
@@ -615,7 +613,7 @@ public class WalletActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             if (result.equals("timeout")) {
                 progress.dismiss();
-                Toast.makeText(WalletActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             } else {
                 evaluateResult(result);
             }
@@ -683,102 +681,6 @@ public class WalletActivity extends AppCompatActivity {
                 return "timeout";
             } catch (JSONException e) {
                 e.printStackTrace();
-                return "timeout";
-            } finally {
-                if (is != null) {
-                    is.close();
-                }
-            }
-        }
-
-        // Reads an InputStream and converts it to a String.
-        public String readIt(InputStream stream, int len) throws IOException {
-            int count;
-            InputStreamReader reader;
-
-            reader = new InputStreamReader(stream, "UTF-8");
-            String str = new String();
-            char[] buffer = new char[len];
-            while ((count = reader.read(buffer, 0, len)) > 0) {
-                str += new String(buffer, 0, count);
-            }
-            return str;
-        }
-    }
-
-    private class GetBalance extends AsyncTask<String, Void, String> {
-        String dataToServer;
-
-        public GetBalance(String dataToServer) {
-            this.dataToServer = dataToServer;
-        }
-
-        @Override
-        protected String doInBackground(String... urls) {
-            // params comes from the execute() call: params[0] is the url.
-            try {
-                return downloadUrl(urls[0]);
-            } catch (IOException e) {
-                //Log.d("DD","Caught - " + e.getMessage());
-                return "Unable to retrieve web page. URL may be invalid.";
-            }
-        }
-
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
-            //Log.d("DD","Result - " + result);
-            if (result.equals("timeout")) {
-                Toast.makeText(WalletActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
-            }
-            //Log.d("DD", "Wallet balance from webserver: " + result);
-            try {
-                JSONObject resultJson = new JSONObject(result);
-                updateBalance(resultJson.getInt("balance"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        // Given a URL, establishes an HttpUrlConnection and retrieves
-        // the web page content as a InputStream, which it returns as
-        // a string.
-        private String downloadUrl(String myurl) throws IOException {
-            InputStream is = null;
-            // Only display the first 500 characters of the retrieved
-            // web page content.
-            int len = 1500;
-
-            try {
-                URL url = new URL(myurl);
-                //Using httpurlconnection
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(10000);//* milliseconds *//*);
-                conn.setConnectTimeout(15000); //* milliseconds *//*);
-                conn.setRequestMethod("POST");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-                // Starts the query
-                conn.connect();
-                /*OutputStream out = new BufferedOutputStream(conn.getOutputStream());
-                //out.write(Integer.parseInt(URLEncoder.encode(userDetails.toString(), "UTF-8")));
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(out, "UTF-8"));
-                writer.write(dataToServer);
-                writer.flush();
-                writer.close();
-                out.flush();
-                out.close();*/
-                OutputStream out = new BufferedOutputStream(conn.getOutputStream());
-                //out.write(Integer.parseInt(URLEncoder.encode(userDetails.toString(), "UTF-8")));
-                out.write(dataToServer.getBytes());
-                out.flush();
-                out.close();
-                is = conn.getInputStream();
-                return readIt(is, len);
-
-            } catch (SocketTimeoutException e) {
                 return "timeout";
             } finally {
                 if (is != null) {
