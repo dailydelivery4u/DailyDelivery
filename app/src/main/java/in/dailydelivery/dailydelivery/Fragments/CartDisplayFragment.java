@@ -141,6 +141,7 @@ public class CartDisplayFragment extends Fragment implements onItemRemovedListne
             deliveryState = 3;
         }
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -182,6 +183,7 @@ public class CartDisplayFragment extends Fragment implements onItemRemovedListne
 
     public interface OnCartDisplayFragmentInteractionListener {
         void onCartDisplayFragmentInteraction(String date);
+
         void setActionBarTitle(String title);
     }
 

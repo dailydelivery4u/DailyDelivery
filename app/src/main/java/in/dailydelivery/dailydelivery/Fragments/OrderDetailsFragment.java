@@ -180,13 +180,6 @@ public class OrderDetailsFragment extends Fragment {
         }
     }
 
-    private boolean cartContainsWater() {
-        for (Cart c : cartList) {
-            if (c.getCatId() == 250) return true;
-        }
-        return false;
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

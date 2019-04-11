@@ -2,65 +2,65 @@
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/colorGray"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorGray">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:background="@color/colorPrimary"
-            android:layout_height="50dp"
             android:id="@+id/searchViewLL"
-            android:focusableInTouchMode="true"
-            android:layout_alignParentTop="true">
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:background="@color/colorPrimary"
+            android:focusableInTouchMode="true">
 
             <android.support.v7.widget.SearchView
                 android:id="@+id/searchView"
                 android:layout_width="match_parent"
-                app:iconifiedByDefault="false"
                 android:layout_height="wrap_content"
-                app:queryHint="Search Products"
-                app:queryBackground="@drawable/bg_white_rounded"
-                app:submitBackground="@drawable/bg_white_rounded"
-                android:background="@drawable/bg_white_rounded"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginTop="5dp" />
+                android:background="@drawable/bg_white_rounded"
+                app:iconifiedByDefault="false"
+                app:queryBackground="@drawable/bg_white_rounded"
+                app:queryHint="Search Products"
+                app:submitBackground="@drawable/bg_white_rounded" />
         </LinearLayout>
 
         <com.glide.slider.library.SliderLayout
             android:id="@+id/slider"
-            android:layout_below="@+id/searchViewLL"
             android:layout_width="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_height="180dp" />
+            android:layout_height="180dp"
+            android:layout_below="@+id/searchViewLL"
+            android:layout_marginBottom="5dp" />
 
         <TextView
             android:id="@+id/tv1"
-            android:background="@color/colorWhite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Shop By Category"
-            android:textColor="@color/colorCheckoutBg"
-            android:textStyle="bold"
-            android:textSize="17sp"
-            android:textAlignment="center"
-            android:padding="10dp"
+            android:layout_below="@+id/slider"
             android:layout_marginBottom="5dp"
-            android:layout_below="@+id/slider" />
+            android:background="@color/colorWhite"
+            android:padding="10dp"
+            android:text="Shop By Category"
+            android:textAlignment="center"
+            android:textColor="@color/colorCheckoutBg"
+            android:textSize="17sp"
+            android:textStyle="bold" />
 
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list"
-            android:layout_below="@+id/tv1"
             android:name="in.dailydelivery.dailydelivery.Fragments.categoryDisplayFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/tv1"
             android:background="@color/colorWhite"
             tools:listitem="@layout/cat_type" />
 

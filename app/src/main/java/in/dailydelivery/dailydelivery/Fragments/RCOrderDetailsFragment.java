@@ -62,8 +62,47 @@ public class RCOrderDetailsFragment extends Fragment {
 
     String[] dates;
     DateTimeFormatter dtf, displayDTF;
-
-
+    View.OnClickListener freqChangeOnClickListner = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            resetSelected();
+            switch (v.getId()) {
+                case R.id.dailyTV:
+                    selectedFreq = 1;
+                    questionMark.setVisibility(View.GONE);
+                    qtyMonthlyRL.setVisibility(View.GONE);
+                    alternateDayFreqSelLL.setVisibility(View.GONE);
+                    dailyFrequencyLL.setVisibility(View.VISIBLE);
+                    break;
+                case R.id.oncein2daysTV:
+                    selectedFreq = 2;
+                    questionMark.setVisibility(View.VISIBLE);
+                    dailyFrequencyLL.setVisibility(View.GONE);
+                    qtyMonthlyRL.setVisibility(View.GONE);
+                    alternateDayFreqSelLL.setVisibility(View.VISIBLE);
+                    break;
+                /*case R.id.oncein3daysTV:
+                    selectedFreq = 3;
+                    break;
+                case R.id.weeklyTV:
+                    selectedFreq=4;
+                    weekdaySelectionLL.setVisibility(View.VISIBLE);
+                    break;
+                case R.id.oncein2WeeksTV:
+                    selectedFreq=5;
+                    weekdaySelectionLL.setVisibility(View.VISIBLE);
+                    break;*/
+                case R.id.onceinMonthTV:
+                    selectedFreq = 3;
+                    questionMark.setVisibility(View.GONE);
+                    alternateDayFreqSelLL.setVisibility(View.GONE);
+                    dailyFrequencyLL.setVisibility(View.GONE);
+                    qtyMonthlyRL.setVisibility(View.VISIBLE);
+                    break;
+            }
+            highlightSelected();
+        }
+    };
     private RCOrderDetailsFragmentInteractionListener mListener;
 
     public RCOrderDetailsFragment() {
@@ -185,7 +224,7 @@ public class RCOrderDetailsFragment extends Fragment {
             np[i].setValue(1);
         }
         productNameTV.setText(product.getProductName());
-        productDesTV.setText(product.getProductDes());
+        productDesTV.setText(product.getProductDes() + " - " + product.getProductQty());
         mrpTV.setText("Mrp: Rs." + String.valueOf(product.getMrp()));
         mrpTV.setPaintFlags(mrpTV.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         ddPriceTV.setText("DD Price: Rs." + String.valueOf(product.getDdPrice()));
@@ -205,7 +244,7 @@ public class RCOrderDetailsFragment extends Fragment {
                 } else if (selectedFreq == 3) {
                     day1Qty = Integer.parseInt(qtyNumberTv.getText().toString());
                 }
-                mListener.rcOrderDetailsFragmentInteraction(new RcOrderDetails(product.getId(), product.getCat_id(), product.getProductName(), product.getProductDes(), product.getDdPrice(), 1, product.getDeliverySlot(), new DateTime().plusDays(dateSelected).plusDays(minOrderDays).toString(dtf), np[0].getValue(), np[1].getValue(), np[2].getValue(), np[3].getValue(), np[4].getValue(), np[5].getValue(), np[6].getValue(), selectedFreq, day1Qty, Integer.parseInt(qtyDay2NumberTV.getText().toString()), (datesSpinner.getSelectedIndex() + 1)));
+                mListener.rcOrderDetailsFragmentInteraction(new RcOrderDetails(product.getId(), product.getCat_id(), product.getProductName(), product.getProductDes(), product.getProductQty(), product.getDdPrice(), 1, product.getDeliverySlot(), new DateTime().plusDays(dateSelected).plusDays(minOrderDays).toString(dtf), np[0].getValue(), np[1].getValue(), np[2].getValue(), np[3].getValue(), np[4].getValue(), np[5].getValue(), np[6].getValue(), selectedFreq, day1Qty, Integer.parseInt(qtyDay2NumberTV.getText().toString()), (datesSpinner.getSelectedIndex() + 1)));
             }
         });
         /*dsChangeTV.setEnabled(false);
@@ -339,49 +378,6 @@ public class RCOrderDetailsFragment extends Fragment {
                 .setTextColorUnselectedRes(R.color.colorBlack)
                 .start(weekDaysChangedCallBack);*/
     }
-
-    View.OnClickListener freqChangeOnClickListner = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            resetSelected();
-            switch (v.getId()) {
-                case R.id.dailyTV:
-                    selectedFreq = 1;
-                    questionMark.setVisibility(View.GONE);
-                    qtyMonthlyRL.setVisibility(View.GONE);
-                    alternateDayFreqSelLL.setVisibility(View.GONE);
-                    dailyFrequencyLL.setVisibility(View.VISIBLE);
-                    break;
-                case R.id.oncein2daysTV:
-                    selectedFreq = 2;
-                    questionMark.setVisibility(View.VISIBLE);
-                    dailyFrequencyLL.setVisibility(View.GONE);
-                    qtyMonthlyRL.setVisibility(View.GONE);
-                    alternateDayFreqSelLL.setVisibility(View.VISIBLE);
-                    break;
-                /*case R.id.oncein3daysTV:
-                    selectedFreq = 3;
-                    break;
-                case R.id.weeklyTV:
-                    selectedFreq=4;
-                    weekdaySelectionLL.setVisibility(View.VISIBLE);
-                    break;
-                case R.id.oncein2WeeksTV:
-                    selectedFreq=5;
-                    weekdaySelectionLL.setVisibility(View.VISIBLE);
-                    break;*/
-                case R.id.onceinMonthTV:
-                    selectedFreq = 3;
-                    questionMark.setVisibility(View.GONE);
-                    alternateDayFreqSelLL.setVisibility(View.GONE);
-                    dailyFrequencyLL.setVisibility(View.GONE);
-                    qtyMonthlyRL.setVisibility(View.VISIBLE);
-                    break;
-            }
-            highlightSelected();
-        }
-    };
-
 
     private void highlightSelected() {
         switch (selectedFreq) {

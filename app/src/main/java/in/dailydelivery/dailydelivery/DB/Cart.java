@@ -17,6 +17,8 @@ public class Cart {
     private String productName;
     @ColumnInfo(name = "product_des")
     private String productDes;
+    @ColumnInfo(name = "product_qty_des")
+    private String productQtyDes;
     @ColumnInfo(name = "product_mrp")
     private int productMrp;
     @ColumnInfo(name = "product_ddprice")
@@ -28,11 +30,12 @@ public class Cart {
     @ColumnInfo(name = "delivery_slot")
     private int delivery_slot;
 
-    public Cart(int catId, int productId, String productName, String productDes, int productMrp, int productDdprice, int productqty, String productTnUrl, int delivery_slot) {
+    public Cart(int catId, int productId, String productName, String productDes, String productQtyDes, int productMrp, int productDdprice, int productqty, String productTnUrl, int delivery_slot) {
         this.catId = catId;
         this.productId = productId;
         this.productName = productName;
         this.productDes = productDes;
+        this.productQtyDes = productQtyDes;
         this.productMrp = productMrp;
         this.productDdprice = productDdprice;
         this.productqty = productqty;
@@ -119,5 +122,13 @@ public class Cart {
 
     public void setDelivery_slot(int delivery_slot) {
         this.delivery_slot = delivery_slot;
+    }
+
+    public String getProductQtyDes() {
+        return productQtyDes;
+    }
+
+    public void setProductQtyDes(String productQtyDes) {
+        this.productQtyDes = productQtyDes;
     }
 }

@@ -18,8 +18,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
             android:text="DD Balance"
-            android:textSize="18sp"
-            android:textColor="#fff" />
+            android:textColor="#fff"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/balanceDisplayTV"
@@ -27,10 +27,10 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:textStyle="bold"
             android:text="Rs. - - "
             android:textColor="#fff"
-            android:textSize="25sp" />
+            android:textSize="25sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 
@@ -61,45 +61,92 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/amountET"
-        android:padding="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
         android:text="Monthly Order Value: Rs. 500"
         android:textColor="#732525" />
-
-    <TextView
-        android:id="@+id/weeklyCostTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/monthlyCostTV"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="Weekly Order Value: Rs. 150"
-        android:textColor="#732525"
-        android:layout_marginStart="10dp" />
 
     <Button
         android:id="@+id/payOnlineBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/weeklyCostTV"
+        android:layout_below="@+id/monthlyCostTV"
         android:layout_centerHorizontal="true"
-        android:minHeight="43dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="15dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/button_background_color_primary"
+        android:minHeight="43dp"
         android:text="Recharge Online"
         android:textColor="@color/colorWhite" />
+
+    <TextView
+        android:id="@+id/promoCodeTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/payOnlineBtn"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:text="Have a Promo Code?"
+        android:textColor="@color/tv_hyperlink"
+        android:textSize="16sp" />
+
+    <RelativeLayout
+        android:id="@+id/promoCodeResultRL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/payOnlineBtn"
+        android:layout_marginTop="15dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/promoCodeResultHeaderTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/removePromoBtn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/promoCodeResultHeaderTV"
+            android:layout_toRightOf="@+id/promoCodeResultHeaderTV"
+            android:background="@drawable/circle_cancel_btn_bg"
+            android:text="X" />
+
+        <TextView
+            android:id="@+id/promoCodeResultMessageTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/promoCodeResultHeaderTV"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/cashColTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/payOnlineBtn"
+        android:layout_above="@+id/divider1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="Cash Recharge"
-        android:textColor="#5372be"
-        android:textSize="16sp" />
+        android:layout_marginBottom="15dp"
+        android:text="Request Cash Recharge"
+        android:textColor="@color/tv_hyperlink"
+        android:textSize="17sp" />
 
     <View
         android:id="@+id/divider1"
@@ -112,15 +159,15 @@
         android:id="@+id/myTransactionsTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="View My Transactions"
-        android:textColor="@color/colorCheckoutBg"
         android:layout_alignParentBottom="true"
-        android:textAlignment="textEnd"
+        android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
-        android:textSize="16sp"
-        android:padding="10dp"
         android:gravity="end"
-        android:layout_marginEnd="5dp" />
+        android:padding="10dp"
+        android:text="View My Transactions"
+        android:textAlignment="textEnd"
+        android:textColor="@color/colorCheckoutBg"
+        android:textSize="16sp" />
 
     <View
         android:id="@+id/divider2"

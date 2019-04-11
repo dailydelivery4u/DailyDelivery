@@ -66,7 +66,7 @@ public class RCOrdersAdapter extends RecyclerView.Adapter<RCOrdersAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull final RCOrdersAdapter.ViewHolder holder, int position) {
         holder.mItem = items.get(position);
-        String productName = holder.mItem.getName() + " " + holder.mItem.getDes();
+        String productName = holder.mItem.getName() + " " + holder.mItem.getDes() + " - " + holder.mItem.getQtyDes();
         holder.nameTV.setText(productName);
         holder.priceTV.setText("Price: Rs." + holder.mItem.getPrice());
         holder.startDateTV.setText("Start Date: " + holder.mItem.getStartDate());

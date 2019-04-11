@@ -71,12 +71,12 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
                 .load(mValues.get(position).getThumbnailUrl())
                 //.diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.imageView);
-            if (holder.mItem.isIn_cart()) {
-                holder.addBtn.setVisibility(View.GONE);
-                holder.numberPicker.setValue(holder.mItem.getQty());
-                holder.addBtn.setEnabled(false);
-                holder.qtyLinLay.setVisibility(View.VISIBLE);
-            }
+        if (holder.mItem.isIn_cart()) {
+            holder.addBtn.setVisibility(View.GONE);
+            holder.numberPicker.setValue(holder.mItem.getQty());
+            holder.addBtn.setEnabled(false);
+            holder.qtyLinLay.setVisibility(View.VISIBLE);
+        }
 
 
         holder.numberPicker.setValueChangedListener(new ValueChangedListener() {
@@ -99,15 +99,15 @@ public class MyProductRecyclerViewAdapter extends RecyclerView.Adapter<MyProduct
         holder.addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    //Log.d("DD","delivery slot in cart: " + deliverySlotInCart + "; item delivery slot: "+ holder.mItem.getDeliverySlot());
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
+                //Log.d("DD","delivery slot in cart: " + deliverySlotInCart + "; item delivery slot: "+ holder.mItem.getDeliverySlot());
+                // Notify the active callbacks interface (the activity, if the
+                // fragment is attached to one) that an item has been selected.
                 //if (deliverySlotInCart == 0 || deliverySlotInCart == holder.mItem.getDeliverySlot()) {
-                        mListener.productDisplayFragmentInteraction(holder.mItem, 1);
-                        holder.addBtn.setEnabled(false);
+                mListener.productDisplayFragmentInteraction(holder.mItem, 1);
+                holder.addBtn.setEnabled(false);
                 holder.addBtn.setVisibility(View.GONE);
                 holder.numberPicker.setValue(1);
-                        holder.qtyLinLay.setVisibility(View.VISIBLE);
+                holder.qtyLinLay.setVisibility(View.VISIBLE);
                     /*} else {
                         //show the user status with an alert dailogue
                         String message;

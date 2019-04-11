@@ -250,7 +250,7 @@ public class ProductDisplayFragment extends Fragment {
                             }
                         }
                         String thumbnailUrl = obj.getString("thumbnail_url").replace("\\", "");
-                        Product product = new Product(product_id, obj.getInt("cat"), obj.getString("name"), obj.getString("description"), obj.getString("qty"), obj.getInt("price"), obj.getInt("discount_price"), thumbnailUrl, presentInCart, qty, delivery_slot);
+                        Product product = new Product(product_id, obj.getInt("cat"), obj.getString("name"), obj.getString("description"), obj.getString("des_qty"), obj.getInt("price"), obj.getInt("discount_price"), thumbnailUrl, presentInCart, qty, delivery_slot);
                         Products.addItem(product);
                     } catch (JSONException e) {
                         e.printStackTrace();

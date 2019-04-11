@@ -100,22 +100,22 @@
     <LinearLayout
         android:id="@+id/ll"
         android:layout_width="match_parent"
-        android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
-        android:background="@drawable/border"
+        android:layout_below="@+id/tv5"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:weightSum="1"
+        android:background="@drawable/border"
         android:orientation="horizontal"
-        android:layout_below="@+id/tv5">
+        android:weightSum="1">
 
         <TextView
             android:id="@+id/rcTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.8"
             android:padding="20dp"
             android:text="XCV567"
-            android:layout_weight="0.8"
             android:textColor="@color/colorBrown"
             android:textSize="16sp" />
 
@@ -123,15 +123,15 @@
             android:id="@+id/rcShareBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_share"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0.2"
+            android:background="@color/colorWhite"
+            android:onClick="shareBtnOnClick"
             android:outlineAmbientShadowColor="@color/colorBrown"
             android:outlineSpotShadowColor="@color/colorBrown"
             android:padding="10dp"
-            android:onClick="shareBtnOnClick"
-            android:layout_weight="0.2"
-            android:layout_marginTop="2dp"
-            android:layout_marginRight="10dp"
-            android:background="@color/colorWhite" />
+            android:src="@drawable/ic_share" />
     </LinearLayout>
 
     <TextView

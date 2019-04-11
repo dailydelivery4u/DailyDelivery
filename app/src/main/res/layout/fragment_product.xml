@@ -23,11 +23,11 @@
                 android:id="@+id/imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:scaleType="fitXY"
-                android:adjustViewBounds="true"
-                android:layout_marginBottom="20dp"
                 android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
                 app:srcCompat="@drawable/background_day_selected" />
 
             <TextView
@@ -69,52 +69,52 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/productQtyTextView"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="8dp"
                 android:text="MRP: Rs 21"
-                android:textSize="12sp"
-                android:layout_marginStart="10dp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/ddPriceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/productQtyTextView"
+                android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@+id/mrpTextView"
                 android:text="DD Price: Rs 21"
                 android:textColor="#732525"
-                android:textSize="15sp"
-                android:layout_marginStart="10dp" />
+                android:textSize="15sp" />
 
             <Button
                 android:id="@+id/repeatBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/button_background"
-                android:text="Repeat Order"
+                android:layout_below="@+id/ddPriceTextView"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/button_background"
                 android:minHeight="30dp"
-                android:layout_below="@+id/ddPriceTextView"
+                android:text="Repeat Order"
                 android:textColor="@color/colorWhite" />
 
             <Button
                 android:id="@+id/addBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/button_background_green"
-                android:text="Buy Once"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="20dp"
-                android:minHeight="30dp"
                 android:layout_below="@+id/repeatBtn"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/button_background_green"
+                android:minHeight="30dp"
+                android:text="Buy Once"
                 android:textColor="@color/colorWhite" />
 
 
@@ -129,9 +129,9 @@
 
                 <com.travijuu.numberpicker.library.NumberPicker
                     android:id="@+id/number_picker"
-                    android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
+                    android:layout_gravity="center"
                     numberpicker:focusable="false"
                     numberpicker:max="10"
                     numberpicker:min="0"

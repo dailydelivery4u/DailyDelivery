@@ -24,6 +24,9 @@ public class RcOrderDetails {
     @ColumnInfo(name = "des")
     private String des;
 
+    @ColumnInfo(name = "qty_des")
+    private String qtyDes;
+
     @ColumnInfo(name = "price")
     private int price;
 
@@ -58,14 +61,14 @@ public class RcOrderDetails {
     private int day2Qty;
     @ColumnInfo(name = "date_of_month")
     private int dateOfMonth;
-//TODO: ADd qtyDesc in RC ORders Display
 
 
-    public RcOrderDetails(int productId, int catId, String name, String des, int price, int status, int deliverySlot, String startDate, int mon, int tue, int wed, int thu, int fri, int sat, int sun, int frequency, int day1Qty, int day2Qty, int dateOfMonth) {
+    public RcOrderDetails(int productId, int catId, String name, String des, String qtyDes, int price, int status, int deliverySlot, String startDate, int mon, int tue, int wed, int thu, int fri, int sat, int sun, int frequency, int day1Qty, int day2Qty, int dateOfMonth) {
         this.productId = productId;
         this.catId = catId;
         this.name = name;
         this.des = des;
+        this.qtyDes = qtyDes;
         this.price = price;
         this.status = status;
         this.deliverySlot = deliverySlot;
@@ -135,16 +138,16 @@ public class RcOrderDetails {
         return price;
     }
 
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
     public int getDateOfMonth() {
         return dateOfMonth;
     }
 
     public void setDateOfMonth(int dateOfMonth) {
         this.dateOfMonth = dateOfMonth;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
     }
 
     public int getStatus() {
@@ -249,5 +252,13 @@ public class RcOrderDetails {
 
     public void setDay2Qty(int day2Qty) {
         this.day2Qty = day2Qty;
+    }
+
+    public String getQtyDes() {
+        return qtyDes;
+    }
+
+    public void setQtyDes(String qtyDes) {
+        this.qtyDes = qtyDes;
     }
 }

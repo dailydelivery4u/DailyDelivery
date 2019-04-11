@@ -14,11 +14,11 @@
         android:layout_below="@+id/datePicker"
         android:background="@color/colorPrimary"
         android:padding="10dp"
-        android:textStyle="bold"
         android:text="Orders for the Day"
         android:textAlignment="center"
         android:textColor="@color/colorWhite"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"

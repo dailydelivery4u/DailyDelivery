@@ -7,133 +7,133 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-    android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        app:srcCompat="@drawable/background_day_selected" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            app:srcCompat="@drawable/background_day_selected" />
 
-    <TextView
-        android:id="@+id/productNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageView"
-        android:layout_marginLeft="30dp"
-        android:layout_toRightOf="@+id/imageView"
-        android:text="Heritage Golden Cow Milk"
-        android:textAllCaps="true"
-        android:textColor="#732525"
-        android:textSize="16sp" />
+        <TextView
+            android:id="@+id/productNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/imageView"
+            android:layout_marginLeft="30dp"
+            android:layout_toRightOf="@+id/imageView"
+            android:text="Heritage Golden Cow Milk"
+            android:textAllCaps="true"
+            android:textColor="#732525"
+            android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/productDescriptionTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/productNameTextView"
-        android:layout_alignLeft="@+id/productNameTextView"
-        android:layout_marginTop="5dp"
-        android:text="500ml Milk Packet"
-        android:textColor="@color/colorBlack" />
+        <TextView
+            android:id="@+id/productDescriptionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/productNameTextView"
+            android:layout_alignLeft="@+id/productNameTextView"
+            android:layout_marginTop="5dp"
+            android:text="500ml Milk Packet"
+            android:textColor="@color/colorBlack" />
 
-    <TextView
-        android:id="@+id/mrpTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/productDescriptionTextView"
-        android:layout_alignLeft="@+id/productDescriptionTextView"
-        android:layout_marginTop="15dp"
-        android:text="MRP: Rs 21"
-        android:textSize="12sp" />
+        <TextView
+            android:id="@+id/mrpTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/productDescriptionTextView"
+            android:layout_alignLeft="@+id/productDescriptionTextView"
+            android:layout_marginTop="15dp"
+            android:text="MRP: Rs 21"
+            android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/ddPriceTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/productDescriptionTextView"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_toRightOf="@+id/mrpTextView"
-        android:text="DD Price: Rs 21"
-        android:textColor="#732525"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/ddPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/productDescriptionTextView"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_toRightOf="@+id/mrpTextView"
+            android:text="DD Price: Rs 21"
+            android:textColor="#732525"
+            android:textSize="14sp" />
 
-    <View
-        android:id="@+id/divider1"
-        android:layout_width="match_parent"
-        android:layout_marginTop="5dp"
-        android:layout_height="1dp"
-        android:layout_below="@+id/ddPriceTextView"
-        android:background="#FF5722" />
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/ddPriceTextView"
+            android:layout_marginTop="5dp"
+            android:background="#FF5722" />
 
         <TextView
             android:id="@+id/freqHeaderTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/divider1"
-            android:textStyle="bold"
-            android:text="Frequency"
             android:padding="10dp"
-            android:textColor="#ed2a2a" />
+            android:text="Frequency"
+            android:textColor="#ed2a2a"
+            android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/dailyTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/freqHeaderTV"
-            android:text="Daily"
-            android:textColor="@color/colorWhite"
-            android:id="@+id/dailyTV"
             android:layout_marginLeft="10dp"
-            android:paddingRight="10dp"
+            android:background="@drawable/freq_selector_selected_bg"
             android:paddingLeft="10dp"
             android:paddingTop="5dp"
+            android:paddingRight="10dp"
             android:paddingBottom="10dp"
-            android:background="@drawable/freq_selector_selected_bg" />
+            android:text="Daily"
+            android:textColor="@color/colorWhite" />
 
         <TextView
             android:id="@+id/oncein2daysTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/freqHeaderTV"
-            android:layout_toRightOf="@+id/dailyTV"
-            android:text="Alternate Days"
+            android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
-            android:textColor="@color/colorBlack"
-            android:paddingRight="10dp"
+            android:layout_toEndOf="@+id/dailyTV"
+            android:layout_toRightOf="@+id/dailyTV"
+            android:background="@drawable/freq_selector_default_bg"
             android:paddingLeft="10dp"
             android:paddingTop="5dp"
+            android:paddingRight="10dp"
             android:paddingBottom="10dp"
-            android:background="@drawable/freq_selector_default_bg"
-            android:layout_marginStart="20dp"
-            android:layout_toEndOf="@+id/dailyTV" />
+            android:text="Alternate Days"
+            android:textColor="@color/colorBlack" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/freqHeaderTV"
-        android:layout_toRightOf="@+id/oncein2daysTV"
-        android:text="Once in a month"
-        android:id="@+id/onceinMonthTV"
-        android:layout_marginLeft="20dp"
-        android:textColor="@color/colorBlack"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="10dp"
-        android:background="@drawable/freq_selector_default_bg"
-        android:layout_marginStart="20dp"
-        android:layout_toEndOf="@+id/oncein2daysTV" />
+        <TextView
+            android:id="@+id/onceinMonthTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/freqHeaderTV"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/oncein2daysTV"
+            android:layout_toRightOf="@+id/oncein2daysTV"
+            android:background="@drawable/freq_selector_default_bg"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="10dp"
+            android:text="Once in a month"
+            android:textColor="@color/colorBlack" />
 
 
         <View
             android:id="@+id/divider2"
-        android:layout_width="match_parent"
+            android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/onceinMonthTV"
             android:layout_marginTop="10dp"
@@ -145,93 +145,93 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/divider2"
-            android:textStyle="bold"
             android:layout_centerHorizontal="true"
-            android:text="Quantity"
             android:padding="10dp"
-            android:textColor="#ed2a2a" />
+            android:text="Quantity"
+            android:textColor="#ed2a2a"
+            android:textStyle="bold" />
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/questionMarkIV"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:visibility="gone"
+            android:layout_alignTop="@+id/qtyHeaderTV"
             android:layout_marginTop="8dp"
-            android:src="@drawable/question_mark"
             android:layout_toRightOf="@+id/qtyHeaderTV"
-            android:layout_alignTop="@+id/qtyHeaderTV" />
+            android:src="@drawable/question_mark"
+            android:visibility="gone" />
 
 
         <FrameLayout
+            android:id="@+id/qtySelectionLayouts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/qtySelectionLayouts"
             android:layout_below="@+id/qtyHeaderTV">
             <!-- Quantity Layout for Monthly Frequency Selection -->
             <RelativeLayout
+                android:id="@+id/qtyMonthlyRL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/qtyMonthlyRL"
                 android:visibility="gone">
 
                 <TextView
                     android:id="@+id/qtyNumberTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1"
                     android:layout_centerHorizontal="true"
-                    android:textStyle="bold"
+                    android:text="1"
+                    android:textColor="@color/colorBottomNavigationNotification"
                     android:textSize="22sp"
-                    android:textColor="@color/colorBottomNavigationNotification" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/qtyDecreaseBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="-"
-                    android:layout_toLeftOf="@+id/qtyNumberTV"
                     android:layout_alignTop="@+id/qtyNumberTV"
                     android:layout_marginRight="15dp"
-                    android:textStyle="bold"
-                    android:textAlignment="center"
+                    android:layout_toLeftOf="@+id/qtyNumberTV"
                     android:background="@drawable/circle"
+                    android:text="-"
+                    android:textAlignment="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="22sp" />
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/qtyIncreaseBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="+"
-                    android:layout_toRightOf="@+id/qtyNumberTV"
                     android:layout_alignTop="@+id/qtyNumberTV"
                     android:layout_marginLeft="15dp"
-                    android:textStyle="bold"
-                    android:textAlignment="center"
+                    android:layout_toRightOf="@+id/qtyNumberTV"
                     android:background="@drawable/circle"
+                    android:text="+"
+                    android:textAlignment="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="22sp" />
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
                 <!-- Date Selection Layout for Monthly Frequency Selection -->
                 <LinearLayout
+                    android:id="@+id/monthdateSelectionLL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/qtyNumberTV"
-                    android:id="@+id/monthdateSelectionLL"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
                         android:padding="5dp"
                         android:text="Select Date of Delivery Every Month:"
-                        android:textColor="#ed2a2a" />
+                        android:textColor="#ed2a2a"
+                        android:textStyle="bold" />
 
                     <org.angmarch.views.NiceSpinner
                         android:id="@+id/date_spinner"
                         android:layout_width="wrap_content"
-                        app:textTint="@color/colorBrown"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        app:textTint="@color/colorBrown" />
 
                 </LinearLayout>
 
@@ -239,20 +239,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/monthdateSelectionLL"
+                    android:gravity="start"
                     android:padding="5dp"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/colorBlack"
                     android:text="Deliveries will be done on the day selected above every month after the start date."
-                    android:gravity="start" />
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorBlack" />
 
             </RelativeLayout>
 
 
             <!-- Quantity Layout for Daily Frequency Selection -->
             <LinearLayout
+                android:id="@+id/dailyFrequencyLL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/dailyFrequencyLL"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -363,43 +363,43 @@
                         android:id="@+id/np3"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:descendantFocusability="blocksDescendants"
                         android:layout_weight="1"
+                        android:descendantFocusability="blocksDescendants"
                         android:padding="5dp" />
 
                     <NumberPicker
                         android:id="@+id/np4"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:descendantFocusability="blocksDescendants"
                         android:layout_weight="1"
+                        android:descendantFocusability="blocksDescendants"
                         android:padding="5dp" />
 
                     <NumberPicker
                         android:id="@+id/np5"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:descendantFocusability="blocksDescendants"
                         android:layout_weight="1"
+                        android:descendantFocusability="blocksDescendants"
                         android:padding="5dp" />
 
                     <NumberPicker
                         android:id="@+id/np6"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:descendantFocusability="blocksDescendants"
                         android:layout_weight="1"
+                        android:descendantFocusability="blocksDescendants"
                         android:padding="5dp" />
                 </LinearLayout>
             </LinearLayout>
 
             <!-- Quantity Layout for Alternate Day Frequency Selection -->
             <LinearLayout
+                android:id="@+id/alternateDayFreqSelLL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/alternateDayFreqSelLL"
-                android:orientation="horizontal"
                 android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
                 android:visibility="gone"
                 android:weightSum="1">
 
@@ -414,48 +414,48 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="First Day Qty"
-                        android:textColor="@color/colorBlack"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@color/colorBlack" />
 
                     <TextView
                         android:id="@+id/qtyDay1NumberTV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/day1HeaderTV"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="10dp"
                         android:text="2"
-                        android:layout_centerHorizontal="true"
-                        android:textStyle="bold"
+                        android:textColor="@color/colorBottomNavigationNotification"
                         android:textSize="22sp"
-                        android:textColor="@color/colorBottomNavigationNotification" />
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/qtyDay1DecreaseBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
-                        android:layout_toLeftOf="@+id/qtyDay1NumberTV"
                         android:layout_alignTop="@+id/qtyDay1NumberTV"
                         android:layout_marginRight="15dp"
-                        android:textStyle="bold"
-                        android:textAlignment="center"
+                        android:layout_toLeftOf="@+id/qtyDay1NumberTV"
                         android:background="@drawable/circle"
+                        android:text="-"
+                        android:textAlignment="center"
                         android:textColor="@color/colorWhite"
-                        android:textSize="22sp" />
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/qtyDay1IncreaseBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="+"
-                        android:layout_toRightOf="@+id/qtyDay1NumberTV"
                         android:layout_alignTop="@+id/qtyDay1NumberTV"
                         android:layout_marginLeft="15dp"
-                        android:textStyle="bold"
-                        android:textAlignment="center"
+                        android:layout_toRightOf="@+id/qtyDay1NumberTV"
                         android:background="@drawable/circle"
+                        android:text="+"
+                        android:textAlignment="center"
                         android:textColor="@color/colorWhite"
-                        android:textSize="22sp" />
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
 
 
                 </RelativeLayout>
@@ -472,127 +472,130 @@
                     android:layout_weight="0.5">
 
                     <TextView
+                        android:id="@+id/day2HeaderTV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorBlack"
-                        android:id="@+id/day2HeaderTV"
                         android:text="Next Day Qty"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@color/colorBlack" />
 
                     <TextView
                         android:id="@+id/qtyDay2NumberTV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/day2HeaderTV"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginTop="10dp"
                         android:text="0"
-                        android:layout_centerHorizontal="true"
-                        android:textStyle="bold"
+                        android:textColor="@color/colorBottomNavigationNotification"
                         android:textSize="22sp"
-                        android:textColor="@color/colorBottomNavigationNotification" />
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/qtyDay2DecreaseBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
-                        android:layout_toLeftOf="@+id/qtyDay2NumberTV"
                         android:layout_alignTop="@+id/qtyDay2NumberTV"
                         android:layout_marginRight="15dp"
-                        android:textStyle="bold"
-                        android:textAlignment="center"
+                        android:layout_toLeftOf="@+id/qtyDay2NumberTV"
                         android:background="@drawable/circle"
+                        android:text="-"
+                        android:textAlignment="center"
                         android:textColor="@color/colorWhite"
-                        android:textSize="22sp" />
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/qtyDay2IncreaseBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="+"
-                        android:layout_toRightOf="@+id/qtyDay2NumberTV"
                         android:layout_alignTop="@+id/qtyDay2NumberTV"
                         android:layout_marginLeft="15dp"
-                        android:textStyle="bold"
-                        android:textAlignment="center"
+                        android:layout_toRightOf="@+id/qtyDay2NumberTV"
                         android:background="@drawable/circle"
+                        android:text="+"
+                        android:textAlignment="center"
                         android:textColor="@color/colorWhite"
-                        android:textSize="22sp" />
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
                 </RelativeLayout>
 
             </LinearLayout>
 
         </FrameLayout>
 
-    <View
-        android:id="@+id/divider8"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/qtySelectionLayouts"
-        android:background="#FF5722" />
+        <View
+            android:id="@+id/divider8"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/qtySelectionLayouts"
+            android:background="#FF5722" />
 
         <RelativeLayout
             android:id="@+id/startDateRL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/divider8">
-    <TextView
-        android:id="@+id/startDateTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
 
-        android:padding="10dp"
-        android:textStyle="bold"
-        android:text="Start Date"
-        android:textColor="#ed2a2a" />
+            <TextView
+                android:id="@+id/startDateTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-    <TextView
-        android:id="@+id/sdChangeTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/startDateDisplayTV"
-        android:padding="10dp"
-        android:layout_marginRight="20dp"
-        android:text="Change"
-        android:textColor="@color/tv_hyperlink" />
+                android:padding="10dp"
+                android:text="Start Date"
+                android:textColor="#ed2a2a"
+                android:textStyle="bold" />
 
-    <View
-        android:id="@+id/divider9"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/startDateTV"
-        android:background="#FF5722" />
+            <TextView
+                android:id="@+id/sdChangeTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/startDateDisplayTV"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:padding="10dp"
+                android:text="Change"
+                android:textColor="@color/tv_hyperlink" />
+
+            <View
+                android:id="@+id/divider9"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/startDateTV"
+                android:background="#FF5722" />
 
 
-    <TextView
-        android:id="@+id/startDateDisplayTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/divider9"
-        android:padding="10dp"
-        android:text="Monday, 26 November 2018"
-        android:textColor="@color/colorBlack" />
-    <View
-        android:id="@+id/divider5"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/startDateDisplayTV"
-        android:background="#FF5722" />
+            <TextView
+                android:id="@+id/startDateDisplayTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider9"
+                android:padding="10dp"
+                android:text="Monday, 26 November 2018"
+                android:textColor="@color/colorBlack" />
+
+            <View
+                android:id="@+id/divider5"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/startDateDisplayTV"
+                android:background="#FF5722" />
 
         </RelativeLayout>
-    <Button
-        android:id="@+id/placeRcOrdBtn"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/startDateRL"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/button_background"
-        android:padding="10dp"
-        android:text="Place Repeating Order"
-        android:textColor="@color/colorWhite" />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/placeRcOrdBtn"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/startDateRL"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/button_background"
+            android:padding="10dp"
+            android:text="Place Repeating Order"
+            android:textColor="@color/colorWhite" />
+
+    </RelativeLayout>
 </ScrollView>

@@ -2,7 +2,7 @@
     <string name="app_name">DailyDelivery</string>
     <string name="server_addr_local">http://www.dailydelivery.co.in/dd/</string>
     <!--<string name="server_addr_release">http://192.168.0.6/dd/</string>-->
-    <string name="server_addr_release">http://192.168.0.8/dd/</string>
+    <string name="server_addr_release">http://192.168.0.6/dd/</string>
     <string name="private_sharedpref_file">dd</string>
     <string name="sp_tag_user_id">user_id</string>
     <string name="sp_tag_user_name">user_name</string>
@@ -35,4 +35,5 @@
     <string name="Rs">\u20B9</string>
     <string name="ruppes_text">\u20A8</string>
     <string name="search_hint">Search for Products</string>
+    <string name="promo_hint">Enter Promo Code</string>
 </resources>

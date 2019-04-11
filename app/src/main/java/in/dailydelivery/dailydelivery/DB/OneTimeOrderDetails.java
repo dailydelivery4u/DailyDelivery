@@ -27,6 +27,9 @@ public class OneTimeOrderDetails {
     @ColumnInfo(name = "des")
     private String des;
 
+    @ColumnInfo(name = "des_qty")
+    private String qtyDes;
+
     @ColumnInfo(name = "price")
     private int price;
 
@@ -39,13 +42,14 @@ public class OneTimeOrderDetails {
     @ColumnInfo(name = "delivery_slot")
     private int deliverySlot;
 
-    public OneTimeOrderDetails(int orderId, int productId, int catId, int qty, String name, String des, int price, int status, String date, int deliverySlot) {
+    public OneTimeOrderDetails(int orderId, int productId, int catId, int qty, String name, String des, String qtyDes, int price, int status, String date, int deliverySlot) {
         this.orderId = orderId;
         this.productId = productId;
         this.catId = catId;
         this.qty = qty;
         this.name = name;
         this.des = des;
+        this.qtyDes = qtyDes;
         this.price = price;
         this.status = status;
         this.date = date;
@@ -138,5 +142,13 @@ public class OneTimeOrderDetails {
 
     public void setDeliverySlot(int deliverySlot) {
         this.deliverySlot = deliverySlot;
+    }
+
+    public String getQtyDes() {
+        return qtyDes;
+    }
+
+    public void setQtyDes(String qtyDes) {
+        this.qtyDes = qtyDes;
     }
 }

@@ -30,10 +30,9 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
         TextView nameTV = view.findViewById(R.id.nameTV);
         TextView desTV = view.findViewById(R.id.desTV);
         TextView priceTV = view.findViewById(R.id.priceTV);
-        TextView slotTV = view.findViewById(R.id.deliverySlotTV);
         TextView statusTV = view.findViewById(R.id.statusTV);
         ImageView delBtn = view.findViewById(R.id.delBtn);
-        return new ViewHolder(view, nameTV, desTV, priceTV, slotTV, statusTV, delBtn);
+        return new ViewHolder(view, nameTV, desTV, priceTV, statusTV, delBtn);
     }
 
     @Override
@@ -41,14 +40,8 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
         holder.mItem = items.get(position);
         int ddPrice = items.get(position).getPrice() * items.get(position).getQty();
         holder.nameTV.setText(items.get(position).getName() + "(" + items.get(position).getQty() + " Nos. )");
-        holder.desTV.setText(items.get(position).getDes());
+        holder.desTV.setText(items.get(position).getDes() + " - " + items.get(position).getQtyDes());
         holder.priceTV.setText("Rs. " + ddPrice);
-        //Log.d("DD", "Delivery Slot: " + items.get(position).getDeliverySlot());
-        if (items.get(position).getDeliverySlot() == 1) {
-            holder.slotTV.setText(holder.mView.getContext().getString(R.string.delivery_slot_1));
-        } else if (items.get(position).getDeliverySlot() == 2) {
-            holder.slotTV.setText(holder.mView.getContext().getString(R.string.delivery_slot_2));
-        }
         String status;
         switch (holder.mItem.getStatus()) {
             case 1:
@@ -111,19 +104,17 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
         public final TextView nameTV;
         public final TextView desTV;
         public final TextView priceTV;
-        public final TextView slotTV;
         public final TextView statusTV;
         public final ImageView delBtn;
         public View mView;
         public OneTimeOrderDetails mItem;
 
-        public ViewHolder(View mView, TextView nameTV, TextView desTV, TextView priceTV, TextView slotTV, TextView statusTV, ImageView delBtn) {
+        public ViewHolder(View mView, TextView nameTV, TextView desTV, TextView priceTV, TextView statusTV, ImageView delBtn) {
             super(mView);
             this.mView = mView;
             this.nameTV = nameTV;
             this.desTV = desTV;
             this.priceTV = priceTV;
-            this.slotTV = slotTV;
             this.statusTV = statusTV;
             this.delBtn = delBtn;
         }

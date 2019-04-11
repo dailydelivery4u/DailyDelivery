@@ -18,8 +18,8 @@
             android:fontFamily="serif"
             android:inputType="number"
             android:text="DAILY DELIVERY"
-            android:textColor="@color/colorWhite"
             android:textAlignment="center"
+            android:textColor="@color/colorWhite"
             android:textSize="35sp"
             android:textStyle="normal" />
 
@@ -39,14 +39,14 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
+            android:backgroundTint="@color/colorWhite"
             android:hint="Mobile Number"
+            android:inputType="number"
             android:maxLength="10"
-            android:textCursorDrawable="@null"
+            android:padding="10dp"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorWhite"
-            android:backgroundTint="@color/colorWhite"
-            android:inputType="number"
-            android:padding="10dp" />
+            android:textCursorDrawable="@null" />
 
         <Button
             android:id="@+id/getOtpBtn"
@@ -77,8 +77,8 @@
             android:layout_height="wrap_content"
             android:padding="15dp"
             android:text="ENTER OTP"
-            android:textColor="@color/colorWhite"
             android:textAlignment="center"
+            android:textColor="@color/colorWhite"
             android:textSize="17sp" />
 
 
@@ -88,11 +88,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/otpInputTV"
             android:layout_centerHorizontal="true"
-            android:textColor="@color/colorWhite"
-            android:backgroundTint="@color/colorWhite"
-            android:textCursorDrawable="@null"
             android:layout_marginTop="20dp"
-            android:inputType="number" />
+            android:backgroundTint="@color/colorWhite"
+            android:inputType="number"
+            android:textColor="@color/colorWhite"
+            android:textCursorDrawable="@null" />
 
         <Button
             android:layout_width="250dp"

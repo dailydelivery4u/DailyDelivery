@@ -8,11 +8,11 @@
         android:id="@+id/society_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SITA ARCADE"
-        android:textAllCaps="true"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
+        android:text="SITA ARCADE"
+        android:textAllCaps="true"
         android:textColor="@color/colorBlack"
         android:textSize="16sp" />
 
@@ -20,10 +20,10 @@
         android:id="@+id/society_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Beside Radhika Hospital"
-        android:textAllCaps="true"
+        android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:paddingBottom="10dp"
-        android:textSize="14sp"
-        android:layout_marginStart="10dp" />
+        android:text="Beside Radhika Hospital"
+        android:textAllCaps="true"
+        android:textSize="14sp" />
 </LinearLayout>

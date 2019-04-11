@@ -397,8 +397,8 @@ public class ReccurringOrdersActivity extends Fragment implements RCOrdersAdapte
         @Override
         protected void onPostExecute(String result) {
             Toast.makeText(getActivity(), "Order Deleted", Toast.LENGTH_LONG).show();
-            //TODO: Notify Data Set changed
-
+            rcOrders.clear();
+            new GetRcOrders().execute();
             //ReccurringOrdersActivity.this.recreate();
             //refreshActivity();
         }

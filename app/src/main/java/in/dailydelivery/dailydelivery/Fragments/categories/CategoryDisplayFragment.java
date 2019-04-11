@@ -46,10 +46,10 @@ public class CategoryDisplayFragment extends Fragment {
     ArrayList<CatDataModel> catDataModel;
     Context context;
     RecyclerView catTyperecyclerView;
-    private SliderLayout mDemoSlider;
-    private CategoryDisplayFragmentInteractionListener mListener;
     //ProgressDialog progress;
     SearchView searchView;
+    private SliderLayout mDemoSlider;
+    private CategoryDisplayFragmentInteractionListener mListener;
 
 
     /**
@@ -69,7 +69,7 @@ public class CategoryDisplayFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_categorydisplay_list, container, false);
 
-            context = view.getContext();
+        context = view.getContext();
         catTyperecyclerView = view.findViewById(R.id.list);
         mDemoSlider = view.findViewById(R.id.slider);
         mListener.setActionBarTitle("Daily Delivery");

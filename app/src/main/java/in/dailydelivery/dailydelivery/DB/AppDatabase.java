@@ -11,8 +11,6 @@ import android.support.annotation.NonNull;
 
 @Database(entities = {Cart.class, OneTimeOrderDetails.class, RcOrderDetails.class, Vacation.class, WalletTransaction.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
-    private static AppDatabase INSTANCE;
-
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
@@ -20,8 +18,13 @@ public abstract class AppDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE rc_orderdetails ADD COLUMN day1_qty INTEGER DEFAULT 0 NOT NULL");
             database.execSQL("ALTER TABLE rc_orderdetails ADD COLUMN day2_qty INTEGER DEFAULT 0 NOT NULL");
             database.execSQL("ALTER TABLE rc_orderdetails ADD COLUMN date_of_month INTEGER DEFAULT 0 NOT NULL");
+            database.execSQL("ALTER TABLE rc_orderdetails ADD COLUMN date_of_month INTEGER DEFAULT 0 NOT NULL");
+            database.execSQL("ALTER TABLE rc_orderdetails ADD COLUMN qty_des STRING DEFAULT '' NOT NULL");
+            database.execSQL("ALTER TABLE cart ADD COLUMN product_qty_des STRING DEFAULT '' NOT NULL");
+            database.execSQL("ALTER TABLE onetime_orderdetails ADD COLUMN des_qty STRING DEFAULT '' NOT NULL");
         }
     };
+    private static AppDatabase INSTANCE;
 
     public static AppDatabase getAppDatabase(Context context) {
         if (INSTANCE == null) {

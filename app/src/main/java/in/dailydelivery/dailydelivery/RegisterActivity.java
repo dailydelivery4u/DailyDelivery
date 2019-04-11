@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,19 +39,21 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
 
+//import android.util.Log;
+
 public class RegisterActivity extends AppCompatActivity {
     EditText nameInput, refCodeInput, flatInput, floorInput;
     SharedPreferences sharedPref;
     ProgressDialog progress;
     AutoCompleteTextView societyACTV;
-    private ArrayList<Society> societies, suggestions;
     Society societySelected;
     ArrayList<String> blocks;
     Spinner blockSpinner;
     String blockSelected;
-
     LinearLayout blockLL;
     CardView addCV;
+    private ArrayList<Society> societies, suggestions;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,10 +86,15 @@ public class RegisterActivity extends AppCompatActivity {
                 societyACTV.clearFocus();
             }
         });
-        blockSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        blockSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 blockSelected = blocks.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }
@@ -125,13 +131,15 @@ public class RegisterActivity extends AppCompatActivity {
                 //Create a JSONObject for sending to server
                 JSONObject obj = new JSONObject();
                 //String address = addInput.getText().toString().toUpperCase() + ", " + areaList.get(selectedAreaIndex).getAreaName();
-
+                String address = flatInput.getText().toString() + ", Block " + blockSelected + ", " + societySelected.getSocietyName() + ", " + societySelected.getSocietyAdd();
                 try {
                     obj.put("name", nameInput.getText().toString());
-                    obj.put("id", sharedPref.getInt(getString(R.string.sp_tag_user_id), 0));
+                    obj.put("id", sharedPref.getInt(getString(R.string.sp_tag_user_id), 273));
                     obj.put("block_name", blockSelected);
                     obj.put("flat", flatInput.getText().toString());
                     obj.put("floor", floorInput.getText().toString());
+                    obj.put("add", address);
+                    obj.put("soc_id", societySelected.getSocietyId());
                     //  obj.put("add", address);
                     obj.put("rc", refCodeInput.getText().toString());
                     //obj.put("areaId", areaId);
@@ -175,7 +183,7 @@ public class RegisterActivity extends AppCompatActivity {
             if (result.equals("timeout")) {
                 Toast.makeText(RegisterActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             }
-            Log.d("DD", "Result from webserver: " + result);
+            //Log.d("DD", "Result from webserver: " + result);
             try {
                 JSONObject resultArrayJson = new JSONObject(result);
                 //Check for Result COde
@@ -290,7 +298,7 @@ public class RegisterActivity extends AppCompatActivity {
             if (result.equals("timeout")) {
                 Toast.makeText(RegisterActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             }
-            Log.d("DD", "Result from webserver: " + result);
+            //Log.d("DD", "Result from webserver: " + result);
             try {
                 JSONObject resultArrayJson = new JSONObject(result);
                 JSONArray socJSON = resultArrayJson.getJSONArray("soc");
@@ -395,7 +403,7 @@ public class RegisterActivity extends AppCompatActivity {
             if (result.equals("timeout")) {
                 Toast.makeText(RegisterActivity.this, "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             }
-            Log.d("DD", "Result from webserver: " + result);
+            //Log.d("DD", "Result from webserver: " + result);
             try {
                 JSONArray resultArrayJson = new JSONArray(result);
                 blocks.clear();
@@ -519,7 +527,48 @@ public class RegisterActivity extends AppCompatActivity {
         private Context context;
         private int resourceId;
         private ArrayList<Society> items, tempItems;
+        private Filter addFilter = new Filter() {
+            @Override
+            public CharSequence convertResultToString(Object resultValue) {
+                Society society = (Society) resultValue;
+                return society.getSocietyName() + society.getSocietyAdd();
+            }
 
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                if (charSequence != null) {
+                    suggestions.clear();
+                    for (Society society : tempItems) {
+                        if (society.getSocietyName().toLowerCase().contains(charSequence.toString().toLowerCase()) ||
+                                society.getSocietyAdd().toLowerCase().contains(charSequence.toString().toLowerCase())) {
+                            suggestions.add(society);
+                        }
+                    }
+
+                    FilterResults filterResults = new FilterResults();
+                    filterResults.values = suggestions;
+                    filterResults.count = suggestions.size();
+                    return filterResults;
+                } else {
+                    return new FilterResults();
+                }
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                ArrayList<Society> tempValues = (ArrayList<Society>) filterResults.values;
+                if (filterResults.count > 0) {
+                    clear();
+                    for (Society fruitObj : tempValues) {
+                        add(fruitObj);
+                        notifyDataSetChanged();
+                    }
+                } else {
+                    clear();
+                    notifyDataSetChanged();
+                }
+            }
+        };
 
         public AddressAdapter(Context context, int resource, ArrayList<Society> items) {
             super(context, resource, items);
@@ -570,48 +619,5 @@ public class RegisterActivity extends AppCompatActivity {
         public Filter getFilter() {
             return addFilter;
         }
-
-        private Filter addFilter = new Filter() {
-            @Override
-            public CharSequence convertResultToString(Object resultValue) {
-                Society society = (Society) resultValue;
-                return society.getSocietyName() + society.getSocietyAdd();
-            }
-
-            @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-                if (charSequence != null) {
-                    suggestions.clear();
-                    for (Society society : tempItems) {
-                        if (society.getSocietyName().toLowerCase().contains(charSequence.toString().toLowerCase()) ||
-                                society.getSocietyAdd().toLowerCase().contains(charSequence.toString().toLowerCase())) {
-                            suggestions.add(society);
-                        }
-                    }
-
-                    FilterResults filterResults = new FilterResults();
-                    filterResults.values = suggestions;
-                    filterResults.count = suggestions.size();
-                    return filterResults;
-                } else {
-                    return new FilterResults();
-                }
-            }
-
-            @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                ArrayList<Society> tempValues = (ArrayList<Society>) filterResults.values;
-                if (filterResults.count > 0) {
-                    clear();
-                    for (Society fruitObj : tempValues) {
-                        add(fruitObj);
-                        notifyDataSetChanged();
-                    }
-                } else {
-                    clear();
-                    notifyDataSetChanged();
-                }
-            }
-        };
     }
 }

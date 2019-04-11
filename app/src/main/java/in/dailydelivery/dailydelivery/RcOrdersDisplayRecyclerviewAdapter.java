@@ -44,7 +44,7 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
         TextView statusTV = view.findViewById(R.id.statusTV);
         ImageView delBtn = view.findViewById(R.id.delBtn);
         TextView rcTv = view.findViewById(R.id.rcTV);
-        return new RcOrdersDisplayRecyclerviewAdapter.ViewHolder(view, nameTV, desTV, priceTV, slotTV, statusTV, delBtn, rcTv);
+        return new RcOrdersDisplayRecyclerviewAdapter.ViewHolder(view, nameTV, desTV, priceTV, statusTV, delBtn, rcTv);
     }
 
     @Override
@@ -129,13 +129,9 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
         }
         int ddPrice = holder.mItem.getPrice() * qty;
         holder.nameTV.setText(holder.mItem.getName() + "(" + qty + " Nos.)");
-        holder.desTV.setText(holder.mItem.getDes());
+        holder.desTV.setText(holder.mItem.getDes() + " - " + holder.mItem.getQtyDes());
         holder.priceTV.setText("Rs. " + ddPrice);
-        if (holder.mItem.getDeliverySlot() == 1) {
-            holder.slotTV.setText(holder.mView.getContext().getString(R.string.delivery_slot_1));
-        } else if (holder.mItem.getDeliverySlot() == 2) {
-            holder.slotTV.setText(holder.mView.getContext().getString(R.string.delivery_slot_2));
-        }
+
         String status;
         switch (holder.mItem.getStatus()) {
             case 1:
@@ -196,19 +192,17 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
         public final TextView nameTV;
         public final TextView desTV;
         public final TextView priceTV;
-        public final TextView slotTV;
         public final TextView statusTV;
         public final ImageView delBtn;
         public final TextView rcTV;
         public RcOrderDetails mItem;
 
-        public ViewHolder(View mView, TextView nameTV, TextView desTV, TextView priceTV, TextView slotTV, TextView statusTV, ImageView delBtn, TextView rcTV) {
+        public ViewHolder(View mView, TextView nameTV, TextView desTV, TextView priceTV, TextView statusTV, ImageView delBtn, TextView rcTV) {
             super(mView);
             this.mView = mView;
             this.nameTV = nameTV;
             this.desTV = desTV;
             this.priceTV = priceTV;
-            this.slotTV = slotTV;
             this.statusTV = statusTV;
             this.delBtn = delBtn;
             this.rcTV = rcTV;

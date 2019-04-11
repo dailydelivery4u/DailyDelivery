@@ -23,48 +23,48 @@
             android:id="@+id/cartIV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="centerInside"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/ic_basket"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:tint="@color/colorWhite"
-            android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:contentDescription="CART"
             android:paddingStart="10dp"
-            android:paddingEnd="10dp" />
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_basket"
+            android:tint="@color/colorWhite" />
 
         <TextView
             android:id="@+id/cartQtyTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/cartIV"
             android:text="1 item"
             android:textColor="@color/colorWhite"
-            android:layout_toRightOf="@+id/cartIV"
-            android:layout_centerVertical="true"
-            android:textStyle="bold"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/goToCartBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CHECKOUT  >"
-            android:layout_centerVertical="true"
-            android:textStyle="bold"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:paddingRight="10dp"
-            android:paddingLeft="10dp"
-            android:paddingStart="10dp"
-            android:textSize="18sp"
             android:layout_alignParentEnd="true"
-            android:textColor="@color/colorWhite"
             android:layout_alignParentRight="true"
-            android:paddingEnd="10dp" />
+            android:layout_centerVertical="true"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:text="CHECKOUT  >"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation

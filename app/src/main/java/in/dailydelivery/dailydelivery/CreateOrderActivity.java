@@ -51,6 +51,8 @@ import in.dailydelivery.dailydelivery.DB.AppDatabase;
 import in.dailydelivery.dailydelivery.DB.Cart;
 import in.dailydelivery.dailydelivery.DB.OneTimeOrderDetails;
 import in.dailydelivery.dailydelivery.DB.RcOrderDetails;
+import in.dailydelivery.dailydelivery.DB.Vacation;
+import in.dailydelivery.dailydelivery.DB.WalletTransaction;
 import in.dailydelivery.dailydelivery.Fragments.CartDisplayFragment;
 import in.dailydelivery.dailydelivery.Fragments.OrderDetailsFragment;
 import in.dailydelivery.dailydelivery.Fragments.RCOrderDetailsFragment;
@@ -73,6 +75,7 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
     TextView goToCartBtn, cartQtyTV;
     RelativeLayout bottomRL;
     AppCompatTextView actionBarTitleTV;
+    int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +97,8 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
                 displayBottomLL(false);
             }
         });
+        userId = sharedPref.getInt(getString(R.string.sp_tag_user_id), 12705);
 
-        //TODO: DO it only for Wallet activity
         getSupportActionBar().setElevation(0);
         //Intent intent = getIntent();
         //int fragmentNum = intent.getIntExtra("fragment", 0);
@@ -105,8 +108,8 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
             CartDisplayFragment frag = new CartDisplayFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, frag).commit();
         } else {*/
-            CategoryDisplayFragment frag = new CategoryDisplayFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, frag).commit();
+        CategoryDisplayFragment frag = new CategoryDisplayFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_frame, frag).commit();
         //}
 
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Home", R.drawable.ic_home);
@@ -457,6 +460,53 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
         }
     }
 
+    private void updateBalance(String balance) {
+        String bal = getString(R.string.Rs) + balance;
+        bottomNavigationView.setNotification(bal, 2);
+    }
+
+    @Override
+    public void setActionBarTitle(String title) {
+
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.fragment_frame);
+        if (!(f instanceof CategoryDisplayFragment) && !(f instanceof ReccurringOrdersActivity) && !(f instanceof WalletFragment)) {
+            getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
+            getSupportActionBar().setDisplayShowCustomEnabled(false);
+            getSupportActionBar().setTitle(title);
+        } else {
+            getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+            getSupportActionBar().setDisplayShowCustomEnabled(true);
+
+            getSupportActionBar().setCustomView(R.layout.actionbar);
+            View v = getSupportActionBar().getCustomView();
+            //getSupportActionBar().setTitle("");
+            actionBarTitleTV = v.findViewById(R.id.tvTitle);
+            actionBarTitleTV.setText(title);
+        }
+
+
+    }
+
+    @Override
+    public void showBottom() {
+        checkActiveFragment();
+    }
+
+    @Override
+    public void showBottomLL() {
+        checkActiveFragment();
+    }
+
+    @Override
+    public void onOrderDetailsFragmentInteraction(String dateSelected, int deliverySlot) {
+
+    }
+
+    private void checkForUserUpdates() {
+        String query = "userId=" + userId;
+        new CheckForUserUpdatesFromServer(query).execute(getString(R.string.server_addr_release) + "check_for_user_updates.php");
+    }
+
     private class PlaceRcOrder extends AsyncTask<String, Void, String> {
         JSONObject orderDetails;
 
@@ -622,10 +672,10 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
                 JSONObject resultJson = new JSONObject(result);
                 walletBal = resultJson.getInt("balance");
                 updateBalance(String.valueOf(walletBal));
+                checkForUserUpdates();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
 
         // Given a URL, establishes an HttpUrlConnection and retrieves
@@ -687,48 +737,6 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
             }
             return str;
         }
-    }
-
-    private void updateBalance(String balance) {
-        String bal = getString(R.string.Rs) + balance;
-        bottomNavigationView.setNotification(bal, 2);
-    }
-
-    @Override
-    public void setActionBarTitle(String title) {
-
-        Fragment f = getSupportFragmentManager().findFragmentById(R.id.fragment_frame);
-        if (!(f instanceof CategoryDisplayFragment) && !(f instanceof ReccurringOrdersActivity) && !(f instanceof WalletFragment)) {
-            getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
-            getSupportActionBar().setDisplayShowCustomEnabled(false);
-            getSupportActionBar().setTitle(title);
-        } else {
-            getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-            getSupportActionBar().setDisplayShowCustomEnabled(true);
-
-            getSupportActionBar().setCustomView(R.layout.actionbar);
-            View v = getSupportActionBar().getCustomView();
-            //getSupportActionBar().setTitle("");
-            actionBarTitleTV = v.findViewById(R.id.tvTitle);
-            actionBarTitleTV.setText(title);
-        }
-
-
-    }
-
-    @Override
-    public void showBottom() {
-        checkActiveFragment();
-    }
-
-    @Override
-    public void showBottomLL() {
-        checkActiveFragment();
-    }
-
-    @Override
-    public void onOrderDetailsFragmentInteraction(String dateSelected, int deliverySlot) {
-
     }
 
     private class PlaceOrder extends AsyncTask<String, Void, String> {
@@ -863,7 +871,7 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
         protected Void doInBackground(Void... integers) {
             for (Cart c : cartItems) {
                 //Log.d("dd", "Pid - " + String.valueOf(c.getProductId()) + "UId: " + String.valueOf(c.getUid()));
-                db.oneTimeOrderDetailsDao().insertOnetimeOrderDetails(new OneTimeOrderDetails(c.getUid(), c.getProductId(), c.getCatId(), c.getProductqty(), c.getProductName(), c.getProductDes(), c.getProductDdprice(), status, date, deliverySlot));
+                db.oneTimeOrderDetailsDao().insertOnetimeOrderDetails(new OneTimeOrderDetails(c.getUid(), c.getProductId(), c.getCatId(), c.getProductqty(), c.getProductName(), c.getProductDes(), c.getProductQtyDes(), c.getProductDdprice(), status, date, deliverySlot));
             }
             db.userDao().emptyCart();
             return null;
@@ -920,7 +928,7 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
                     db.userDao().updateQty(item.getId(), item.getCat_id(), qty);
                 } else {
                     //new item. insert in db
-                    db.userDao().insertCart(new Cart(item.getCat_id(), item.getId(), item.getProductName(), item.getProductDes(), item.getMrp(), item.getDdPrice(), qty, item.getThumbnailUrl(), item.getDeliverySlot()));
+                    db.userDao().insertCart(new Cart(item.getCat_id(), item.getId(), item.getProductName(), item.getProductDes(), item.getProductQty(), item.getMrp(), item.getDdPrice(), qty, item.getThumbnailUrl(), item.getDeliverySlot()));
                 }
             } else if (qty == 0) {
                 //delete product from db
@@ -948,6 +956,155 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
         @Override
         protected void onPostExecute(Integer integer) {
             setCartNum(integer);
+        }
+    }
+
+    private class CheckForUserUpdatesFromServer extends AsyncTask<String, Integer, String> {
+        String query;
+
+        public CheckForUserUpdatesFromServer(String query) {
+            this.query = query;
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+
+            // params comes from the execute() call: params[0] is the url.
+            try {
+                return downloadUrl(urls[0]);
+            } catch (IOException e) {
+                return "Pls Check internet connection";
+            }
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            //Toast.makeText(UserHomeActivity.this, result, Toast.LENGTH_SHORT).show();
+            if (result.equals("Updating...")) {
+
+            }
+        }
+
+
+        // Given a URL, establishes an HttpUrlConnection and retrieves
+        // the web page content as a InputStream, which it returns as
+        // a string.
+        private String downloadUrl(String myurl) throws IOException {
+            InputStream is = null;
+            // Only display the first 500 characters of the retrieved
+            // web page content.
+            int len = 1500;
+
+            try {
+                URL url = new URL(myurl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(10000);//* milliseconds *//*);
+                conn.setConnectTimeout(15000); //* milliseconds *//*);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                conn.connect();
+                ;
+                OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+                out.write(query.getBytes());
+                out.flush();
+                out.close();
+                is = conn.getInputStream();
+
+                String result = readIt(is, len);
+                //Log.d("DD", "Result from server - user updates: " + result);
+                if (is != null) {
+                    is.close();
+                }
+                if (result.equals("timeout")) {
+                    return "TIMEOUT";
+                }
+                JSONObject resultArrayJson = new JSONObject(result);
+                JSONObject resultJson = resultArrayJson.getJSONObject("result");
+                if (resultJson.getInt("responseCode") == 273) {
+                    int updateCnt = resultJson.getInt("row_cnt");
+                    //Log.d("DD", "Row Count: " + updateCnt);
+                    if (updateCnt == 0) return "NOUP";
+                    JSONArray updateTypes = resultArrayJson.getJSONArray("update_types");
+                    for (int i = 0; i < updateCnt; i++) {
+                        JSONObject j = resultArrayJson.getJSONObject("result_details" + i);
+                        switch (updateTypes.getInt(i)) {
+                                /*1:Add OTO, 2: Add RCO, 3: Modify OTO, 4: Modify RCO, 5: Del OTO, 6: Del RCO, 7: Add Vac, 8: Modify Vac,
+                                9: Del Vacation, 10: Add Wallet Transaction; 11 - oto status update, 12 - rco status update; 13- rco hold udpdate */
+                            case 1:
+                                db.oneTimeOrderDetailsDao().insertOnetimeOrderDetails(new OneTimeOrderDetails(j.getInt("id"), j.getInt("product_id"), j.getInt("cat_id"), j.getInt("qty"),
+                                        j.getString("name"), j.getString("description"), j.getString("des_qty"), j.getInt("discount_price"), j.getInt("status"), j.getString("order_date"), j.getInt("delivery_slot")));
+                                break;
+                            case 2:
+                                RcOrderDetails r = new RcOrderDetails(j.getInt("p_id"), j.getInt("cat_id"), j.getString("name"), j.getString("description"), j.getString("des_qty"), j.getInt("discount_price"),
+                                        j.getInt("status"), j.getInt("delivery_slot"), j.getString("order_date"), j.getInt("mon"), j.getInt("tue"), j.getInt("wed"), j.getInt("thu"),
+                                        j.getInt("fri"), j.getInt("sat"), j.getInt("sun"), j.getInt("frequency"), j.getInt("day1_qty"), j.getInt("day2_qty"), j.getInt("date_of_month"));
+                                r.setOrderId(j.getInt("id"));
+                                db.rcOrderDetailsDao().insertRcOrderDetails(r);
+                                break;
+                            case 3:
+                                db.oneTimeOrderDetailsDao().updateOrder(j.getInt("qty"), j.getInt("id"));
+                                break;
+                            case 4:
+                                db.rcOrderDetailsDao().updateOrder(j.getInt("mon"), j.getInt("tue"), j.getInt("wed"), j.getInt("thu"), j.getInt("fri"), j.getInt("sat"), j.getInt("sun"), j.getInt("id"), j.getInt("day1_qty"), j.getInt("day2_qty"), j.getInt("date_of_month"));
+                                break;
+                            case 5:
+                                db.oneTimeOrderDetailsDao().deleteByOrderId(j.getInt("uniqueId"));
+                                break;
+                            case 6:
+                                db.rcOrderDetailsDao().deleteByOrderId(j.getInt("uniqueId"));
+                                break;
+                            case 7:
+                                db.vacationDao().addVacation(new Vacation(j.getInt("id"), j.getString("start_f"), j.getString("end_f")));
+                                break;
+                            case 8:
+                                db.vacationDao().updateVac(j.getString("start_f"), j.getString("end_f"), j.getInt("id"));
+                                break;
+                            case 9:
+                                db.vacationDao().deleteVac(j.getInt("uniqueId"));
+                                break;
+                            case 10:
+                                db.walletTransactionDao().insertWalletTransaction(new WalletTransaction(j.getInt("id"), j.getInt("transaction_type"), j.getString("description"), j.getInt("transaction_amount"), j.getString("date")));
+                                break;
+                            case 11:
+                                db.oneTimeOrderDetailsDao().updateStatus(j.getInt("status"), j.getInt("id"));
+                                break;
+                            case 12:
+                                SharedPreferences.Editor editor = sharedPref.edit();
+                                String key = j.getString("date") + j.getInt("rco_id");
+                                editor.putInt(key, j.getInt("status"));
+                                editor.commit();
+                                break;
+                            case 13:
+                                db.rcOrderDetailsDao().updateStatus(j.getInt("status"), j.getInt("id"));
+                                break;
+                        }
+                    }
+                    return "Updating...";
+                } else {
+                    return "";
+                }
+            } catch (SocketTimeoutException e) {
+                return "timeout";
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return "";
+            }
+        }
+
+        // Reads an InputStream and converts it to a String.
+        public String readIt(InputStream stream, int len) throws IOException {
+            int count;
+            InputStreamReader reader;
+
+            reader = new InputStreamReader(stream, "UTF-8");
+            String str = new String();
+            char[] buffer = new char[len];
+            while ((count = reader.read(buffer, 0, len)) > 0) {
+                str += new String(buffer, 0, count);
+            }
+            return str;
         }
     }
 }

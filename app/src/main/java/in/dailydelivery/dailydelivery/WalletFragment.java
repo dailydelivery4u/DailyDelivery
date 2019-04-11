@@ -5,17 +5,21 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,28 +56,48 @@ import in.dailydelivery.dailydelivery.DB.WalletTransaction;
 
 import static android.content.Context.MODE_PRIVATE;
 
+//import android.util.Log;
+
 public class WalletFragment extends Fragment {
 
     int userId;
     SharedPreferences sharedPref;
-    TextView balanceDisplayTV, monthlyTV, weeklyTV, myTransacationTV;
+    RelativeLayout promocodeResultRL;
+    TextView balanceDisplayTV, monthlyTV, myTransacationTV, promocodeTV, promocodeResultHeaderTV, promocodeResultMsgTV;
+    Button promocodeResultCancelBtn;
     EditText amountET;
     String amountToRecharge;
     AppDatabase db;
-    int rcWeeklyProjection = 0, otoWeeklyProjection = 0, otoMonthlyProjection = 0;
+    int rcWeeklyProjection = 0, otoMonthlyProjection = 0;
+    int promoActive = 0, minRechargeVal = 0, cashback = 0;
+    String promoCodeApplied;
     private String checksumHash;
     private ProgressDialog progress;
     private String orderId;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_wallet, container, false);
 
         balanceDisplayTV = view.findViewById(R.id.balanceDisplayTV);
         amountET = view.findViewById(R.id.amountET);
         monthlyTV = view.findViewById(R.id.monthlyCostTV);
-        weeklyTV = view.findViewById(R.id.weeklyCostTV);
         myTransacationTV = view.findViewById(R.id.myTransactionsTV);
+        promocodeTV = view.findViewById(R.id.promoCodeTV);
+
+        //Promo Result
+        promocodeResultRL = view.findViewById(R.id.promoCodeResultRL);
+        promocodeResultHeaderTV = view.findViewById(R.id.promoCodeResultHeaderTV);
+        promocodeResultMsgTV = view.findViewById(R.id.promoCodeResultMessageTV);
+        promocodeResultCancelBtn = view.findViewById(R.id.removePromoBtn);
+
+        promocodeResultCancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                promocodeResultRL.setVisibility(View.GONE);
+                promocodeTV.setVisibility(View.VISIBLE);
+            }
+        });
 
         progress = new ProgressDialog(getActivity());
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -110,7 +134,59 @@ public class WalletFragment extends Fragment {
             }
         });
 
+        promocodeTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Promo Code");
+                final EditText input = new EditText(getActivity());
+                input.setSingleLine();
+                FrameLayout container = new FrameLayout(getActivity());
+                FrameLayout.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.leftMargin = 50;
+                params.rightMargin = 50;
+                params.topMargin = 20;
+                input.setLayoutParams(params);
+                container.addView(input);
+
+
+                input.setHint(R.string.promo_hint);
+                builder.setView(container);
+                builder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        fetchPromotion(input.getText().toString());
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog mDialog = builder.create();
+                mDialog.setCanceledOnTouchOutside(false);
+                mDialog.show();
+            }
+        });
+
         return view;
+    }
+
+    private void fetchPromotion(String promoCode) {
+        promoCodeApplied = promoCode;
+        //----------------------------------Connect to Server
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            String query = "promo=" + promoCode + "&userId=" + sharedPref.getString(getString(R.string.sp_tag_user_id), "273");
+            new FetchPromo(query).execute(getString(R.string.server_addr_release) + "fetch_promo.php");
+
+        } else {
+            Toast.makeText(getActivity(), "No Internet Detected!", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -120,7 +196,11 @@ public class WalletFragment extends Fragment {
     }
 
     public void onPayBtnClicked() {
-        startTransaction();
+
+        String query = "USER_ID=" + userId + "&promocode=" + promoCodeApplied + "&minRecharge=" + minRechargeVal + "&cashback=" + cashback + "&amount=" + amountET.getText().toString();
+
+        new VerifyChecksumFromServer(query).execute(getString(R.string.server_addr_release) + "wallet/verifyChecksum.php");
+        //startTransaction();
         /*
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS}, 101);
@@ -269,7 +349,8 @@ public class WalletFragment extends Fragment {
                 e.printStackTrace();
             }
         }
-        result.append("&USER_ID=" + userId);
+        if (promoCodeApplied.isEmpty()) promoCodeApplied = "NONE";
+        result.append("&USER_ID=" + userId + "&promocode=" + promoCodeApplied + "&minRecharge=" + minRechargeVal + "&cashback=" + cashback);
 
         new VerifyChecksumFromServer(result.toString()).execute(getString(R.string.server_addr_release) + "wallet/verifyChecksum.php");
     }
@@ -310,15 +391,15 @@ public class WalletFragment extends Fragment {
         }
     }
 
-
     private void evaluateResult(String status) {
         progress.dismiss();
         String message;
         if (status.equals("AISH")) {
             //Toast.makeText(this, "Recharge Success", Toast.LENGTH_LONG).show();
             message = "Recharge Success!!";
-        } else {
-            //Toast.makeText(this, "Recharge Failed.\n Contact Customer Care for any queries", Toast.LENGTH_LONG).show();
+        } else if (status.equals("CASHBACK")) {
+            message = "Recharge Success!! Cash Back Added.";
+        } else {            //Toast.makeText(this, "Recharge Failed.\n Contact Customer Care for any queries", Toast.LENGTH_LONG).show();
             message = "Recharge Failed!! Pls contact customer care";
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -344,14 +425,115 @@ public class WalletFragment extends Fragment {
         }
     }
 
+    private class FetchPromo extends AsyncTask<String, Void, String> {
+        String query;
+
+        public FetchPromo(String query) {
+            this.query = query;
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            progress.setProgress(50);
+            // params comes from the execute() call: params[0] is the url.
+            try {
+                return downloadUrl(urls[0]);
+            } catch (IOException e) {
+                return "Unable to contact server... check net connection" + e.getMessage();
+            }
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("timeout")) {
+                Toast.makeText(getActivity(), "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
+            }
+            //Log.d("DD", "Result from webserver: " + result);
+            try {
+                JSONObject resultJson = new JSONObject(result);
+                promoActive = resultJson.getInt("active");
+                promocodeResultHeaderTV.setText(resultJson.getString("title"));
+                promocodeResultMsgTV.setText(resultJson.getString("message"));
+                if (promoActive == 1) {
+                    promocodeResultHeaderTV.setTextColor(Color.parseColor("#20A737"));
+                    minRechargeVal = resultJson.getInt("minRecharge");
+                    cashback = resultJson.getInt("cashback");
+                } else {
+                    promocodeResultHeaderTV.setTextColor(Color.RED);
+                }
+                promocodeTV.setVisibility(View.GONE);
+                promocodeResultRL.setVisibility(View.VISIBLE);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+                progress.dismiss();
+            }
+        }
+
+        // Given a URL, establishes an HttpUrlConnection and retrieves
+        // the web page content as a InputStream, which it returns as
+        // a string.
+        private String downloadUrl(String myurl) throws IOException {
+            InputStream is = null;
+            // Only display the first 500 characters of the retrieved
+            // web page content.
+            int len = 1500;
+
+            try {
+                URL url = new URL(myurl);
+                //Using httpurlconnection
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(10000);//* milliseconds *//*);
+                conn.setConnectTimeout(15000); //* milliseconds *//*);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                // Starts the query
+                conn.connect();
+
+                OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+                out.write(query.getBytes());
+                out.flush();
+                out.close();
+                is = conn.getInputStream();
+
+                // Convert the InputStream into a string
+                //Log.d("NetworkDebugTag", "The text is: " + contentAsString);
+                return readIt(is, len);
+
+                // Makes sure that the InputStream is closed after the app is
+                // finished using it.
+            } catch (SocketTimeoutException e) {
+                return "timeout";
+            } finally {
+                if (is != null) {
+                    is.close();
+                }
+            }
+        }
+
+        // Reads an InputStream and converts it to a String.
+        public String readIt(InputStream stream, int len) throws IOException {
+            int count;
+            InputStreamReader reader;
+
+            reader = new InputStreamReader(stream, "UTF-8");
+            String str = new String();
+            char[] buffer = new char[len];
+            while ((count = reader.read(buffer, 0, len)) > 0) {
+                str += new String(buffer, 0, count);
+            }
+            return str;
+        }
+    }
+
     private class GetAmountProjections extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPostExecute(Void aVoid) {
             int monthlyProjection = rcWeeklyProjection * 4 + otoMonthlyProjection;
-            int weeklyProjection = rcWeeklyProjection + otoWeeklyProjection;
             monthlyTV.setText("Monthly Orders: Rs." + monthlyProjection);
-            weeklyTV.setText("Weekly Orders:  Rs." + weeklyProjection);
             amountET.setText(String.valueOf(monthlyProjection));
         }
 
@@ -360,15 +542,18 @@ public class WalletFragment extends Fragment {
             List<RcOrderDetails> rcOrders = db.rcOrderDetailsDao().getRcOrders();
             List<OneTimeOrderDetails> oto = db.oneTimeOrderDetailsDao().getAllOrders();
             for (RcOrderDetails rc : rcOrders) {
-                rcWeeklyProjection += rc.getPrice() * (rc.getMon() + rc.getTue() + rc.getWed() + rc.getThu() + rc.getFri() + rc.getSat() + rc.getSun());
+                if (rc.getFrequency() == 1) {
+                    rcWeeklyProjection += rc.getPrice() * (rc.getMon() + rc.getTue() + rc.getWed() + rc.getThu() + rc.getFri() + rc.getSat() + rc.getSun());
+                } else if (rc.getFrequency() == 2) {
+                    rcWeeklyProjection += rc.getPrice() * (rc.getDay1Qty() * 4 + rc.getDay2Qty() * 3);
+                } else if (rc.getFrequency() == 3) {
+                    rcWeeklyProjection += rc.getPrice() * rc.getDay1Qty() / 4;
+                }
             }
             DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
             DateTime today = new DateTime();
             for (OneTimeOrderDetails oneTimeOrderDetails : oto) {
                 DateTime orderDate = dtf.parseDateTime(oneTimeOrderDetails.getDate());
-                if (orderDate.isBefore(today.plusDays(8)) && orderDate.isAfterNow()) {
-                    otoWeeklyProjection += oneTimeOrderDetails.getPrice() * oneTimeOrderDetails.getQty();
-                }
                 if (orderDate.isBefore(today.plusDays(31)) && orderDate.isAfterNow()) {
                     otoMonthlyProjection += oneTimeOrderDetails.getPrice() * oneTimeOrderDetails.getQty();
                 }
@@ -611,6 +796,7 @@ public class WalletFragment extends Fragment {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
+
             if (result.equals("timeout")) {
                 progress.dismiss();
                 Toast.makeText(getActivity(), "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
@@ -661,15 +847,21 @@ public class WalletFragment extends Fragment {
                 // Convert the InputStream into a string
                 //Log.d("NetworkDebugTag", "The text is: " + contentAsString);
                 String result = readIt(is, len);
-                //Log.d("DD", "Result from webserver After server validation: " + result);
+                Log.d("DD", "Result from webserver After server validation: " + result);
                 JSONObject resultJson = new JSONObject(result);
                 int response = resultJson.getInt("responseCode");
                 if (response == 273) {
                     //Transaction succesfull
                     DateTimeFormatter dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
                     DateTime d = new DateTime();
-                    db.walletTransactionDao().insertWalletTransaction(new WalletTransaction(resultJson.getInt("wallettx_id"), 1, "Online Recharge", resultJson.getInt("amount"), d.toString(dtf)));
-                    return "AISH";
+                    String rechargeDes = "Online Recharge", returnVal = "AISH";
+                    if (resultJson.getInt("promo") == 1) {
+                        //Promo succesful
+                        rechargeDes = "Online Recharge: Rs." + resultJson.getInt("amount") + "; " + promoCodeApplied + " cashback: Rs. " + resultJson.getInt("cashback");
+                        returnVal = "CASHBACK";
+                    }
+                    db.walletTransactionDao().insertWalletTransaction(new WalletTransaction(resultJson.getInt("wallettx_id"), 1, rechargeDes, resultJson.getInt("amount"), d.toString(dtf)));
+                    return returnVal;
                 } else {
                     return "FAIL";
                 }

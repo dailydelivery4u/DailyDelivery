@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_marginTop="5dp"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
-    android:layout_marginBottom="0dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent">
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="0dp">
 
     <RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <TextView
-        android:id="@+id/nameTV"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:textAlignment="center"
-        android:text="Product: Heritage Golden Cow"
-        android:textColor="@color/colorBlack"
-        android:textStyle="bold"
-        android:textSize="17sp" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/nameTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="Product: Heritage Golden Cow"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlack"
+            android:textSize="17sp"
+            android:textStyle="bold" />
 
         <View
             android:id="@+id/divider8"
@@ -30,47 +30,47 @@
             android:layout_marginBottom="10dp"
             android:background="#FF5722" />
 
-    <TextView
-        android:id="@+id/priceTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/divider8"
-        android:layout_marginLeft="15dp"
-        android:text="Price: Rs. 21"
-        android:textColor="@color/colorBlack"
-        android:layout_marginStart="15dp" />
+        <TextView
+            android:id="@+id/priceTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider8"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="Price: Rs. 21"
+            android:textColor="@color/colorBlack" />
 
-    <TextView
-        android:id="@+id/startDateTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/divider8"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:text="Start Date: 20 Jan 018"
-        android:textColor="@color/colorBlack"
-        android:layout_marginEnd="20dp"
-        android:layout_alignParentEnd="true" />
+        <TextView
+            android:id="@+id/startDateTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider8"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:text="Start Date: 20 Jan 018"
+            android:textColor="@color/colorBlack" />
 
         <TextView
             android:id="@+id/frequencyTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/startDateTV"
+            android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
-            android:text="Frequency: Daily"
             android:layout_marginTop="10dp"
-            android:textColor="@color/colorBlack"
-            android:layout_marginStart="15dp" />
+            android:text="Frequency: Daily"
+            android:textColor="@color/colorBlack" />
 
 
         <View
-        android:id="@+id/divider4"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
+            android:id="@+id/divider4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
             android:layout_below="@+id/frequencyTV"
-        android:layout_marginTop="10dp"
-        android:background="?android:attr/listDivider" />
+            android:layout_marginTop="10dp"
+            android:background="?android:attr/listDivider" />
 
         <LinearLayout
             android:id="@+id/qtyLL"
@@ -80,29 +80,29 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/monthlyLL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/monthlyLL"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/monthlyQty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
                     android:layout_marginLeft="15dp"
                     android:text="Quantity: 2"
-                    android:textColor="@color/colorBrown"
-                    android:layout_marginStart="15dp" />
+                    android:textColor="@color/colorBrown" />
 
                 <TextView
                     android:id="@+id/monthlyStartDateTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:textColor="@color/colorBrown"
                     android:layout_marginTop="10dp"
-                    android:text="Delivery Date every month: 3" />
+                    android:text="Delivery Date every month: 3"
+                    android:textColor="@color/colorBrown" />
 
             </LinearLayout>
 
@@ -110,38 +110,38 @@
                 android:id="@+id/alternateDayLL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:visibility="gone"
-                android:weightSum="1"
-                android:orientation="horizontal">
+                android:weightSum="1">
 
                 <TextView
                     android:id="@+id/day1QtyTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
                     android:layout_weight="0.5"
-                    android:textColor="@color/colorBrown"
+                    android:padding="10dp"
+                    android:text="First Day Qty: 1"
                     android:textAlignment="center"
-                    android:text="First Day Qty: 1" />
+                    android:textColor="@color/colorBrown" />
 
                 <TextView
                     android:id="@+id/day2QtyTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:padding="10dp"
-                    android:textColor="@color/colorBrown"
                     android:layout_weight="0.5"
-                    android:text="Next Day Qty: 2" />
+                    android:padding="10dp"
+                    android:text="Next Day Qty: 2"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBrown" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/weeklyLL"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/weekListLL"
@@ -305,47 +305,47 @@
             </LinearLayout>
         </LinearLayout>
 
-    <View
-        android:id="@+id/divider6"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/qtyLL"
-        android:layout_marginTop="5dp"
-        android:background="?android:attr/listDivider" />
+        <View
+            android:id="@+id/divider6"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/qtyLL"
+            android:layout_marginTop="5dp"
+            android:background="?android:attr/listDivider" />
 
         <Button
             android:id="@+id/pauseBtn"
             android:layout_width="90dp"
             android:layout_height="wrap_content"
-            android:minHeight="30dp"
+            android:layout_below="@id/divider6"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:layout_below="@id/divider6"
-            android:text="Pause"
-            android:textColor="@color/colorWhite"
             android:layout_marginBottom="10dp"
             android:background="@drawable/button_background_color_primary"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp" />
+            android:minHeight="30dp"
+            android:text="Pause"
+            android:textColor="@color/colorWhite" />
 
         <Button
-        android:id="@+id/delBtn"
+            android:id="@+id/delBtn"
             android:layout_width="90dp"
-        android:layout_height="wrap_content"
-            android:minHeight="30dp"
-            android:layout_marginLeft="10dp"
-            android:layout_alignParentLeft="true"
-        android:layout_below="@id/divider6"
-        android:text="Delete"
-        android:textColor="@color/colorWhite"
-            android:layout_marginBottom="10dp"
-            android:drawableLeft="@drawable/ic_delete"
-            android:background="@drawable/button_background_color_primary"
-            android:layout_marginTop="10dp"
-            android:drawableStart="@drawable/ic_delete"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider6"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="10dp" />
+            android:layout_alignParentLeft="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/button_background_color_primary"
+            android:drawableStart="@drawable/ic_delete"
+            android:drawableLeft="@drawable/ic_delete"
+            android:minHeight="30dp"
+            android:text="Delete"
+            android:textColor="@color/colorWhite" />
 
-</RelativeLayout>
+    </RelativeLayout>
 </android.support.v7.widget.CardView>

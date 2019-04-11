@@ -33,18 +33,6 @@
         android:textColor="@color/colorBlack" />
 
     <TextView
-        android:id="@+id/deliverySlotTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/priceTV"
-        android:layout_alignTop="@+id/desTV"
-        android:layout_alignParentRight="true"
-        android:gravity="right"
-        android:paddingRight="10dp"
-        android:text="Delivery : 6:00 AM to 8:30 AM"
-        android:textColor="@color/colorBlack" />
-
-    <TextView
         android:id="@+id/statusTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,7 +46,8 @@
         android:id="@+id/delBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/deliverySlotTV"
+        android:layout_below="@+id/priceTV"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:padding="10dp"
         android:src="@drawable/delete_btn"
@@ -74,6 +63,8 @@
         android:padding="10dp"
         android:text="Repeating Order"
         android:textColor="#2330b9"
+        android:textSize="15sp"
+        android:textStyle="bold"
         android:visibility="gone" />
 
 

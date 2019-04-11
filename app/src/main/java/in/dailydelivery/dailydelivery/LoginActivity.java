@@ -35,7 +35,6 @@ import in.dailydelivery.dailydelivery.DB.RcOrderDetails;
 import in.dailydelivery.dailydelivery.DB.Vacation;
 import in.dailydelivery.dailydelivery.DB.WalletTransaction;
 
-//import android.util.Log;
 
 public class LoginActivity extends AppCompatActivity {
     EditText phInput, pinInput;
@@ -48,12 +47,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent createOrderActivityIntent = new Intent(this, RegisterActivity.class);
-        startActivity(createOrderActivityIntent);
-        /*Intent RegisterActivityIntent = new Intent(this, RegisterActivity.class);
-        startActivity(RegisterActivityIntent);*/
+        Intent RegisterActivityIntent = new Intent(this, CreateOrderActivity.class);
+        startActivity(RegisterActivityIntent);
 
-        /*sharedPref = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
+        sharedPref = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
         if (sharedPref.getBoolean("logged_in", false)) {
             startActivity(new Intent(this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
             finish();
@@ -66,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
             rl1 = findViewById(R.id.phInputRL);
             rl2 = findViewById(R.id.otpInputRL);
         }
-        db = AppDatabase.getAppDatabase(this);*/
+        db = AppDatabase.getAppDatabase(this);
     }
 
     public void onLoginBtnClicked(View view) {
@@ -252,13 +249,13 @@ public class LoginActivity extends AppCompatActivity {
                             for (int i = 0; i < otoJson.length(); i++) {
                                 JSONObject j = (JSONObject) otoJson.get(i);
                                 db.oneTimeOrderDetailsDao().insertOnetimeOrderDetails(new OneTimeOrderDetails(j.getInt("id"), j.getInt("product_id"), j.getInt("cat_id"), j.getInt("qty"),
-                                        j.getString("name"), j.getString("description"), j.getInt("discount_price"), j.getInt("status"), j.getString("order_date"), j.getInt("delivery_slot")));
+                                        j.getString("name"), j.getString("description"), j.getString("des_qty"), j.getInt("discount_price"), j.getInt("status"), j.getString("order_date"), j.getInt("delivery_slot")));
                             }
                             JSONArray rcoJson = resultArrayJson.getJSONArray("rco");
                             //Log.d("DD",rcoJson.toString());
                             for (int i = 0; i < rcoJson.length(); i++) {
                                 JSONObject j = (JSONObject) rcoJson.get(i);
-                                RcOrderDetails r = new RcOrderDetails(j.getInt("p_id"), j.getInt("cat_id"), j.getString("name"), j.getString("description"), j.getInt("discount_price"),
+                                RcOrderDetails r = new RcOrderDetails(j.getInt("p_id"), j.getInt("cat_id"), j.getString("name"), j.getString("description"), j.getString("des_qty"), j.getInt("discount_price"),
                                         j.getInt("status"), j.getInt("delivery_slot"), j.getString("order_date"), j.getInt("mon"), j.getInt("tue"), j.getInt("wed"), j.getInt("thu"),
                                         j.getInt("fri"), j.getInt("sat"), j.getInt("sun"), j.getInt("frequency"), j.getInt("day1_qty"), j.getInt("day2_qty"), j.getInt("date_of_month"));
                                 r.setOrderId(j.getInt("id"));

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -11,35 +11,35 @@
         tools:context=".ReccurringOrdersActivity">
 
         <android.support.v7.widget.CardView
+            android:id="@+id/cv1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/cv1"
-            android:layout_margin="5dp"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:layout_margin="5dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:id="@+id/tv1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/tv1"
-                    android:textColor="@color/colorBrown"
                     android:padding="10dp"
-                    android:text="You can Pause all Repeating Orders by setting Vacations" />
+                    android:text="You can Pause all Repeating Orders by setting Vacations"
+                    android:textColor="@color/colorBrown" />
 
                 <TextView
                     android:id="@+id/myVacationsTV"
-                    android:layout_below="@+id/tv1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="View My Vacations"
+                    android:layout_below="@+id/tv1"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_alignParentRight="true"
-                    android:textColor="@color/tv_hyperlink"
-                    android:layout_alignParentEnd="true" />
+                    android:text="View My Vacations"
+                    android:textColor="@color/tv_hyperlink" />
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
@@ -47,20 +47,20 @@
             android:id="@+id/cv2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
+            android:layout_below="@+id/cv1"
             android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
             android:layout_marginRight="5dp"
-            android:layout_marginBottom="0dp"
-            android:layout_below="@+id/cv1">
+            android:layout_marginBottom="0dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:text="My Repeating Orders"
-                android:textColor="@color/colorCheckoutBg"
-                android:textStyle="bold"
                 android:textAlignment="center"
-                android:padding="10dp" />
+                android:textColor="@color/colorCheckoutBg"
+                android:textStyle="bold" />
 
         </android.support.v7.widget.CardView>
 

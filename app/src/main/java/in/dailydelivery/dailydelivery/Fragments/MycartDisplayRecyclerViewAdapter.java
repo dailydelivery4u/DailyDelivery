@@ -58,7 +58,7 @@ public class MycartDisplayRecyclerViewAdapter extends RecyclerView.Adapter<Mycar
         int ddPrice = mValues.get(position).getProductDdprice() * mValues.get(position).getProductqty();
         holder.mItem = mValues.get(position);
         holder.productNameTV.setText(mValues.get(position).getProductName());
-        holder.productDesTV.setText(mValues.get(position).getProductDes());
+        holder.productDesTV.setText(mValues.get(position).getProductDes() + " - " + mValues.get(position).getProductQtyDes());
         holder.mrpTV.setText("Rs. " + String.valueOf(mrp));
         holder.mrpTV.setPaintFlags(holder.mrpTV.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         holder.ddPriceTV.setText("Rs. " + String.valueOf(ddPrice));
