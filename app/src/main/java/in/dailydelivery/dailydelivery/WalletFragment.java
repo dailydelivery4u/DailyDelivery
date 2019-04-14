@@ -12,7 +12,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,12 +95,17 @@ public class WalletFragment extends Fragment {
             public void onClick(View v) {
                 promocodeResultRL.setVisibility(View.GONE);
                 promocodeTV.setVisibility(View.VISIBLE);
+                promoActive = 0;
+                cashback = 0;
+                minRechargeVal = 0;
+                promoCodeApplied = "";
             }
         });
 
         progress = new ProgressDialog(getActivity());
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progress.setCanceledOnTouchOutside(false);
+
 
         Button payOnlineBtn = view.findViewById(R.id.payOnlineBtn);
         payOnlineBtn.setOnClickListener(new View.OnClickListener() {
@@ -120,6 +124,7 @@ public class WalletFragment extends Fragment {
         });
 
         sharedPref = getActivity().getSharedPreferences("dd", MODE_PRIVATE);
+        userId = sharedPref.getInt(getString(R.string.sp_tag_user_id), 273);
 
         db = AppDatabase.getAppDatabase(getActivity());
 
@@ -181,7 +186,7 @@ public class WalletFragment extends Fragment {
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            String query = "promo=" + promoCode + "&userId=" + sharedPref.getString(getString(R.string.sp_tag_user_id), "273");
+            String query = "promo=" + promoCode + "&userId=" + sharedPref.getInt(getString(R.string.sp_tag_user_id), 273);
             new FetchPromo(query).execute(getString(R.string.server_addr_release) + "fetch_promo.php");
 
         } else {
@@ -197,10 +202,31 @@ public class WalletFragment extends Fragment {
 
     public void onPayBtnClicked() {
 
-        String query = "USER_ID=" + userId + "&promocode=" + promoCodeApplied + "&minRecharge=" + minRechargeVal + "&cashback=" + cashback + "&amount=" + amountET.getText().toString();
+        if (Integer.valueOf(amountET.getText().toString()) > minRechargeVal) {
+            startTransaction();
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setCancelable(false);
+            builder.setTitle("Dont Miss Promocode Cashback");
+            builder.setMessage("Your Recharge Amount is lower than Minimum Recharge Value needed for Promocode Applied. Would you like to proceed?");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    startTransaction();
 
-        new VerifyChecksumFromServer(query).execute(getString(R.string.server_addr_release) + "wallet/verifyChecksum.php");
-        //startTransaction();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog mDialog = builder.create();
+            mDialog.setCanceledOnTouchOutside(false);
+            mDialog.show();
+        }
         /*
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS}, 101);
@@ -209,6 +235,7 @@ public class WalletFragment extends Fragment {
         }*/
     }
 
+/*
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -218,6 +245,7 @@ public class WalletFragment extends Fragment {
             }
         }
     }
+*/
 
     public void startTransaction() {
         progress.show();
@@ -393,22 +421,23 @@ public class WalletFragment extends Fragment {
 
     private void evaluateResult(String status) {
         progress.dismiss();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCancelable(false);
         String message;
         if (status.equals("AISH")) {
             //Toast.makeText(this, "Recharge Success", Toast.LENGTH_LONG).show();
             message = "Recharge Success!!";
         } else if (status.equals("CASHBACK")) {
-            message = "Recharge Success!! Cash Back Added.";
+            message = "Recharge Success!!";
+            builder.setMessage("Cashback of Rs." + cashback + " added in your recharge.");
         } else {            //Toast.makeText(this, "Recharge Failed.\n Contact Customer Care for any queries", Toast.LENGTH_LONG).show();
             message = "Recharge Failed!! Pls contact customer care";
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setCancelable(false);
         builder.setTitle(message);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent userHomeActivityIntent = new Intent(getActivity(), UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Intent userHomeActivityIntent = new Intent(getActivity(), CreateOrderActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(userHomeActivityIntent);
                 dialog.dismiss();
             }
@@ -449,7 +478,6 @@ public class WalletFragment extends Fragment {
             if (result.equals("timeout")) {
                 Toast.makeText(getActivity(), "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
             }
-            //Log.d("DD", "Result from webserver: " + result);
             try {
                 JSONObject resultJson = new JSONObject(result);
                 promoActive = resultJson.getInt("active");
@@ -847,7 +875,6 @@ public class WalletFragment extends Fragment {
                 // Convert the InputStream into a string
                 //Log.d("NetworkDebugTag", "The text is: " + contentAsString);
                 String result = readIt(is, len);
-                Log.d("DD", "Result from webserver After server validation: " + result);
                 JSONObject resultJson = new JSONObject(result);
                 int response = resultJson.getInt("responseCode");
                 if (response == 273) {
@@ -860,7 +887,8 @@ public class WalletFragment extends Fragment {
                         rechargeDes = "Online Recharge: Rs." + resultJson.getInt("amount") + "; " + promoCodeApplied + " cashback: Rs. " + resultJson.getInt("cashback");
                         returnVal = "CASHBACK";
                     }
-                    db.walletTransactionDao().insertWalletTransaction(new WalletTransaction(resultJson.getInt("wallettx_id"), 1, rechargeDes, resultJson.getInt("amount"), d.toString(dtf)));
+                    int total = cashback + resultJson.getInt("amount");
+                    db.walletTransactionDao().insertWalletTransaction(new WalletTransaction(resultJson.getInt("wallettx_id"), 1, rechargeDes, total, d.toString(dtf)));
                     return returnVal;
                 } else {
                     return "FAIL";

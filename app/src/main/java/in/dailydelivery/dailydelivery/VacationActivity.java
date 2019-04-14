@@ -196,7 +196,7 @@ public class VacationActivity extends AppCompatActivity implements VacationsRVAd
                 JSONObject resultJson = resultArrayJson.getJSONObject("result");
                 if (resultJson.getInt("responseCode") == 273) {
                     //int orderStatus = resultJson.getInt("status");
-                    Toast.makeText(VacationActivity.this, "Vacation Set.\nRepeating Orders during the set period will be paused", Toast.LENGTH_LONG).show();
+                    Toast.makeText(VacationActivity.this, "Vacation Set.\nAll Repeating Orders during the set period will not be delivered", Toast.LENGTH_LONG).show();
                     vacationDetails.put("id", resultJson.getInt("id"));
                     new UpdateVacInDb(vacationDetails).execute();
                 } else if (resultJson.getInt("responseCode") == 275) {

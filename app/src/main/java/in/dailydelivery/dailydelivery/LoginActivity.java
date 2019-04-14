@@ -11,9 +11,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -47,12 +50,14 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent RegisterActivityIntent = new Intent(this, CreateOrderActivity.class);
-        startActivity(RegisterActivityIntent);
+
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
 
         sharedPref = getSharedPreferences(getString(R.string.private_sharedpref_file), MODE_PRIVATE);
         if (sharedPref.getBoolean("logged_in", false)) {
-            startActivity(new Intent(this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+            startActivity(new Intent(this, CreateOrderActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
             finish();
         } else {
             setContentView(R.layout.activity_login);
@@ -62,12 +67,31 @@ public class LoginActivity extends AppCompatActivity {
             progress = new ProgressDialog(this);
             rl1 = findViewById(R.id.phInputRL);
             rl2 = findViewById(R.id.otpInputRL);
+
+            phInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        getOtp();
+                    }
+                    return false;
+                }
+            });
+            pinInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        login();
+                    }
+                    return false;
+                }
+            });
+
         }
         db = AppDatabase.getAppDatabase(this);
     }
 
-    public void onLoginBtnClicked(View view) {
-
+    public void login() {
         if (pinInput.getText().length() == 4) {
             //Toast.makeText(this,"Login",Toast.LENGTH_LONG).show();
             progress.setMessage("Hang on!! Logging You in...");
@@ -99,15 +123,10 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Please Enter correct OTP", Toast.LENGTH_LONG).show();
 
         }
+
     }
 
-    private boolean validPhoneNumber(String s) {
-        String regexStr = "^[0-9]{10}$";
-        return s.matches(regexStr);
-    }
-
-    public void onGetOtpClicked(View view) {
-
+    public void getOtp() {
         if (validPhoneNumber(phInput.getText().toString())) {
             progress.setMessage("Sending OTP...");
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -136,6 +155,21 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Please enter valid phone number to proceed.", Toast.LENGTH_LONG).show();
         }
+    }
+
+
+    public void onLoginBtnClicked(View view) {
+        login();
+
+    }
+
+    private boolean validPhoneNumber(String s) {
+        String regexStr = "^[0-9]{10}$";
+        return s.matches(regexStr);
+    }
+
+    public void onGetOtpClicked(View view) {
+        getOtp();
 
 /*        rl1.setVisibility(View.GONE);
         rl2.setVisibility(View.VISIBLE);
@@ -165,7 +199,7 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             progress.dismiss();
             if (result.equals("OK")) {
-                Intent userHomeActivityIntent = new Intent(LoginActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Intent userHomeActivityIntent = new Intent(LoginActivity.this, CreateOrderActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(userHomeActivityIntent);
                 finish();
             } else if (result.equals("NOLOGIN")) {
@@ -228,7 +262,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (result.equals("timeout")) {
                     return "TIMEOUT";
                 }
-                //Log.d("DD", "Result from webserver: " + result);
                 try {
                     JSONObject resultArrayJson = new JSONObject(result);
                     //Check for Result COde
@@ -252,7 +285,6 @@ public class LoginActivity extends AppCompatActivity {
                                         j.getString("name"), j.getString("description"), j.getString("des_qty"), j.getInt("discount_price"), j.getInt("status"), j.getString("order_date"), j.getInt("delivery_slot")));
                             }
                             JSONArray rcoJson = resultArrayJson.getJSONArray("rco");
-                            //Log.d("DD",rcoJson.toString());
                             for (int i = 0; i < rcoJson.length(); i++) {
                                 JSONObject j = (JSONObject) rcoJson.get(i);
                                 RcOrderDetails r = new RcOrderDetails(j.getInt("p_id"), j.getInt("cat_id"), j.getString("name"), j.getString("description"), j.getString("des_qty"), j.getInt("discount_price"),

@@ -18,10 +18,9 @@ public abstract class AppDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE rc_orderdetails ADD COLUMN day1_qty INTEGER DEFAULT 0 NOT NULL");
             database.execSQL("ALTER TABLE rc_orderdetails ADD COLUMN day2_qty INTEGER DEFAULT 0 NOT NULL");
             database.execSQL("ALTER TABLE rc_orderdetails ADD COLUMN date_of_month INTEGER DEFAULT 0 NOT NULL");
-            database.execSQL("ALTER TABLE rc_orderdetails ADD COLUMN date_of_month INTEGER DEFAULT 0 NOT NULL");
-            database.execSQL("ALTER TABLE rc_orderdetails ADD COLUMN qty_des STRING DEFAULT '' NOT NULL");
-            database.execSQL("ALTER TABLE cart ADD COLUMN product_qty_des STRING DEFAULT '' NOT NULL");
-            database.execSQL("ALTER TABLE onetime_orderdetails ADD COLUMN des_qty STRING DEFAULT '' NOT NULL");
+            database.execSQL("ALTER TABLE rc_orderdetails ADD COLUMN qty_des TEXT DEFAULT ''");
+            database.execSQL("ALTER TABLE cart ADD COLUMN product_qty_des TEXT DEFAULT ''");
+            database.execSQL("ALTER TABLE onetime_orderdetails ADD COLUMN des_qty TEXT DEFAULT ''");
         }
     };
     private static AppDatabase INSTANCE;

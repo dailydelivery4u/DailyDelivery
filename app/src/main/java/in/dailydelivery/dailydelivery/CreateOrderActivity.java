@@ -1,5 +1,7 @@
 package in.dailydelivery.dailydelivery;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -9,6 +11,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -29,6 +32,9 @@ import android.widget.Toast;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,6 +82,7 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
     RelativeLayout bottomRL;
     AppCompatTextView actionBarTitleTV;
     int userId;
+    DateTimeFormatter dtf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +105,7 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
             }
         });
         userId = sharedPref.getInt(getString(R.string.sp_tag_user_id), 12705);
+        dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
 
         getSupportActionBar().setElevation(0);
         //Intent intent = getIntent();
@@ -176,11 +184,45 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
                 }
             }
         });
+
+        if (getIntent().getStringExtra("title") != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
+            builder.setTitle(getIntent().getStringExtra("title"))
+                    .setMessage(getIntent().getStringExtra("message"));
+
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        }
+        createNotificationChannel();
+
+
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
         //getSupportActionBar().setLogo(R.mipmap.ic_launcher_orange);
         displayWalletBal();
         Intent intent = getIntent();
         handleIntent(intent);
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("Sandeep123", name, importance);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override
@@ -534,16 +576,19 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
             } else if (result.equals("ok")) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(CreateOrderActivity.this);
                 builder.setCancelable(false);
-                builder.setTitle("Yay!! Order is scheduled")
-                        .setMessage("Ensure sufficient wallet balance for daily order confirmations.\n(See Help for more Info).\nYou can Pause " +
-                                "repeating orders by placing vacations.");
+                builder.setTitle("Yay!! Repeating Order Placed")
+                        .setMessage("Ensure sufficient wallet balance for daily order confirmations.\n(See Help for more Info)");
 
                 builder.setNegativeButton("Recharge Now", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent walletActivityIntent = new Intent(CreateOrderActivity.this, WalletFragment.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(walletActivityIntent);
-                        finish();
+                        setActionBarTitle("My DD Wallet");
+                        displayBottomLL(false);
+                        WalletFragment cartDisplayFragment = new WalletFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("wallet_bal", walletBal);
+                        cartDisplayFragment.setArguments(bundle);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, cartDisplayFragment).commit();
                     }
                 });
                 builder.setPositiveButton("Later", new DialogInterface.OnClickListener() {
@@ -551,6 +596,16 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
                         // User cancelled the dialog
                         dialog.dismiss();
                         Intent userHomeActivityIntent = new Intent(CreateOrderActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        //Date to go in Home activity;
+                        if (rcOrderDetails.getFrequency() == 3) {
+                            DateTime sDate = dtf.parseDateTime(rcOrderDetails.getStartDate());
+                            int sday = rcOrderDetails.getDateOfMonth();
+                            if (sday >= sDate.getDayOfMonth()) {
+                                userHomeActivityIntent.putExtra("orderDate", sDate.withDayOfMonth(sday).toString(dtf));
+                            } else {
+                                userHomeActivityIntent.putExtra("orderDate", sDate.withDayOfMonth(sday).plusMonths(1).toString(dtf));
+                            }
+                        }
                         startActivity(userHomeActivityIntent);
                         finish();
                     }
@@ -698,17 +753,9 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
                 conn.setDoOutput(true);
                 // Starts the query
                 conn.connect();
-                /*OutputStream out = new BufferedOutputStream(conn.getOutputStream());
-                //out.write(Integer.parseInt(URLEncoder.encode(userDetails.toString(), "UTF-8")));
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(out, "UTF-8"));
-                writer.write(dataToServer);
-                writer.flush();
-                writer.close();
-                out.flush();
-                out.close();*/
+
                 OutputStream out = new BufferedOutputStream(conn.getOutputStream());
-                //out.write(Integer.parseInt(URLEncoder.encode(userDetails.toString(), "UTF-8")));
+
                 out.write(dataToServer.getBytes());
                 out.flush();
                 out.close();
@@ -890,9 +937,15 @@ public class CreateOrderActivity extends AppCompatActivity implements CategoryDi
             builder.setNegativeButton("Recharge Now", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent walletActivityIntent = new Intent(CreateOrderActivity.this, WalletFragment.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(walletActivityIntent);
-                    finish();
+                    //Open Wallet fragment
+                    setActionBarTitle("My DD Wallet");
+                    displayBottomLL(false);
+                    WalletFragment cartDisplayFragment = new WalletFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("wallet_bal", walletBal);
+                    cartDisplayFragment.setArguments(bundle);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, cartDisplayFragment).commit();
+
                 }
             });
             builder.setPositiveButton("Later", new DialogInterface.OnClickListener() {

@@ -77,7 +77,7 @@
         android:layout_marginRight="20dp"
         android:background="@drawable/button_background_color_primary"
         android:minHeight="43dp"
-        android:text="Recharge Online"
+        android:text="Pay Online"
         android:textColor="@color/colorWhite" />
 
     <TextView

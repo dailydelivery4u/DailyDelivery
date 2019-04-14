@@ -7,7 +7,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorGray"
         tools:context=".ReccurringOrdersActivity">
 
         <android.support.v7.widget.CardView
@@ -76,7 +75,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="25dp"
-            android:text="No Reapeating Orders yet! :("
+            android:layout_below="@+id/cv2"
+            android:text="No Reapeating Orders yet!\n Go to Home and place one Now :D"
             android:textAlignment="center"
             android:textColor="@color/colorBrown"
             android:textSize="17sp"

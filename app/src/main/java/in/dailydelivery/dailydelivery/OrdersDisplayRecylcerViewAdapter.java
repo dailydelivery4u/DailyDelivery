@@ -39,7 +39,7 @@ public class OrdersDisplayRecylcerViewAdapter extends RecyclerView.Adapter<Order
     public void onBindViewHolder(@NonNull final OrdersDisplayRecylcerViewAdapter.ViewHolder holder, int position) {
         holder.mItem = items.get(position);
         int ddPrice = items.get(position).getPrice() * items.get(position).getQty();
-        holder.nameTV.setText(items.get(position).getName() + "(" + items.get(position).getQty() + " Nos. )");
+        holder.nameTV.setText(items.get(position).getName() + " (" + items.get(position).getQty() + " Nos. )");
         holder.desTV.setText(items.get(position).getDes() + " - " + items.get(position).getQtyDes());
         holder.priceTV.setText("Rs. " + ddPrice);
         String status;

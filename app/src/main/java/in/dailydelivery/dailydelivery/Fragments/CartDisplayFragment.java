@@ -59,19 +59,6 @@ public class CartDisplayFragment extends Fragment implements onItemRemovedListne
     public void onCreate(Bundle savedInstanceState) {
         db = AppDatabase.getAppDatabase(getActivity());
         super.onCreate(savedInstanceState);
-        minOrderDate = new DateTime().plusDays(1);
-        orderDate = new DateTime().plusDays(1);
-        displayDTF = DateTimeFormat.fullDate();
-        dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
-        orderDateListner = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                Calendar newDate = Calendar.getInstance();
-                newDate.set(year, month, dayOfMonth);
-                orderDate = new DateTime(newDate);
-                deliveryDateTV.setText(orderDate.toString(displayDTF));
-            }
-        };
     }
 
     @Override
@@ -89,6 +76,19 @@ public class CartDisplayFragment extends Fragment implements onItemRemovedListne
                 layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
 
+        minOrderDate = new DateTime().plusDays(1);
+        orderDate = new DateTime().plusDays(1);
+        displayDTF = DateTimeFormat.fullDate();
+        dtf = DateTimeFormat.forPattern("dd-MM-yyyy");
+        orderDateListner = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, month, dayOfMonth);
+                orderDate = new DateTime(newDate);
+                deliveryDateTV.setText(orderDate.toString(displayDTF));
+            }
+        };
 
         determineDeliveryState();
         if (deliveryState == 1 || deliveryState == 2) {
@@ -96,7 +96,7 @@ public class CartDisplayFragment extends Fragment implements onItemRemovedListne
         } else if (deliveryState == 3) {
             //Order cannot be placed for tomo. should be placed only for day after tomo
             orderDate = orderDate.plusDays(1);
-            minOrderDate = orderDate.plusDays(1);
+            minOrderDate = minOrderDate.plusDays(1);
         }
         deliveryDateTV.setText(orderDate.toString(displayDTF));
 

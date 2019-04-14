@@ -31,6 +31,7 @@
             android:paddingRight="10dp"
             android:paddingBottom="10dp"
             android:text="Hyderabad"
+            android:textStyle="bold"
             android:textColor="@color/colorWhite" />
 
         <android.support.v7.widget.AppCompatAutoCompleteTextView
@@ -57,7 +58,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:orientation="vertical">
 
                 <TextView
@@ -85,6 +85,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
+                        android:textStyle="bold"
                         android:text="Block Number: " />
 
                     <Spinner
@@ -113,7 +114,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:textStyle="bold" />
+                        android:inputType="text"
+                        android:imeOptions="actionNext"
+                        android:textColor="@color/colorBlack" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -134,8 +137,10 @@
                         android:id="@+id/floorInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
                         android:layout_weight="0.5"
-                        android:textStyle="bold" />
+                        android:textColor="@color/colorBlack" />
                 </LinearLayout>
 
 
@@ -163,10 +168,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
+                    android:inputType="text"
+                    android:imeOptions="actionNext"
                     android:ems="10"
                     android:hint="Name"
-                    android:inputType="textCapCharacters"
-                    android:textStyle="bold" />
+                    android:textColor="@color/colorBlack" />
 
                 <EditText
                     android:id="@+id/referralCodeET"
@@ -175,6 +181,7 @@
                     android:layout_below="@+id/blockDetailsRL"
                     android:layout_margin="10dp"
                     android:hint="Referal Code (Optional)"
+                    android:imeOptions="actionDone"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -187,6 +194,7 @@
             android:layout_below="@+id/blockDetailsCV"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/button_background"
             android:onClick="registerBtnOnClick"
             android:text="Register"

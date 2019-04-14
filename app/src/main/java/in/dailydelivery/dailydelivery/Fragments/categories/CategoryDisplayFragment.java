@@ -13,7 +13,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,40 +78,32 @@ public class CategoryDisplayFragment extends Fragment {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 
         catDataModel = new ArrayList<>();
-        ArrayList<String> listUrl = new ArrayList<>();
-        listUrl.add(getString(R.string.server_addr_release) + "pics/Milk_banner.jpg");
-        listUrl.add(getString(R.string.server_addr_release) + "pics/Referral_banner.jpg");
-        listUrl.add(getString(R.string.server_addr_release) + "pics/summer_banner.jpg");
+        new FetchBannerPics().execute(getString(R.string.server_addr_release) + "fetch_banner_pics.php");
+/*
+        //Volley try
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        String url = getString(R.string.server_addr_release) + "fetch_banner_pics.php";
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("dd","Response: " + response.toString());
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Log.d("dd","Response: " + error.toString());
+                    }
+                });
 
 
-        RequestOptions requestOptions = new RequestOptions();
-        requestOptions.centerCrop();
-        //requestOptions.centerInside();
-        //requestOptions.fitCenter();
 
+        queue.add(jsonObjectRequest);*/
 
-        for (int i = 0; i < listUrl.size(); i++) {
-            DefaultSliderView sliderView = new DefaultSliderView(context);
-            //TextSliderView sliderView = new TextSliderView(context);
-            // if you want show image only / without description text use DefaultSliderView instead
-
-            // initialize SliderLayout
-            sliderView
-                    .image(listUrl.get(i))
-                    .setRequestOption(requestOptions)
-                    .setProgressBarVisible(true);
-
-
-            mDemoSlider.addSlider(sliderView);
-        }
-
-        // set Slider Transition Animation
-        // mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Default);
-        mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
-
-        mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-        //mDemoSlider.setCustomAnimation(new DescriptionAnimation());
-        mDemoSlider.setDuration(4000);
 
         return view;
     }
@@ -246,7 +237,6 @@ public class CategoryDisplayFragment extends Fragment {
                 //Toast.makeText(getActivity(), "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
                 displayTechincialError();
             } else {
-                Log.d("DD", "Result from webserver in Category fetching: " + result);
                 try {
                     catDataModel.clear();
                     JSONObject resultArrayJson = new JSONObject(result);
@@ -274,7 +264,7 @@ public class CategoryDisplayFragment extends Fragment {
                     displayCategories();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    displayTechincialError();
+                    //displayTechincialError();
                 } finally {
                 }
             }
@@ -317,6 +307,124 @@ public class CategoryDisplayFragment extends Fragment {
 
                 // Makes sure that the InputStream is closed after the app is
                 // finished using it.
+            } catch (SocketTimeoutException e) {
+                return "timeout";
+            } finally {
+                if (is != null) {
+                    is.close();
+                }
+            }
+        }
+
+        // Reads an InputStream and converts it to a String.
+        public String readIt(InputStream stream, int len) throws IOException {
+            int count;
+            InputStreamReader reader;
+
+            reader = new InputStreamReader(stream, "UTF-8");
+            String str = new String();
+            char[] buffer = new char[len];
+            while ((count = reader.read(buffer, 0, len)) > 0) {
+                str += new String(buffer, 0, count);
+            }
+            return str;
+        }
+    }
+
+
+    //Fetch Display Banner Pics
+
+    private class FetchBannerPics extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            // params comes from the execute() call: params[0] is the url.
+            try {
+                return downloadUrl(urls[0]);
+            } catch (IOException e) {
+                return "Unable to retrieve contact server!";
+            }
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            //progress.dismiss();
+            if (result.equals("timeout")) {
+                //Toast.makeText(getActivity(), "Your net connection is slow.. Please try again later.", Toast.LENGTH_LONG).show();
+                //displayTechincialError();
+            } else {
+                try {
+                    JSONObject resultArrayJson = new JSONObject(result);
+                    int numOfPics = resultArrayJson.getInt("numOfPics");
+                    ArrayList<String> listUrl = new ArrayList<>();
+                    for (int i = 1; i <= numOfPics; i++) {
+                        String url = resultArrayJson.getString("pic" + i).replace("\\", "");
+                        listUrl.add(url);
+                    }
+
+                    RequestOptions requestOptions = new RequestOptions();
+                    requestOptions.centerCrop();
+                    //requestOptions.fitCenter();
+                    //requestOptions.fitCenter();
+                    //.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+                    //requestOptions.centerInside();
+                    //requestOptions.fitCenter();
+
+
+                    for (int i = 0; i < listUrl.size(); i++) {
+                        DefaultSliderView sliderView = new DefaultSliderView(context);
+                        //TextSliderView sliderView = new TextSliderView(context);
+                        // if you want show image only / without description text use DefaultSliderView instead
+
+                        // initialize SliderLayout
+                        sliderView
+                                .image(listUrl.get(i))
+                                .setRequestOption(requestOptions)
+                                .setProgressBarVisible(true);
+                        mDemoSlider.addSlider(sliderView);
+                    }
+
+                    // set Slider Transition Animation
+                    // mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Default);
+                    mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
+
+                    mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+                    //mDemoSlider.setCustomAnimation(new DescriptionAnimation());
+                    mDemoSlider.setDuration(4000);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    displayTechincialError();
+                } finally {
+                }
+            }
+        }
+
+        // Given a URL, establishes an HttpUrlConnection and retrieves
+        // the web page content as a InputStream, which it returns as
+        // a string.
+        private String downloadUrl(String myurl) throws IOException {
+            InputStream is = null;
+            // Only display the first 500 characters of the retrieved
+            // web page content.
+            int len = 1500;
+
+            try {
+                URL url = new URL(myurl);
+                //Using httpurlconnection
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(10000);//* milliseconds *//*);
+                conn.setConnectTimeout(10000); //* milliseconds *//*);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                // Starts the query
+                conn.connect();
+
+                is = conn.getInputStream();
+                return readIt(is, len);
             } catch (SocketTimeoutException e) {
                 return "timeout";
             } finally {

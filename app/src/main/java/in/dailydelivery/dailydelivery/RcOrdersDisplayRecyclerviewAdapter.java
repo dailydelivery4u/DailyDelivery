@@ -87,9 +87,8 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
                 //Alternate Days order
                 DateTime startDate;
                 startDate = dtf.parseDateTime(holder.mItem.getStartDate());
-                long diffInMillis = dateSelected.getMillis() - startDate.getMillis();
+                long diffInMillis = dateSelected.withTimeAtStartOfDay().getMillis() - startDate.withTimeAtStartOfDay().getMillis();
                 long diff = TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
-
                 if (diff % 2 == 0) {
                     qty = holder.mItem.getDay1Qty();
                 } else {
@@ -103,32 +102,8 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
                 }
                 break;
         }
-
-        switch (dayOfWeek) {
-            case 1:
-                qty = holder.mItem.getMon();
-                break;
-            case 2:
-                qty = holder.mItem.getTue();
-                break;
-            case 3:
-                qty = holder.mItem.getWed();
-                break;
-            case 4:
-                qty = holder.mItem.getThu();
-                break;
-            case 5:
-                qty = holder.mItem.getFri();
-                break;
-            case 6:
-                qty = holder.mItem.getSat();
-                break;
-            case 7:
-                qty = holder.mItem.getSun();
-                break;
-        }
         int ddPrice = holder.mItem.getPrice() * qty;
-        holder.nameTV.setText(holder.mItem.getName() + "(" + qty + " Nos.)");
+        holder.nameTV.setText(holder.mItem.getName() + " (" + qty + " Nos.)");
         holder.desTV.setText(holder.mItem.getDes() + " - " + holder.mItem.getQtyDes());
         holder.priceTV.setText("Rs. " + ddPrice);
 
@@ -175,10 +150,11 @@ public class RcOrdersDisplayRecyclerviewAdapter extends RecyclerView.Adapter<RcO
         return items.size();
     }
 
-    public void updateData(List<RcOrderDetails> list, int dayOfWeek) {
+    public void updateData(List<RcOrderDetails> list, int dayOfWeek, DateTime dateSelected) {
         items.clear();
         items = list;
         this.dayOfWeek = dayOfWeek;
+        this.dateSelected = dateSelected;
         notifyDataSetChanged();
     }
 

@@ -15,6 +15,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -90,6 +91,8 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 blockSelected = blocks.get(position);
+                InputMethodManager imm = (InputMethodManager) RegisterActivity.this.getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             }
 
             @Override
@@ -198,12 +201,12 @@ public class RegisterActivity extends AppCompatActivity {
                     editor.putString(getString(R.string.sp_tag_user_phone), resultJson.getString("phone"));
                     editor.putString(getString(R.string.sp_tag_user_add), resultJson.getString("add"));
                     editor.commit();
-                    Intent userHomeActivityIntent = new Intent(RegisterActivity.this, UserHomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    Intent createOrderActivityIntent = new Intent(RegisterActivity.this, CreateOrderActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     if (!resultJson.getString("title").isEmpty() && !resultJson.getString("msg").isEmpty()) {
-                        userHomeActivityIntent.putExtra("title", resultJson.getString("title"));
-                        userHomeActivityIntent.putExtra("message", resultJson.getString("msg"));
+                        createOrderActivityIntent.putExtra("title", resultJson.getString("title"));
+                        createOrderActivityIntent.putExtra("message", resultJson.getString("msg"));
                     }
-                    startActivity(userHomeActivityIntent);
+                    startActivity(createOrderActivityIntent);
                     finish();
                 } else if (resultJson.getInt("responseCode") == 275) {
                     //Regsitration failed
@@ -531,7 +534,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public CharSequence convertResultToString(Object resultValue) {
                 Society society = (Society) resultValue;
-                return society.getSocietyName() + society.getSocietyAdd();
+                return society.getSocietyName() + ", " + society.getSocietyAdd();
             }
 
             @Override
